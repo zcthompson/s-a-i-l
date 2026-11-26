@@ -46,15 +46,15 @@ Private working notes live in the ignored `.private-migration/HANDOFF.md`.
   test_arch_rerecon_a7.py) and a few synthetic fixture values that embed
   work-package codes (e.g. "WP3Co").
 
+## Resolved (owner decisions, restart session)
+- License: Apache-2.0 (LICENSE file + `license` field in pyproject.toml).
+- GitHub repository secret `SAIL_DENYLIST` set from the local git-ignored
+  `.denylist` (brand/identity regexes; the CI hygiene job reads it).
+- Optional integrations: keep all (LDAP/AD directory auth, Azure Document
+  Intelligence provider, NetSuite/RVTools/Red Hat import panes) — generic,
+  config-gated; the import panes are core product value.
+
 ## Remaining (priority order)
-1. Owner's final human review pass (agent review above states its coverage and
-   limits; private name lists remain in `.private-migration/`).
-2. Add GitHub repository secret `SAIL_DENYLIST` (brand/identity regexes;
-   the local git-ignored `.denylist` is ready —
-   `gh secret set SAIL_DENYLIST --body-from .denylist`).
-3. Choose a license (recommendation: Apache-2.0; MIT also fine).
-4. Decide on optional integrations kept in code: LDAP/AD directory auth,
-   Azure Document Intelligence provider, NetSuite/RVTools/Red Hat import
-   panes. Recommendation: keep all (generic, config-gated; the import panes
-   are core product value). If trimming, drop LDAP first.
-5. Push only when the user authorizes it (local is ahead of origin).
+1. Owner's final human review pass (agent review above states its coverage
+   and limits; private name lists remain in `.private-migration/`).
+2. Push only when the user authorizes it (local is ahead of origin).

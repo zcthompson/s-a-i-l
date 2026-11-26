@@ -6,6 +6,7 @@ build-backend = "hatchling.build"
 name = "sail"
 version = "0.0.1"
 description = "S-A-I-L — open-source Sales Analytics and Intelligence Launchpad"
+license = {text = "Apache-2.0"}
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115,<1",

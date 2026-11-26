@@ -46,4 +46,4 @@ co-author/agent attribution trailers in commit messages. See `AGENTS.md`.
 
 ## License
 
-To be determined before the first public release.
+Apache-2.0 — see [LICENSE](LICENSE).
