@@ -1,0 +1,10 @@
+#!/bin/sh
+# Block agent folders, secrets, private data, denylisted terms, version drift.
+set -e
+top="$(git rev-parse --show-toplevel)"
+python3 "$top/scripts/ci/check_repo_hygiene.py" --staged
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks git --pre-commit --staged --redact --no-banner --config "$top/.gitleaks.toml"
+else
+  echo "note: gitleaks not installed; secret scan skipped locally (CI still runs it)" >&2
+fi

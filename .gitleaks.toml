@@ -1,0 +1,8 @@
+title = "S-A-I-L gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Placeholder-only examples"
+paths = ['''(^|/)\.env(\.[^/]*)?\.example$''']

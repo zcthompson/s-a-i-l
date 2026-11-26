@@ -1,0 +1,3 @@
+#!/bin/sh
+# Reject co-author / agent attribution trailers (AGENTS.md).
+exec python3 "$(git rev-parse --show-toplevel)/scripts/ci/check_commit_messages.py" --file "$1"

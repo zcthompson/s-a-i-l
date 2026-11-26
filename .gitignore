@@ -1,0 +1,63 @@
+# Private migration inputs and working material
+*.tar
+*.tar.*
+*.tgz
+*.zip
+/.private-migration/
+/s-i-l-t/
+
+# Secrets and local configuration (examples must contain placeholders only)
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+
+# Runtime data and exports
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sql.gz
+*.dump
+/local-import/
+/uploads/
+/logs/
+*.log
+
+# Generated dependencies and build output
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage/
+.coverage
+dist/
+build/
+.DS_Store
+
+# AI agent / assistant working folders (never commit)
+.hermes/
+.claude/
+.codex/
+.cursor/
+.aider*
+.continue/
+.windsurf/
+.roo/
+.cline/
+.gemini/
+.qwen/
+.agents/
+.agent/
+.ai/
+.local/
+*.bak
+
+# Private brand/identity denylist used by local hooks (never commit)
+/.denylist
