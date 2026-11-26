@@ -8,19 +8,8 @@ from logging.config import fileConfig
 
 import sqlalchemy as sa
 from alembic import context
-from alembic.ddl.postgresql import PostgresqlImpl
 from sqlalchemy import engine_from_config, pool
 
-
-class SiltPostgresqlImpl(PostgresqlImpl):
-    """Keep the existing long revision identifiers on strict SQL backends."""
-
-    __dialect__ = "postgresql"
-
-    def version_table_impl(self, **kw):
-        table = super().version_table_impl(**kw)
-        table.c.version_num.type = sa.String(128)
-        return table
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
