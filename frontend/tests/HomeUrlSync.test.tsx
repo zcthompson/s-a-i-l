@@ -4,7 +4,7 @@
 // changes, so a Back press re-ran it in the same commit with the
 // PRE-UPDATE view and pushed the stale view back into the URL — the
 // URL->view effect then flipped the view back, oscillating view and URL.
-// Caught in review (Codex P1, 2026-08-30); these tests pin the behavior.)
+// Caught in review; these tests pin the behavior.)
 import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
 import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, useNavigate, useLocation } from 'react-router-dom';

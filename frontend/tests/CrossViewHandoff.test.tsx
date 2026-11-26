@@ -1,5 +1,5 @@
 /**
- * Regression tests for F1 ([P0]): customer-detail cross-view buttons
+ * Regression tests for customer-detail cross-view buttons
  * dead-end or open the WRONG use case (RED-first).
  *
  * Reported behavior (pre-fix, captured by these tests):
@@ -143,7 +143,7 @@ afterAll(() => {
 // Drive the real app path to the customer detail tab: My Customers → select
 // the stub customer → Overview → click the use case row (detail tab).
 // NOTE: the detail-tab buttons carry the generic aria-label
-// "Customer dashboard action" (F11), so the visible
+// "Customer dashboard action", so the visible
 // text (not the accessible name) is the probe, scoped to the section that
 // contains them.
 // navigation is now two-level (primary areas + per-area
@@ -174,7 +174,7 @@ function renderApp() {
   );
 }
 
-describe('F1 — customer-detail cross-view handoff', () => {
+describe('customer-detail cross-view handoff', () => {
   it('View Scoring Breakdown reaches the scoring surface for that use case (no dead-end)', async () => {
     renderApp();
     const section = await openUseCaseDetail();

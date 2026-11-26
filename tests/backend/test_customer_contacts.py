@@ -1,4 +1,4 @@
-"""H4 synthetic acceptance tests: observations, isolation, integrity, and honest coverage."""
+"""synthetic acceptance tests: observations, isolation, integrity, and honest coverage."""
 
 from contextlib import contextmanager
 

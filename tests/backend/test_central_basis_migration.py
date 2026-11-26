@@ -1,5 +1,4 @@
-"""Re-recon A-1 pins — the three DV-class legacy-basis surfaces on the
-central policy (operator ruling 2026-11-01: migrate, R1 continuation).
+"""Central-basis migration pins — the three legacy-basis surfaces on the central policy.
 
 Surfaces migrated from ``granted_customer_ids`` to ``customer_scope`` /
 ``can()``:
@@ -20,7 +19,7 @@ Effects pinned:
     caller (no more narrow-scope create vs wide-scope detail);
   - ``granted_customer_ids`` is gone from the resolver (source pin).
 
-Run: pytest tests/backend/test_arch_rerecon_a1.py -v
+Run: pytest tests/backend/test_central_basis_migration.py -v
 """
 
 import os

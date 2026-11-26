@@ -1,4 +1,4 @@
-"""W1 pins: central-policy basis for scope, reads,
+"""Central-policy basis pins: for scope, reads,
 scoring, comments and notifications.
 
 Every surface here moved from a legacy junction check to the central
@@ -17,7 +17,7 @@ Every surface here moved from a legacy junction check to the central
 404-first is preserved (out of scope == missing, byte-identical) and the
 list/stats/broadcast surfaces pin fixed query-family counts under scale.
 
-Run: pytest tests/backend/test_part13_dv_wave1.py -v
+Run: pytest tests/backend/test_central_basis_reads.py -v
 """
 
 import os

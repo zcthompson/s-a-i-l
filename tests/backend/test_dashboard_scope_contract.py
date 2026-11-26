@@ -1,8 +1,8 @@
 """Verify authorized dashboard account sets and counts."""
 import pytest
 
-from tests.backend.test_part13_dv_wave2 import _token
-from tests.backend.test_part13_dv_wave2 import world as _world_fixture
+from tests.backend.test_cross_account_read_basis import _token
+from tests.backend.test_cross_account_read_basis import world as _world_fixture
 
 
 @pytest.fixture

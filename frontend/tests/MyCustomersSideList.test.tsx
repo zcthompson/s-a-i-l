@@ -1,5 +1,5 @@
 /**
- * CustomerDashboard "My Customers" side list on the H2 stack:
+ * CustomerDashboard "My Customers" side list on the stack:
  * A–Z default (client-side over the full list; payload stays newest-first),
  * no nav params when unfiltered, sort serializes, pager slices the filtered
  * list, alias search. Synthetic names only.

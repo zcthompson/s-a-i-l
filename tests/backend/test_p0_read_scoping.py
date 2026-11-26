@@ -3,13 +3,13 @@ score history, projections, exports and the scoring health probe.
 
 Matrix (denied = rep/stranger; allowed = scoped rep or system admin):
 
-- F1  GET /api/use-cases/{id}/         out-of-scope → 404 (no existence oracle)
-- F2  PUT /api/use-cases/{id}/         customer_id move → 422 (no fixed customer)
-- F3  NULL-customer use cases          reads 404, writes 403 for non-admins
-- F4  GET /api/scoring/history/{id}/   out-of-scope use case → 404
-- F5  GET /api/customers/{n}/projections/  out-of-scope customer → 404
-- F6  unscoped exports (pdf/csv/xlsx)  non-admin → 403; admin unchanged
-- F13a GET /api/scoring/health/        unauthenticated → 401
+- GET /api/use-cases/{id}/         out-of-scope → 404 (no existence oracle)
+- PUT /api/use-cases/{id}/         customer_id move → 422 (no fixed customer)
+- NULL-customer use cases          reads 404, writes 403 for non-admins
+- GET /api/scoring/history/{id}/   out-of-scope use case → 404
+- GET /api/customers/{n}/projections/  out-of-scope customer → 404
+- unscoped exports (pdf/csv/xlsx)  non-admin → 403; admin unchanged
+- GET /api/scoring/health/        unauthenticated → 401
 """
 
 import pytest
@@ -76,7 +76,7 @@ def seeded(db_session):
     }
 
 
-# ── F1: by-id read ───────────────────────────────────────────────────────────
+# ── by-id read ───────────────────────────────────────────────────────────
 
 class TestUseCaseReadScope:
     def test_rep_reads_in_scope_use_case(self, client, seeded):
@@ -101,7 +101,7 @@ class TestUseCaseReadScope:
         assert r.status_code == 200
 
 
-# ── F2 / R3: customer cannot be moved ────────────────────────────────────────
+# ── customer cannot be moved ────────────────────────────────────────
 
 class TestUseCaseCustomerImmutable:
     def test_move_to_other_customer_rejected_for_rep(self, client, db_session, seeded):
@@ -147,7 +147,7 @@ class TestUseCaseCustomerImmutable:
         assert uc.title == "Still A"
 
 
-# ── F3 / R2: unassigned (NULL-customer) use cases are admin-only ─────────────
+# ── unassigned (NULL-customer) use cases are admin-only ─────────────
 
 class TestUnassignedUseCasesAdminOnly:
     def test_rep_read_is_404(self, client, seeded):
@@ -232,7 +232,7 @@ class TestUnassignedUseCasesAdminOnly:
         assert r.status_code == 404
 
 
-# ── F4: score history ────────────────────────────────────────────────────────
+# ── score history ────────────────────────────────────────────────────────
 
 class TestScoreHistoryScope:
     def test_rep_reads_in_scope_history(self, client, seeded):
@@ -261,7 +261,7 @@ class TestScoreHistoryScope:
         assert r.status_code == 401
 
 
-# ── F5: projections ──────────────────────────────────────────────────────────
+# ── projections ──────────────────────────────────────────────────────────
 
 class TestProjectionReadScope:
     def test_member_reads_own_customer_projection(self, client, seeded):
@@ -290,7 +290,7 @@ class TestProjectionReadScope:
         assert r.status_code == 200
 
 
-# ── F6 / R5: exports ─────────────────────────────────────────────────────────
+# ── exports ─────────────────────────────────────────────────────────
 
 class TestFullPortfolioExportAdminOnly:
     @pytest.mark.parametrize("path", [
@@ -328,7 +328,7 @@ class TestFullPortfolioExportAdminOnly:
                           headers=_hdr("p0_rep")).status_code == 200
 
 
-# ── F13a: scoring health probe ───────────────────────────────────────────────
+# ── scoring health probe ───────────────────────────────────────────────
 
 class TestScoringHealthAuth:
     def test_anonymous_is_401(self, client):

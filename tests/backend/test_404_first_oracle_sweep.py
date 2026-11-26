@@ -6,7 +6,7 @@ cannot reveal existence; an in-scope caller who lacks the write capability
 keeps the exact 403. Pattern: test_departments_count.py::
 test_department_by_id_is_404_first.
 
-Run: pytest tests/backend/test_part13_wb_oracle_sweep.py -v
+Run: pytest tests/backend/test_404_first_oracle_sweep.py -v
 """
 
 import os

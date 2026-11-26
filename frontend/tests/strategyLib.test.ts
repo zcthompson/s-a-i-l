@@ -1,5 +1,5 @@
 /**
- * H7 — prefillStrategy pure pins. Synthetic fixtures only.
+ * prefillStrategy pure pins. Synthetic fixtures only.
  */
 import { describe, it, expect } from 'vitest';
 import { prefillStrategy } from '../src/lib/strategy';

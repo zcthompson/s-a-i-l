@@ -124,7 +124,7 @@ describe('CustomerPipeline', () => {
   });
 });
 
-describe('CustomerPipeline — H3 history, comparison, renewals', () => {
+describe('CustomerPipeline — history, comparison, renewals', () => {
   const snap = (id: number, selected: boolean) => ({
     import_id: id, source_file: `f${id}.csv`, imported_at: `2026-10-${10 + id}T00:00:00Z`, imported_by: 'admin',
     line_count: 3, opportunity_count: 2, selected,

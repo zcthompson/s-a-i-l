@@ -155,7 +155,7 @@ describe('AccountTimelinePanel', () => {
     expect(onSelect).toHaveBeenCalledTimes(1);
   });
 
-  it('opens area destinations for older imports/snapshots and leaves rep imports inert (RF-07)', async () => {
+  it('opens area destinations for older imports/snapshots and leaves rep imports inert', async () => {
     const onSelect = vi.fn();
     apiMock.getAccountTimeline.mockResolvedValue(page({ items: [
       item({ kind: 'pipeline_import', id: 7, title: 'Pipeline import #7', imported: true }),

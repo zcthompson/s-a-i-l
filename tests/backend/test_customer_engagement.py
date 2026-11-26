@@ -1,4 +1,4 @@
-"""H5 synthetic acceptance: evidence, lifecycle, concurrency, access and delivery."""
+"""synthetic acceptance: evidence, lifecycle, concurrency, access and delivery."""
 
 import importlib
 from datetime import UTC, date, datetime, timedelta

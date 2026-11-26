@@ -1,7 +1,7 @@
 /**
  * AdminConsole: block order Application Functions →
  * Portfolio → Users Management; the Portfolio summary shows the first 10
- * accounts with H2 controls (search over name + aliases, filter, sort, count
+ * accounts with controls (search over name + aliases, filter, sort, count
  * line, reset; LOCAL nav state — no URL sync, primary ruling on SR-1) and
  * click-through to the customer; the Users table is capped at the first 10
  * (matching) user accounts with client-side search. Synthetic names only.
@@ -81,7 +81,7 @@ describe('AdminConsole Portfolio', () => {
     await screen.findByTestId('admin-console-portfolio');
     // payload order (newest first) — the console default is NOT A–Z.
     expect(portfolioRows()).toEqual(data.accounts.slice(0, 10).map((a: any) => a.name));
-    // H2 count line = filtered matches over the full list (not the page slice).
+    // count line = filtered matches over the full list (not the page slice).
     expect(screen.getByTestId('portfolio-match-count').textContent).toBe('12 of 12 accounts match');
   });
 

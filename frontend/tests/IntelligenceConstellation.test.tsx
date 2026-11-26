@@ -1,5 +1,5 @@
 /**
- * F4 — Customer Intelligence Constellation tests (Mobius 3D renderer).
+ * Customer Intelligence Constellation tests (Mobius 3D renderer).
  *
  * Covers:
  * - the pure graph transformation helpers (lib/intelligenceGraph);
@@ -69,7 +69,7 @@ function sparseFixture(): CustomerIntelligenceGraph {
 
 // ── Pure transform tests ─────────────────────────────────────────────────
 
-describe('intelligenceGraph transforms (F4)', () => {
+describe('intelligenceGraph transforms', () => {
   it('prepareGraphData preserves stable node ids and link ids verbatim', () => {
     const g = graphFixture();
     const data = prepareGraphData(g);

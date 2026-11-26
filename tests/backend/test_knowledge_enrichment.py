@@ -78,7 +78,7 @@ ENRICHMENT_JSON_B = {
     "technology_dependencies": [],
     "business_challenges": [],
     "stakeholders": [
-        {"name": "Dana Reyes (Infrastructure Lead)", "description": "Owns the virtualization platform", "provenance": "explicit", "confidence": 0.9, "evidence": "Dana Reyes leads infrastructure."},
+        {"name": "Jane Example (Infrastructure Lead)", "description": "Owns the virtualization platform", "provenance": "explicit", "confidence": 0.9, "evidence": "Jane Example leads infrastructure."},
     ],
     "use_cases": [],
     "opportunities": [],

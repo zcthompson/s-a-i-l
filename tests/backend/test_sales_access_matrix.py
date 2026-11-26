@@ -470,7 +470,7 @@ class TestPerSurfaceAuditorWriteGap:
         # projections generate needs owner/admin or edit on the customer —
         # outsider_1 is out of scope -> the same 404 as a missing customer
         # The scoped auditor is a global write-blocked identity:
-        # the app-wide middleware 403 fires before the route (H4 convention).
+        # the app-wide middleware 403 fires before the route.
         r = client.post(f"/api/customers/{seeded.a1.name}/projections/", headers=_headers("outsider_1"))
         assert r.status_code == 404
         assert client.delete(f"/api/customers/{seeded.a1.name}/projections/",

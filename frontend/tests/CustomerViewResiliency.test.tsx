@@ -1,11 +1,11 @@
 /**
  * Regression tests for CustomerDashboard:
  *
- * F10 [P1]: Bulk Score's Back evicted the customer
+ * Bulk Score's Back evicted the customer
  *   (setCustomerUseCases([]) + setSelectedCustomer(null) → "Select a
  *   Customer"). Now: the customer stays selected, the Overview tab shows,
  *   and the use cases are refetched (fresh scores visible on return).
- * F12 [P1]: one transient API failure replaced the WHOLE customer view
+ * one transient API failure replaced the WHOLE customer view
  *   with a page-reload Retry (window.location.reload() — selection, tab,
  *   and round input lost). Now: an inline banner with a Retry that
  *   re-runs the same load; round create/archive failures are inline in
@@ -141,8 +141,8 @@ function renderDashboard() {
   );
 }
 
-describe('F10 + F12 — customer view resiliency', () => {
-  it('F10: Bulk Score Back keeps the customer and refetches the use cases', async () => {
+describe('customer view resiliency', () => {
+  it('Bulk Score Back keeps the customer and refetches the use cases', async () => {
     renderDashboard();
     await screen.findByRole('heading', { level: 1, name: /Energy Test Company/ });
     const ucCallsBeforeMount = state.ucListCalls;
@@ -151,7 +151,7 @@ describe('F10 + F12 — customer view resiliency', () => {
     fireEvent.click(screen.getByRole('tab', { name: 'Navigate to Bulk Score' }));
     await screen.findByText('← Back');
     // BulkScore fetches the use cases itself on mount — capture AFTER that
-    // so the assertion isolates the onBack refetch (the F10 behavior).
+    // so the assertion isolates the onBack refetch (the Back behavior).
     const ucCallsAfterBulkMount = state.ucListCalls;
     expect(ucCallsAfterBulkMount).toBeGreaterThan(ucCallsBeforeMount);
     fireEvent.click(screen.getByText('← Back'));
@@ -164,7 +164,7 @@ describe('F10 + F12 — customer view resiliency', () => {
     expect(state.ucListCalls).toBe(ucCallsAfterBulkMount + 1);
   });
 
-  it('F12: a load failure is an inline banner with Retry (the view stays mounted)', async () => {
+  it('a load failure is an inline banner with Retry (the view stays mounted)', async () => {
     state.getCustomerShouldFail = true;
     renderDashboard();
     // The banner shows the real reason, and the view is NOT unmounted
@@ -179,7 +179,7 @@ describe('F10 + F12 — customer view resiliency', () => {
     expect(state.getCustomerCalls).toBe(callsBeforeRetry + 1);
   });
 
-  it('F12: a round-create failure is inline in the rounds card (the view stays mounted)', async () => {
+  it('a round-create failure is inline in the rounds card (the view stays mounted)', async () => {
     state.createAssessmentShouldFail = true;
     renderDashboard();
     await screen.findByRole('heading', { level: 1, name: /Energy Test Company/ });

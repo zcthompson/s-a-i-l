@@ -5,7 +5,7 @@ carried only the legacy ``customer_users`` owner row, with no
 ``account_memberships`` primary_owner row. This script gives legacy-only
 owners their primary_owner membership rows (``source='migration'``).
 
-Safety properties (also pinned in tests/backend/test_e0_crm_prerequisites.py):
+Safety properties (also pinned in tests/backend/test_crm_prerequisites.py):
 - DRY-RUN BY DEFAULT. Nothing is written unless ``--apply`` is passed.
 - Idempotent: re-running after a completed apply reports zero gaps.
 - Conflicts are reported, never touched: an account that ALREADY has a

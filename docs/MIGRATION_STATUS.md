@@ -37,14 +37,10 @@ Private working notes live in the ignored `.private-migration/HANDOFF.md`.
   internal domains, account IDs, or territory codes; no predecessor-company
   identity references.
 - Owner flag (optional): one synthetic stakeholder persona in a mocked-LLM
-  test payload (tests/backend/test_knowledge_enrichment.py). The name does not
-  appear in the archived data; rename if the owner prefers an unmistakably
-  placeholder name.
-- Deliberately left unchanged (no privacy content, cosmetic call for the
-  owner): internal feature codes inside test FILE names and suite ids
-  (Part14*, U4Navigation, F10F12, H1/H2, test_part13_dv_wave2.py,
-  test_arch_rerecon_a7.py) and a few synthetic fixture values that embed
-  work-package codes (e.g. "WP3Co").
+  test payload (tests/backend/test_knowledge_enrichment.py) was renamed to a
+  placeholder in the restart session.
+- Test file names and suite titles that carried internal feature codes
+  were renamed to descriptive names (restart session).
 
 ## Resolved (owner decisions, restart session)
 - License: Apache-2.0 (LICENSE file + `license` field in pyproject.toml).

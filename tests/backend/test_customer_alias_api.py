@@ -8,7 +8,7 @@
   404 "Customer not found" on every verb (no existence oracle);
 - list ordering (raw codepoint) and delete semantics.
 
-Run: pytest tests/backend/test_part14_alias_api.py -v
+Run: pytest tests/backend/test_customer_alias_api.py -v
 """
 
 import os

@@ -1,6 +1,6 @@
 /**
- * H7 — AccountStrategyPanel (synthetic fixtures; api mocked with the vi.hoisted
- * pattern used by the H4/H6 panel tests). Covers: empty-state prefill, recorded
+ * AccountStrategyPanel (synthetic fixtures; api mocked with the vi.hoisted
+ * pattern used by the contact and brief panel tests). Covers: empty-state prefill, recorded
  * plan verbatim, save CAS version, verbatim 409, read-only role, links, and the
  * publish → list → view → restore snapshot flow.
  */

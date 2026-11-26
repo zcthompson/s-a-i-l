@@ -107,7 +107,7 @@ async function openArea(label: string) {
   if (label === 'Rounds') { fireEvent.click(await screen.findByText('New assessment round', { selector: 'summary' })); fireEvent.click(screen.getByText('Start a new assessment', { selector: 'summary' })); }
 }
 
-describe('WS5 — round rows: type chip + purpose line', () => {
+describe('round rows: type chip + purpose line', () => {
   it('renders AI / Generic chips and the purpose line', async () => {
     state.assessments = [
       round({ id: 1, name: 'Q3 AI', status: 'archived', assessment_type: 'ai', purpose: 'Baseline readiness' }),
@@ -130,7 +130,7 @@ describe('WS5 — round rows: type chip + purpose line', () => {
   });
 });
 
-describe('WS5 — create flow: explicit type choice', () => {
+describe('create flow: explicit type choice', () => {
   it('has two unselected type options and keeps + New Round disabled until one is chosen', async () => {
     await openArea('Rounds');
     const group = await screen.findByRole('radiogroup', { name: 'Round type' });
@@ -179,7 +179,7 @@ describe('WS5 — create flow: explicit type choice', () => {
   });
 });
 
-describe('WS5 — scoring entry points', () => {
+describe('scoring entry points', () => {
   const openDetail = async (title: string) => {
     await openArea('Use Cases');
     fireEvent.click(await screen.findByRole('button', { name: `Open assessment ${title}` }));
@@ -234,7 +234,7 @@ describe('WS5 — scoring entry points', () => {
   });
 });
 
-describe('WS5 — api layer', () => {
+describe('api layer', () => {
   afterEach(() => vi.unstubAllGlobals());
   const fakeResponse = (status: number, body: string) => ({
     ok: status >= 200 && status < 400, status, statusText: '', text: async () => body,

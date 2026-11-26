@@ -173,7 +173,7 @@ def test_portfolio_pipeline_is_batched_once_and_matches_customer_rows(
     assert response.status_code == 200, response.text
     body = response.json()
     assert calls == [sorted(expected)]
-    assert len(statements) == 6  # H1 + H3 each batch once; no account-by-account reads
+    assert len(statements) == 6  # Pipeline and renewal reads each batch once; no account-by-account reads
     assert body["customer_count"] == 2
     assert body["total_impact"]["value"] == 1500.0
     assert body["calculation_version"] == "account-impact/2"

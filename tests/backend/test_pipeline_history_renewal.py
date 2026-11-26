@@ -1,4 +1,4 @@
-"""H3 acceptance contracts over deterministic synthetic retained snapshots."""
+"""acceptance contracts over deterministic synthetic retained snapshots."""
 
 from contextlib import contextmanager
 from datetime import date, datetime, timedelta

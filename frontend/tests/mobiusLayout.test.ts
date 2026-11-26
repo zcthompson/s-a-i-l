@@ -104,7 +104,7 @@ describe('buildMobiusLayout', () => {
   });
 
   it('keeps entities at least their min distance apart after relaxation (dense)', () => {
-    // 8 data domains now — synthetic(7) keeps the pre-WS5
+    // 8 data domains now — synthetic(7) keeps the previous
     // per-sector entity density (the 8th domain narrows every sector).
     const layout = buildMobiusLayout(synthetic(7));
     const core = layout.find((l) => l.node.type === 'customer')!;

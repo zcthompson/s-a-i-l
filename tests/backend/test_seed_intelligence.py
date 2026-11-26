@@ -411,7 +411,7 @@ class TestSeedKnowledge:
 
 class TestSeedDependencies:
     """PLAN_FEATURE_ENHANCMENTS.md — deterministic demo technology
-    dependency seeding (F2). Dependencies are resolved by tech NAME
+    dependency seeding. Dependencies are resolved by tech NAME
     against the customer's inventory, seeded only when a customer has
     none, and never fabricated (unresolvable endpoints are skipped)."""
 

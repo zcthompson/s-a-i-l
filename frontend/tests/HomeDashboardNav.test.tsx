@@ -1,5 +1,5 @@
 /**
- * H2 — HomeDashboard portfolio table: search / filter / sort / count / reset /
+ * HomeDashboard portfolio table: search / filter / sort / count / reset /
  * URL state, My/All toggle interplay, full-scope KPI cards. Synthetic names only.
  */
 import { describe, it, expect, vi, afterEach, beforeEach, beforeAll } from 'vitest';
@@ -90,7 +90,7 @@ const urlParams = () => new URLSearchParams(screen.getByTestId('url').textConten
 beforeEach(seed);
 afterEach(cleanup);
 
-describe('H2 HomeDashboard navigation', () => {
+describe('HomeDashboard navigation', () => {
   it('keeps quick actions ahead of the portfolio and opens the selected destination', async () => {
     const navigate = vi.fn();
     render(<MemoryRouter><HomeDashboard username="tester" onNavigate={navigate} /></MemoryRouter>);

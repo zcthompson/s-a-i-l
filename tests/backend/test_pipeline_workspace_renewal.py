@@ -1,4 +1,4 @@
-"""H3 workspace renewal attention: urgency selection, evidence, legacy paths."""
+"""workspace renewal attention: urgency selection, evidence, legacy paths."""
 
 from copy import deepcopy
 from datetime import UTC, date, datetime, timedelta

@@ -1,14 +1,14 @@
 """shared-seam pins: alias payloads, import matching.
 
 - customer LIST/DETAIL payloads gain ``aliases`` (raw strings, sorted) —
-  the list carries them via ONE batched query (the H2 fixed-query
+  the list carries them via ONE batched query (the fixed-query
   convention: the customer_aliases query count must NOT scale with the
   number of accounts or aliases);
 - pipeline + rep CSV imports match name-first-then-alias; the reports
   read back ``matched_by`` ("name" | "alias") and legacy rows read back
   as "name" exactly as they matched before aliases existed.
 
-Run: pytest tests/backend/test_part14_aliases_payload.py -v
+Run: pytest tests/backend/test_customer_alias_payload.py -v
 """
 
 import csv
@@ -103,7 +103,7 @@ class TestAliasPayloads:
         finally:
             event.remove(engine, "before_cursor_execute", record)
         assert response.status_code == 200
-        # One batched alias query — never one per account (H2 defect class).
+        # One batched alias query — never one per account.
         # (The total statement count is NOT pinned here: build_customer_response
         # lazy-loads the departments relationship per customer — pre-existing,
         # out of scope for this change. The alias path is what this pin guards.)

@@ -12,7 +12,7 @@
  *
  * Node >= 25 ships a global `localStorage` that is undefined unless
  * --localstorage-file is given, and it shadows jsdom's Storage under vitest
- * (same class as the UXAudit014 root cause) — install an in-memory stub so
+ * (same class as the UxAuditRegressions root cause) — install an in-memory stub so
  * the test is independent of the Node version.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

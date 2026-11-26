@@ -88,7 +88,7 @@ def _grant(db, customer, user, role):
 
 
 def test_unscoped_department_list_is_scoped_to_callable_customers(client, db_session):
-    """F14 (Wave B): the unscoped /api/departments/ list must be limited to the
+    """the unscoped /api/departments/ list must be limited to the
     caller's readable customers — never the whole portfolio."""
     from backend.models.use_case import Customer, Department
 
@@ -129,7 +129,7 @@ def test_unscoped_department_list_is_scoped_to_callable_customers(client, db_ses
 
 
 def test_department_by_id_is_404_first(client, db_session):
-    """F16 (Wave B): out-of-scope by-id department access returns the same 404
+    """(Wave B): out-of-scope by-id department access returns the same 404
     as a missing one (oracle-closing); in-scope capability denials keep 403."""
     from backend.models.use_case import Customer, Department
 

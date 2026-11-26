@@ -1,4 +1,4 @@
-"""H0 account integrity and shared read gates, using synthetic accounts only."""
+"""Account integrity and shared read gates, using synthetic accounts only."""
 
 import json
 from datetime import UTC, datetime

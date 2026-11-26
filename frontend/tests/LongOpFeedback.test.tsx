@@ -1,5 +1,5 @@
 /**
- * Regression tests (F4 — long AI operations had no
+ * Regression tests (long AI operations had no
  * progress, no cancel, no busy state):
  *
  *   (a) the full-screen overlay is named per operation ("Scoring
@@ -157,7 +157,7 @@ function renderApp(entry = '/?view=assessment-list') {
   );
 }
 
-describe('F4 — long-operation feedback', () => {
+describe('long-operation feedback', () => {
   it('(a) the overlay names the scoring operation while the fetch is in flight', async () => {
     renderApp();
     const scoreBtn = await screen.findByText('⚡ Score');

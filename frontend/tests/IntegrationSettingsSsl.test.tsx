@@ -68,7 +68,7 @@ function mount(category: 'ai' | 'documents' | 'notifications' = 'ai') {
   return view;
 }
 
-describe('Application Settings — inference TLS trust fields (P0b)', () => {
+describe('Application Settings — inference TLS trust fields', () => {
   it('renders the TLS verification select with the three modes', async () => {
     mount();
     const select = (await screen.findByLabelText('Inference SSL verification mode')) as HTMLSelectElement;
@@ -113,7 +113,7 @@ describe('Application Settings — inference TLS trust fields (P0b)', () => {
   });
 });
 
-describe('Application Settings — Docling section (P0b, new)', () => {
+describe('Application Settings — Docling section', () => {
   it('renders the Docling section with loaded values', async () => {
     mount('documents');
     const url = (await screen.findByLabelText('Docling server URL')) as HTMLInputElement;

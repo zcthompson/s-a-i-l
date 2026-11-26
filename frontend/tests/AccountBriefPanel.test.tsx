@@ -1,6 +1,6 @@
 /**
- * H6 — AccountBriefPanel + api fns (synthetic fixtures; api mocked with the
- * vi.hoisted pattern). Rail order is pinned in U4Navigation.test.tsx.
+ * AccountBriefPanel + api fns (synthetic fixtures; api mocked with the
+ * vi.hoisted pattern). Rail order is pinned in CustomerWorkspaceNavigation.test.tsx.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';

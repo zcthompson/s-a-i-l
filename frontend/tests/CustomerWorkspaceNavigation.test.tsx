@@ -118,7 +118,7 @@ const { apiStub } = vi.hoisted(() => {
         next_cursor: null,
         more: false,
       }),
-    // F4: the constellation fetches a graph projection (an object, not a
+    // the constellation fetches a graph projection (an object, not a
     // bare list) — return a valid empty projection so the section renders.
     getCustomerIntelligenceGraph: () =>
       Promise.resolve({
@@ -153,7 +153,7 @@ vi.mock('../src/lib/api', () => ({
 vi.mock('../src/lib/websocket', () => ({
   ws: { connect: vi.fn(), disconnect: vi.fn(), subscribe: vi.fn() },
 }));
-// F4: the Intelligence → Summary section renders the Customer Intelligence
+// the Intelligence → Summary section renders the Customer Intelligence
 // Constellation (three.js Mobius canvas). jsdom has no WebGL, so stub the
 // canvas renderer at the module boundary — the dashboard navigation
 // behavior under test does not depend on the canvas internals.
@@ -314,7 +314,7 @@ describe('two-level customer workspace navigation', () => {
 
     fireEvent.click(tab('Intelligence'));
     // The Intelligence rail includes the professional-services intelligence panel.
-    // (H5 adds Activities + Tasks after Contacts; Timeline follows
+    // (adds Activities + Tasks after Contacts; Timeline follows
     // Brief — the Account 360 derived feed).
     expect(primaryTabs()).toEqual([
       'Overview', 'Sales', 'Intelligence', 'Discovery & Value', 'Team',

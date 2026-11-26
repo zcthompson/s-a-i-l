@@ -1,12 +1,12 @@
 /**
  * Regression tests for lib/api.ts:
  *
- * F2 [P0] — FastAPI 422 validation errors carry `detail` as an ARRAY of
+ * FastAPI 422 validation errors carry `detail` as an ARRAY of
  *   {loc, msg, type}; the previous `new Error(error.detail)` rendered
  *   "[object Object],[object Object]" in every error banner. Now: one
  *   "field: message" per entry (loc minus the leading route segment),
  *   joined with "; ".
- * F3 [P0] — exportPdf/exportExcel/exportCSV did `res.blob()` with no
+ * exportPdf/exportExcel/exportCSV did `res.blob()` with no
  *   `res.ok` check: a 500 downloaded the JSON error body as the "export"
  *   file (corrupt report.pdf). Now: the error is parsed (same helper)
  *   and thrown; the success path (blob) is unchanged.
@@ -30,7 +30,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('F2 — 422 array-detail error rendering (lib/api.ts)', () => {
+describe('422 array-detail error rendering (lib/api.ts)', () => {
   it('renders each 422 entry as "field: message", joined with "; "', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => fakeResponse(
       422,
@@ -63,7 +63,7 @@ describe('F2 — 422 array-detail error rendering (lib/api.ts)', () => {
   });
 });
 
-describe('F3 — export integrity (lib/api.ts)', () => {
+describe('export integrity (lib/api.ts)', () => {
   it('exportPdf: a 500 rejects with the real reason (no corrupt download)', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => fakeResponse(500, JSON.stringify({ detail: 'PDF export failed: report exceeded size limit' }))));
     await expect(api.exportPdf('Acme Corp')).rejects.toThrow('PDF export failed: report exceeded size limit');

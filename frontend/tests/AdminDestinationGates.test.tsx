@@ -83,7 +83,7 @@ beforeEach(() => {
   HTMLElement.prototype.scrollTo = vi.fn();
 });
 
-describe('F19 — admin deep links fail closed for non-admins', () => {
+describe('admin deep links fail closed for non-admins', () => {
   it('non-admin ?view=admin-users -> denied state, no Admin Dashboard', async () => {
     authState.isAdmin = false;
     renderAt('admin-users');
@@ -134,7 +134,7 @@ describe('F19 — admin deep links fail closed for non-admins', () => {
   });
 });
 
-describe('F19 — sidebar hides the admin-only New Customer entry', () => {
+describe('sidebar hides the admin-only New Customer entry', () => {
   it('non-admin: My Customers visible, New Customer hidden', () => {
     const { container } = render(
       <Sidebar {...sidebarProps} is_admin={false} userRole="rep" />

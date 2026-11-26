@@ -12,7 +12,7 @@ import { GapAnalysis } from '../src/components/GapAnalysis';
 
 // Vitest here runs without globals, so @testing-library/react's automatic
 // cleanup does not register itself — clean up between tests manually
-// (same pattern as F5CustomerUrlSync.test.tsx).
+// (same pattern as CustomerUrlSync.test.tsx).
 afterEach(() => {
   cleanup();
 });

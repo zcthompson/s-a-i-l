@@ -53,7 +53,7 @@ describe('account impact currency and coverage', () => {
   });
 });
 
-describe('H3 renewal formatters', () => {
+describe('renewal formatters', () => {
   it('formatDaysUntil: null / 0 / negative / positive / singular', () => {
     expect(formatDaysUntil(null)).toBe('date not recorded');
     expect(formatDaysUntil(0)).toBe('due today');

@@ -1,4 +1,4 @@
-"""Synthetic H1 contracts: snapshots, opportunity grain, money and bounded reads."""
+"""Synthetic contracts: snapshots, opportunity grain, money and bounded reads."""
 
 from datetime import date
 

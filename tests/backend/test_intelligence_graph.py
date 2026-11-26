@@ -1,4 +1,4 @@
-"""Customer Intelligence graph projection (F3) tests.
+"""Customer Intelligence graph projection tests.
 
 Verifies build_customer_intelligence_graph (PLAN_FEATURE_ENHANCMENTS.md):
 - central Customer node + domain hub nodes (Customer -> Domain -> Entity)

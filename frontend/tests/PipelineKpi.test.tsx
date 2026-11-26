@@ -1,5 +1,5 @@
 /**
- * H1 — dashboards carry a separate, honest partner-pipeline KPI + per-customer
+ * dashboards carry a separate, honest partner-pipeline KPI + per-customer
  * "Pipeline:" line from the SAME portfolio payload (no new request).
  */
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
@@ -71,7 +71,7 @@ const noPipeline = { ...withPipeline, pipeline: undefined, customers: withPipeli
 beforeEach(() => { impactFn.mockReset(); });
 afterEach(cleanup);
 
-describe('H1 pipeline KPI', () => {
+describe('pipeline KPI', () => {
   it('HomeDashboard: KPI + per-customer line; impact KPI untouched; unknown never $0', async () => {
     impactFn.mockResolvedValue(withPipeline);
     render(<HomeDashboard onNavigate={() => undefined} isAdmin />);
@@ -111,7 +111,7 @@ describe('H1 pipeline KPI', () => {
   });
 });
 
-describe('H3 renewals KPI + per-row line (same portfolio payload, no new request)', () => {
+describe('renewals KPI + per-row line (same portfolio payload, no new request)', () => {
   const zero = { overdue: 0, within_30: 0, within_60: 0, within_90: 0, within_180: 0, beyond_180: 0, unknown_date: 0 };
   const grp = (o: object) => ({ total: null, coverage: 'no_data', lines_included: 0, lines_excluded: 0, ...o });
   const withRenewals = {

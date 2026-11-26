@@ -75,7 +75,7 @@ async function selectProvider(value: string) {
   return select;
 }
 
-describe('Application Settings — Document Processing section (WS6)', () => {
+describe('Application Settings — Document Processing section', () => {
   it('renders the provider select and the capability matrix rows verbatim', async () => {
     mount();
     expect(await screen.findByRole('heading', { name: 'Document processing' })).toBeTruthy();

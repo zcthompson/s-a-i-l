@@ -1,5 +1,5 @@
 /**
- * H5 — ActivitiesPanel / TasksPanel / PromoteTaskButton / MyTasksBlock
+ * ActivitiesPanel / TasksPanel / PromoteTaskButton / MyTasksBlock
  * (synthetic fixtures; api mocked with the vi.hoisted pattern).
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

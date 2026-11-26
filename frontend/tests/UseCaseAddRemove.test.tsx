@@ -290,7 +290,7 @@ describe('Use-case add/remove in the customer Overview', () => {
     const emptyState = await screen.findByText('No use cases for this customer yet.');
     expect(emptyState).toBeTruthy();
     // The table-header Add button renders even with an empty list — the
-    // empty state is not a dead end (F22 pattern).
+    // empty state is not a dead end.
     const addButton = screen.getByRole('button', { name: 'Add use case' });
     expect(addButton).toBeTruthy();
     expect(addButton.hasAttribute('disabled')).toBe(false);

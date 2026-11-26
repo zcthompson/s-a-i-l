@@ -1,5 +1,5 @@
 /**
- * Regression tests (F5 — refresh/back lost the customer
+ * Regression tests (refresh/back lost the customer
  * context; the selection was component-local + a transient Home prop, and
  * the URL carried only ?view=):
  *
@@ -118,7 +118,7 @@ function NavProbe() {
   return null;
 }
 
-describe('F5 — customer-selection URL sync', () => {
+describe('customer-selection URL sync', () => {
   it('deep link ?view=customers&customer=X restores the customer dashboard on load', async () => {
     render(
       <MemoryRouter initialEntries={['/?view=customers&customer=Energy%20Test%20Company']}>

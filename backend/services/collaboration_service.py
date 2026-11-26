@@ -205,7 +205,7 @@ class CollaborationService:
             # Email delivery (EL): the settings are read EXACTLY ONCE and the
             # recipient addresses come from the fan-out query itself — the
             # query count is fixed (2 SELECTs) and never scales with the
-            # number of recipients (the S6 pin in test_part13_dv_wave1).
+            # number of recipients (the S6 pin in test_central_basis_reads).
             eff = email_service.effective_email_settings(db)
             if email_service.delivery_ready(eff):
                 for obj, email in staged:

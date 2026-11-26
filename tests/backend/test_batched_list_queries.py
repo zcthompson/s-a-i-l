@@ -5,7 +5,7 @@ Each pin records the SQL statement families executed by the surface and
 shows the family count is CONSTANT as the row count grows (was one query
 per row / per batch before the batch).
 
-Run: pytest tests/backend/test_arch_rerecon_a7.py -v
+Run: pytest tests/backend/test_batched_list_queries.py -v
 """
 
 import os

@@ -129,7 +129,7 @@ describe('OpportunitiesPanel', () => {
   });
 });
 
-describe('OpportunitiesPanel — renewal_attention (H3)', () => {
+describe('OpportunitiesPanel — renewal_attention', () => {
   beforeEach(() => { vi.clearAllMocks(); });
   it('renders the Renewal Attention label, severity and the Partner Pipeline source', async () => {
     apiMock.getAccountWorkspace.mockResolvedValue({
@@ -149,7 +149,7 @@ describe('OpportunitiesPanel — renewal_attention (H3)', () => {
   });
 });
 
-describe('OpportunitiesPanel — contact_coverage (H4)', () => {
+describe('OpportunitiesPanel — contact_coverage', () => {
   beforeEach(() => { vi.clearAllMocks(); });
   it('renders the backend title/detail/evidence verbatim with the Contact Coverage label', async () => {
     apiMock.getAccountWorkspace.mockResolvedValue({

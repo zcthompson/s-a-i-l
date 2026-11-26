@@ -1,4 +1,4 @@
-"""Tests for admin user-management endpoints and UserService (WS4).
+"""Tests for admin user-management endpoints and UserService.
 
 Covers: user listing with role, profile/role edits, password reset,
 deactivate/activate, delete (with junction cleanup), admin-only auth,

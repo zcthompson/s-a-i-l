@@ -203,7 +203,7 @@ with patch("backend.auth.hash_password", side_effect=lambda p: _FAKE_HASH):
             assert r.json()["value"] == "xoxb-test"
 
     class TestInferenceEnvOverride:
-        """DB-stored inference settings override .env at runtime (WS-H4)."""
+        """DB-stored inference settings override .env at runtime (inference settings)."""
 
         def test_effective_settings_env_baseline(self, db_session, monkeypatch):
             from backend.services.config_service import effective_inference_settings

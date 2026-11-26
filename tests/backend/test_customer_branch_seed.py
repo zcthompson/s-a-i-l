@@ -316,7 +316,7 @@ def test_seed_customers_from_csv_skips_excluded_rows(db_session, tmp_path):
         assert db_session.query(Customer).filter_by(name=absent).first() is None
 
 
-# ── H2: batched sales context on the LIST payload ───────────────────────────
+# ── batched sales context on the LIST payload ───────────────────────────
 
 
 def _mk_user(db, username, *, sales_role=None, display_name=None):
@@ -332,7 +332,7 @@ def _mk_user(db, username, *, sales_role=None, display_name=None):
 
 
 def test_list_payload_carries_batched_sales_context(client, db_session, admin):
-    """H2: the LIST route carries the SAME sales context as the detail route
+    """the LIST route carries the SAME sales context as the detail route
     (owner filter/sort run off the authorized payload — no per-account
     lookups in the UI)."""
     rep = _mk_user(db_session, "ctx_rep", sales_role="rep", display_name="Rep One")
@@ -378,7 +378,7 @@ def test_list_payload_carries_batched_sales_context(client, db_session, admin):
 
 
 def test_list_sales_context_is_fixed_batch_queries(client, db_session, admin):
-    """H2 scale pin: the list route resolves the sales context in exactly
+    """Batched-query scale pin: the list route resolves the sales context in exactly
     FOUR batch statements (owners / managers / inside / ops) regardless of
     list size — never one lookup per account."""
     from sqlalchemy import event

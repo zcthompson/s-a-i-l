@@ -1,5 +1,5 @@
 /**
- * H5 — promotion wiring on OpportunitiesPanel + the five new notification
+ * promotion wiring on OpportunitiesPanel + the five new notification
  * types rendering in NotificationBell (verbatim payload; no logic change).
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

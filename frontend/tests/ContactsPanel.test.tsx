@@ -1,5 +1,5 @@
 /**
- * H4 — ContactsPanel component tests (synthetic fixtures only).
+ * ContactsPanel component tests (synthetic fixtures only).
  * Mocks the api module (repo pattern: vi.hoisted + vi.mock factory).
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

@@ -48,7 +48,7 @@ def test_empty_deterministic_and_pdf(db_session, account):
     assert 'No contacts recorded' in a['markdown']
     assert '<script>' not in a['markdown']
     # The honest empty case: 8 unavailable sections including rep-maintained deals; attention still fires
-    # (the H4 contact-coverage gap card + discovery cards) and the H4
+    # (the contact-coverage gap card + discovery cards) and the H4
     # null-basis string is byte-identical.
     assert a['markdown'].count('- Not recorded.') == 8
     assert a['sections']['attention']['available']

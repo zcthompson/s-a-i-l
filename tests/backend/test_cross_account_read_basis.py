@@ -1,5 +1,4 @@
-"""W2 pins: central-policy basis for cross-account read
-surfaces and import reads (route reads).
+"""Central-policy basis pins for cross-account read surfaces and import reads.
 
 Every surface here moved from a legacy junction check to the central
 ``sales_access`` basis:
@@ -16,7 +15,7 @@ Every surface here moved from a legacy junction check to the central
 - S9 pipeline import detail → ``customer_scope`` (admin → all); the
   totals cover exactly that scope.
 
-Run: pytest tests/backend/test_part13_dv_wave2.py -v
+Run: pytest tests/backend/test_cross_account_read_basis.py -v
 """
 
 import os
@@ -130,7 +129,7 @@ def _count_families(db_session, call):
 
 def _grow_team(db_session, n: int, per_customer=None) -> None:
     """Add ``n`` more team accounts owned by w2_rep (row-scale axis, the
-    W1/H2 pin pattern); ``per_customer(customer_id)`` seeds surface rows."""
+    central-policy and batched-query pin pattern); ``per_customer(customer_id)`` seeds surface rows."""
     from backend.models.use_case import Customer, CustomerUser, User
 
     rep_id = db_session.query(User.id).filter(User.username == "w2_rep").scalar()
@@ -266,7 +265,7 @@ def test_s7_analytics_unscoped_uses_customer_scope(client, world):
 
 
 def test_s7_analytics_predictive_unassigned_g6(client, world):
-    """G6/F5: unassigned use case = ``can(CAP_READ, None)`` → admin only.
+    """unassigned use case = ``can(CAP_READ, None)`` → admin only.
     Delta vs the old ``is_admin`` rule: none (same 403, same message)."""
     for user in ("w2_sm", "w2_rep", "w2_aud", "w2_sad", "w2_is", "w2_out"):
         r = client.get(f"/api/analytics/predictive/{world['uc_none']}/", headers=_token(user))
@@ -277,7 +276,7 @@ def test_s7_analytics_predictive_unassigned_g6(client, world):
 
 
 def test_s7_analytics_generate_prediction_gates(client, world):
-    """G6/F5 for /predictions/generate/: unassigned → ``can(CAP_EDIT, None)``
+    """For /predictions/generate/: unassigned → ``can(CAP_EDIT, None)``
     (admin only, unchanged); team UC passes for SM; outsider 404-first."""
     with patch("backend.services.prediction_service.AIPredictionService.generate",
                new=AsyncMock(return_value={"ok": True})):
@@ -475,7 +474,7 @@ def test_s8_rvtools_list_fixed_query_families(client, db_session, world, rvtools
     assert _count_families(db_session, call) == base
 
 
-# ── S9 pipeline import detail (F12 totals over the central scope) ───────
+# ── S9 pipeline import detail (totals over the central scope) ───────
 
 
 @pytest.fixture()
@@ -505,7 +504,7 @@ def _detail(client, user, import_id):
 def test_s9_pipeline_detail_uses_customer_scope(client, world, pipeline):
     sm = _detail(client, "w2_sm", pipeline)  # team accounts (was: empty)
     assert [m["customer_id"] for m in sm["matched"]] == [world["team"]]
-    assert sm["matched"][0]["est_acv_total"] == 100.0  # F12: totals == the visible scope only
+    assert sm["matched"][0]["est_acv_total"] == 100.0  # totals == the visible scope only
     assert [row["customer_id"] for row in sm["pipeline_rows"]] == [world["team"]]
     assert sm["visible_customer_count"] == 1 and sm["matched_out_of_scope"] == 2
 

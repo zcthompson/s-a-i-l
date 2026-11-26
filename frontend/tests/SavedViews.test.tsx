@@ -230,7 +230,7 @@ describe('PortfolioFilterBar — saved views', () => {
     expect(screen.queryByRole('button', { name: 'Reset filters' })).toBeNull();
   });
 
-  it('saves the bar state as the H2 URL params (null = default) verbatim', async () => {
+  it('saves the bar state as the URL params (null = default) verbatim', async () => {
     apiMock.saveView.mockResolvedValue({ view: view(), created: true });
     render(<Harness />);
     fireEvent.change(screen.getByRole('searchbox', { name: 'Search customers' }), { target: { value: 'alpha' } });

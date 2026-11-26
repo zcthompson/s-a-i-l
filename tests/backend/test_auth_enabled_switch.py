@@ -1,4 +1,4 @@
-"""A-10 (operator ruling 2026-11-01): the SAIL_AUTH_ENABLED feature switch.
+"""The SAIL_AUTH_ENABLED feature switch.
 
 SAIL_API_KEYS reads like a credential but used to double as the auth
 feature switch (non-empty → AUTH_ENABLED). The ruling: split it into an

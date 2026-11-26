@@ -1,4 +1,4 @@
-/** H2 — pure portfolioNav unit tests (codec, filter, sort, count). Synthetic names only. */
+/** pure portfolioNav unit tests (codec, filter, sort, count). Synthetic names only. */
 import { describe, it, expect } from 'vitest';
 import {
   applyNavPatch, countLabel, defaultNavState, filterRows, isFiltered, matchesText, navStateToSearchParams,

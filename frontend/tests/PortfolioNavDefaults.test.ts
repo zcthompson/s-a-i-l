@@ -1,5 +1,5 @@
 /** portfolioNav alias search + the additive per-surface defaults
- *  argument. Synthetic names only. Omitted defaults = the H2 behavior. */
+ *  argument. Synthetic names only. Omitted defaults = the behavior. */
 import { describe, it, expect } from 'vitest';
 import {
   defaultNavState, filterRows, isFiltered, navStateToSearchParams, parseNavState, resetNavState, searchText,
@@ -16,7 +16,7 @@ const rows: PortfolioNavRow[] = [
   { id: 3, name: 'Cobalt', aliases: [], knownMetadata: true },
 ];
 
-describe('A7 alias search', () => {
+describe('alias search', () => {
   it('a query matching an alias finds the row (case-insensitive substring)', () => {
     const st = { ...defaultNavState(), q: 'qp grou' };
     expect(filterRows(rows, st).map(r => r.id)).toEqual([1]);
@@ -34,7 +34,7 @@ describe('A7 alias search', () => {
   });
 });
 
-describe('B1 defaultSort name/asc', () => {
+describe('defaultSort name/asc', () => {
   it('an unfiltered URL parses to name/asc', () => {
     const s = parseNavState(params('view=customers'), AZ);
     expect(s.sort).toBe('name');
@@ -82,7 +82,7 @@ describe('defaultPageSize 10', () => {
   });
 });
 
-describe('omitted defaults = H2 behavior', () => {
+describe('omitted defaults = behavior', () => {
   it('parse/serialize/reset/isFiltered are unchanged', () => {
     const s = parseNavState(params(''));
     expect(s).toEqual(defaultNavState());

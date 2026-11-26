@@ -4,7 +4,7 @@ CRM prerequisites:
 
 * ``CAP_OPPORTUNITIES`` / ``CAP_FORECASTS`` / ``CAP_COMPETITORS`` activate the
   already-reserved section vocabulary (``models/account_membership.py``
-  ACCOUNT_SECTIONS) with the H4 matrix shape: owner-level writes; inside-sales
+  ACCOUNT_SECTIONS) with the matrix shape: owner-level writes; inside-sales
   gated on a ``contribute`` grant for the MATCHING section (a grant for
   another section never confers it); legacy junction-member parity; auditor /
   sales_admin / ps_admin denied.
@@ -76,7 +76,7 @@ def admin(db_session):
     return u
 
 
-# ── capability matrix pins (the H4 shape, applied to the reserved sections) ─
+# ── capability matrix pins (the shape, applied to the reserved sections) ─
 
 
 CRM_CAPS = (
@@ -99,7 +99,7 @@ def test_new_caps_are_part_of_the_resolver_vocabulary():
     ({"membership_roles": {1: ["primary_owner"]}}, 1, True),
     ({"membership_roles": {1: ["co_owner"]}}, 1, True),
     ({"membership_roles": {1: ["sales_ops"]}}, 1, True),
-    # legacy junction member: content-write parity (H4 matrix row).
+    # legacy junction member: content-write parity.
     ({"junction_roles": {1: "member"}}, 1, True),
     # inside-sales: gated on a contribute grant for the MATCHING section only
     # (the mixed-grants case is covered per-cap in
@@ -128,7 +128,7 @@ def test_crm_capability_matrix(cap, section, context, customer_id, expected):
 
 @pytest.mark.parametrize("cap, section", CRM_CAPS)
 def test_crm_capability_fail_closed_without_section_argument(cap, section):
-    # The H0(d) defect class: a write gate that forgets the section must NOT
+    # The section-gate defect class: a write gate that forgets the section must NOT
     # let a bare inside_sales membership write. Without ``section`` the
     # resolver defaults fail-closed.
     user = {"username": "synthetic_e0_policy_user", "customer_ids": [1],
