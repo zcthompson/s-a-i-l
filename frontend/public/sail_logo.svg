@@ -10,6 +10,5 @@
   <path d="M33 10 L33 46 L14 46 Z" fill="url(#g)"/>
   <path d="M36 16 L36 46 L52 46 Z" fill="#6fbfc8"/>
   <path d="M10 50 H54 L48 56 H16 Z" fill="#eef7f8"/>
-  <text x="74" y="36" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="#0b4f6c" letter-spacing="1">S-A-I-L</text>
-  <text x="75" y="52" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9.5" fill="#4f5f70" letter-spacing="0.4">SALES ANALYTICS &amp; INTELLIGENCE LAUNCHPAD</text>
+  <text x="74" y="41" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="#0b4f6c" letter-spacing="1">S-A-I-L</text>
 </svg>
