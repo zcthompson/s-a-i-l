@@ -5,7 +5,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-# Connection trust model (docs/archive/PLAN_LDAP_AD_AUTH.md P0b): full = verify chain +
+# Connection trust model: full = verify chain +
 # hostname (default, today's behavior); skip = TLS on, verification off
 # (high-risk); ca = verify against an uploaded CA bundle only.
 SslVerifyMode = Literal["full", "skip", "ca"]
@@ -80,7 +80,7 @@ class InferenceConfig(BaseModel):
 class DoclingConfig(BaseModel):
     """Docling Serve configuration (admin-editable; DB values override .env).
 
-    docs/archive/PLAN_LDAP_AD_AUTH.md P0b — Docling previously had NO admin surface
+    Docling previously had NO admin surface
     (env-only). ``api_key`` is deliberately absent: it is env/Secret-only,
     never persisted or returned (empty = no Authorization header, current
     behavior).
@@ -92,7 +92,7 @@ class DoclingConfig(BaseModel):
 
 
 class DocumentProcessingConfig(BaseModel):
-    """Customer Knowledge document provider (Part 13 WS6; DB overrides .env).
+    """Customer Knowledge document provider (DB overrides .env).
 
     ``provider`` is ``docling`` or ``azure_document_intelligence``. The Azure
     API key is env/Secret-only; ``api_key_configured`` reports whether it is

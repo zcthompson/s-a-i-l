@@ -243,8 +243,8 @@ def _notification(db, task, username, event, completer=None, recipient=None,
                   customer_name=None):
     """Stage the collaboration notification for a task event.
 
-    ``recipient`` / ``customer_name`` are pre-resolution seams (re-recon
-    A-7): a batched caller (the task notification evaluator) passes the
+    ``recipient`` / ``customer_name`` are pre-resolution seams: a batched caller (the task
+    notification evaluator) passes the
     already-resolved row/name so the per-task lookups are skipped; the
     single-event callers (assign / reassign / complete) omit them and the
     lookups run exactly as before.

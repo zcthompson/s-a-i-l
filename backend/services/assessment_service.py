@@ -6,7 +6,7 @@ first (or its use cases deleted). Archived rounds are read-only: their use
 cases cannot be edited, scored, or deleted, but they remain exportable
 through the established export endpoints.
 
-Round types (Part 13 WS5, R1/R3/R5): ``ai`` (the default — AI readiness /
+Round types: ``ai`` (the default — AI readiness /
 use-case scoring) or ``generic`` (non-AI customer discovery). The
 one-active-round invariant spans both types. AI-only surfaces (AI scoring,
 manual dimension scoring, prediction generation) refuse generic-round use

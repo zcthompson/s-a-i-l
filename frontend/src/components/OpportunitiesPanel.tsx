@@ -1,19 +1,19 @@
 import { DealPromotion } from './DealPromotion';
 import { useDealSources } from '../lib/useDealSources';
 /**
- * CHANGELOG 0.1.0 U5 (data: U1) — Opportunities & Attention panel.
+ * Opportunities & Attention panel.
  *
  * Synthesizes actionable information across Technology Inventory, Sales
- * Notes, Customer Knowledge, Assessments, and Use Cases (directive 27) as
+ * Notes, Customer Knowledge, Assessments, and Use Cases as
  * typed cards — Observed Gap, Growth Opportunity, Lifecycle Risk,
- * Discovery Needed, Recommended Follow-up (directive 28). Every card shows
- * WHY it exists via its supporting evidence (directive 29) and the panel
+ * Discovery Needed, Recommended Follow-up. Every card shows
+ * WHY it exists via its supporting evidence and the panel
  * carries the Generate Sales Evaluation call to action near the summary
- * (directive 30) so the Sales workflow is one click away.
+ * so the Sales workflow is one click away.
  *
  * Data comes from the deterministic account-workspace endpoint
  * (services/customer_intelligence.py::get_account_workspace) — nothing is
- * invented client-side. Severity colors are semantic (directive 43):
+ * invented client-side. Severity colors are semantic:
  * red = critical risk, amber = attention, neutral = informational.
  */
 import { useEffect, useState } from 'react';

@@ -1,4 +1,4 @@
-"""E6 deal and pipeline-stage request contracts (audit fields are never client-set)."""
+"""Deal and pipeline-stage request contracts (audit fields are never client-set)."""
 
 from datetime import date
 

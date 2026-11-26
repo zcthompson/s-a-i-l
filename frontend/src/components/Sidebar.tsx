@@ -22,7 +22,7 @@ interface SidebarProps {
   onToggle: () => void;
   is_admin?: boolean;
   userRole?: string;
-  /** D3: non-admin sales managers create admin-reviewed prospect accounts. */
+  /** Non-admin sales managers create admin-reviewed prospect accounts. */
   canCreateProspects?: boolean;
 }
 
@@ -51,7 +51,7 @@ export function Sidebar({ activeView, onNavigate, username, onLogout, isCollapse
     }
     if (item.id === 'customers' && !is_admin) {
       // F19: account creation is admin-only on the server (POST /api/customers/)
-      // except D3 prospects for sales managers — no other role sees an entry
+      // Except prospects for sales managers — no other role sees an entry
       // that would 403 on submit.
       if (canCreateProspects) {
         return [{ ...item, children: item.children?.map((child) => (

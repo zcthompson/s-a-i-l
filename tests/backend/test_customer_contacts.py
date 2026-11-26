@@ -237,7 +237,7 @@ def test_workspace_card_and_graph_stability(db_session, account, monkeypatch):
     assert service.contact_coverage_card(service.contact_coverage_for(db_session, cid), customer.name) is None
     assert not any(c["type"] == "contact_coverage" for c in intelligence.get_account_workspace(db_session, cid)["opportunities"])
     graph_after = intelligence.build_customer_intelligence_graph(db_session, cid)
-    # D7: the graph uses the panel synthesis, so the coverage card appears as a
+    # The graph uses the panel synthesis, so the coverage card appears as a
     # Risks / Gaps node while gaps exist and disappears once coverage is complete.
     # No new domain is added; nodes outside the risk domain are unaffected.
     coverage = [n for n in graph_before["nodes"] if n["type"] == "risk" and n["status"] == "contact_coverage"]

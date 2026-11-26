@@ -1,6 +1,6 @@
 /**
- * Regression tests for F1 (WP23 [P0]): customer-detail cross-view buttons
- * dead-end or open the WRONG use case (WP23a step 0 — RED-first).
+ * Regression tests for F1 ([P0]): customer-detail cross-view buttons
+ * dead-end or open the WRONG use case (RED-first).
  *
  * Reported behavior (pre-fix, captured by these tests):
  * Customer Overview → click a use case → detail tab:
@@ -14,7 +14,7 @@
  *     a different use case (even a different customer's) than the one the
  *     user was just looking at.
  *
- * The fix (WP23a step 0): the shared UseCaseDetail component's callbacks hand
+ * The fix: the shared UseCaseDetail component's callbacks hand
  * the use case up to Home (setSelectedUseCase + setView) before/with the view
  * change, so each surface renders FOR THAT use case.
  *
@@ -143,10 +143,10 @@ afterAll(() => {
 // Drive the real app path to the customer detail tab: My Customers → select
 // the stub customer → Overview → click the use case row (detail tab).
 // NOTE: the detail-tab buttons carry the generic aria-label
-// "Customer dashboard action" (WP23 F11 — fixed in WP23g), so the visible
+// "Customer dashboard action" (F11), so the visible
 // text (not the accessible name) is the probe, scoped to the section that
 // contains them.
-// CHANGELOG 0.1.0 U4 — navigation is now two-level (primary areas + per-area
+// navigation is now two-level (primary areas + per-area
 // secondary rail). Helpers drive the real SegmentedNav tabs.
 const primaryTab = (label: string) => screen.getByRole('tab', { name: `Navigate to ${label}` });
 
@@ -174,7 +174,7 @@ function renderApp() {
   );
 }
 
-describe('F1 — customer-detail cross-view handoff (WP23a step 0)', () => {
+describe('F1 — customer-detail cross-view handoff', () => {
   it('View Scoring Breakdown reaches the scoring surface for that use case (no dead-end)', async () => {
     renderApp();
     const section = await openUseCaseDetail();

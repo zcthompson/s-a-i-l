@@ -1,4 +1,4 @@
-"""Synthetic E4 scope, coverage and fixed-query checks."""
+"""Synthetic scope, coverage and fixed-query checks."""
 
 from datetime import UTC, datetime
 

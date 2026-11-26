@@ -73,7 +73,7 @@ MONEY_COLUMNS = {
 
 # Renewal rows record software/hardware the customer actually runs (they are
 # renewing it), so each one also populates the customer's structured
-# technology inventory (charter §21). Deterministic derivation only:
+# technology inventory. Deterministic derivation only:
 # the product name is the Product Offering Group (falling back to the
 # Product Description), the category comes from an explicit table of the
 # offering groups observed in partner pipeline reports ("other" fallback —
@@ -333,7 +333,7 @@ async def import_pipeline(db, upload, user, request=None):
         raise HTTPException(400, "Only .csv pipeline reports are accepted")
     data = await read_upload_bytes(upload)
     header, raw_rows = _parse(data)
-    # Part 14 import remediation (operator rules 2026-11-01): each row maps to
+    # each row maps to
     # an existing customer by name OR alias, case-insensitive (two fixed
     # queries); a row that does not resolve to exactly one customer is
     # skipped and reported — it never blocks the file, never creates a
@@ -413,7 +413,7 @@ async def import_pipeline(db, upload, user, request=None):
             "amount_issues": len(amount_issues),
         })
         from backend.services import sales_access
-        # A-1 re-recon ruling (2026-11-01, R1 continuation): the create
+        # The create
         # response uses the same central READ scope as GET /{id}/ so the
         # same batch shows identical numbers on both.
         customer_ids = None if sales_access.is_unrestricted(user) else sales_access.customer_scope(user, db)
@@ -455,7 +455,7 @@ def _detail(db, batch, customer_ids=None, include_rows=False):
     matched = []
     for customer_id, account_rows in grouped.items():
         totals = _totals(account_rows)
-        # Part 14: how the rows matched — derived read-time from the raw
+        # how the rows matched — derived read-time from the raw
         # supplied names. A row matched by name carries a norm-equal customer
         # name; an alias never norm-equals a customer name, so legacy rows
         # (pre-alias) read back as "name" exactly as they matched.

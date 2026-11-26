@@ -17,7 +17,7 @@ class SalesEvaluationBase(BaseModel):
 class SalesEvaluationCreate(SalesEvaluationBase):
     """Schema for creating a sales evaluation.
 
-    S-A-I-L P5: ``persona`` selects the audience context for persona-tailored
+``persona`` selects the audience context for persona-tailored
     sections (see backend/services/sales_personas.py — the centralized
     registry; GET /api/sales-evaluations/personas/ lists valid values).
     Omit for a generic (legacy) evaluation.
@@ -71,7 +71,7 @@ class SalesEvaluationResponse(SalesEvaluationBase):
     risk_factors: list[dict[str, Any]] | None = None
     sales_approach: dict[str, Any] | None = None
     gaps: list[dict[str, Any]] | None = None
-    # S-A-I-L P5 — persona-driven evaluations (nullable: legacy rows have None)
+    # persona-driven evaluations (nullable: legacy rows have None)
     persona: str | None = None
     source_context: dict[str, Any] | None = None
     persona_sections: dict[str, Any] | None = None
@@ -82,7 +82,7 @@ class SalesEvaluationResponse(SalesEvaluationBase):
 
 
 class SalesPersona(BaseModel):
-    """One entry of the centralized sales persona registry (S-A-I-L P5).
+    """One entry of the centralized sales persona registry.
 
     The registry (backend/services/sales_personas.py) is the single source
     of truth; this schema is the API contract for the
@@ -102,6 +102,6 @@ class SalesPersona(BaseModel):
 
 
 class SalesEvaluationPreviewRequest(BaseModel):
-    """Pre-generation view request (S-A-I-L P5, v2 item 32)."""
+    """Pre-generation view request."""
     customer_id: int
     persona: str | None = None

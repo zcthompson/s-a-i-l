@@ -1,7 +1,6 @@
 """DoclingService unit tests — mocked httpx transport (no Docling container).
 
-Covers the conversion contract (PLAN.md part 43 / CHANGELOG 0.1.1
-items 1, 5, 6, 13): status-authoritative parsing (HTTP 200 is NOT success),
+Covers the conversion contract: status-authoritative parsing (HTTP 200 is NOT success),
 the failure classes (unavailable / timeouts / unsupported / malformed /
 empty / failure / partial_success), API-key header behavior, and the
 Markdown short-circuit normalization.

@@ -44,7 +44,7 @@ def _require_edit_for_use_case(user: dict, db: Session, use_case_id: int) -> Non
     row = db.query(UseCase.customer_id).filter(UseCase.id == use_case_id).first()
     if row is None or row[0] is None:
         return
-    # 404-first (R4/Q7): out of read scope == missing; in-scope capability
+    # 404-first: out of read scope == missing; in-scope capability
     # denials keep their exact 403. The detail matches the missing-use-case
     # pattern (id echoed) so a by-id probe is indistinguishable.
     if not sales_access.can(user, db, sales_access.CAP_READ, row[0]):
@@ -54,7 +54,7 @@ def _require_edit_for_use_case(user: dict, db: Session, use_case_id: int) -> Non
 
 
 def _require_ai_round(db: Session, use_case_id: int) -> None:
-    """422 when the use case belongs to a generic round (Part 13 WS5, R5).
+    """422 when the use case belongs to a generic round.
 
     Legacy use cases with no round resolve to 'ai' and pass. Runs after the
     access gates so out-of-scope/denied callers keep their 404/403.
@@ -95,7 +95,7 @@ async def score_use_case(request: ScoringRequest, req: Request, db: Session = De
         db.commit()
         return result
     except ValueError as e:
-        # 404-first (Part 13 DV wave): a MISSING use case is not a
+        # 404-first: a MISSING use case is not a
         # capability denial — the same 404 as an out-of-scope id.
         if f"Use case {request.use_case_id} not found" == str(e):
             raise HTTPException(status_code=404, detail=str(e))
@@ -139,7 +139,7 @@ def scoring_health(req: Request):
 @router.post("/manual/", response_model=ManualScoreResponse)
 async def manual_score_use_case(request: ManualScoreRequest, req: Request, db: Session = Depends(get_db)):
     """Manually override a use case's scores (bypasses AI).
-    
+
     Requires admin or customer owner role.
     """
     user = get_user_from_request(req)
@@ -169,7 +169,7 @@ async def manual_score_use_case(request: ManualScoreRequest, req: Request, db: S
 @router.post("/validate/", response_model=ScoringValidationResponse)
 async def validate_scoring_response(request: ScoringValidationRequest, req: Request):
     """Validate scoring AI response for correctness.
-    
+
     Checks score ranges, dimension completeness, and data consistency.
     """
     if get_user_from_request(req) is None:
@@ -184,7 +184,7 @@ async def validate_scoring_response(request: ScoringValidationRequest, req: Requ
 @router.get("/dimensions/config/")
 def get_dimension_configs(req: Request, version: str = "1", db: Session = Depends(get_db)):
     """Get dimension configuration versions.
-    
+
     Returns active dimension configs for the specified version.
     """
     if get_user_from_request(req) is None:
@@ -196,19 +196,19 @@ def get_dimension_configs(req: Request, version: str = "1", db: Session = Depend
 @router.post("/dimensions/config/", response_model=DimensionConfigResponse)
 async def create_dimension_config(config: DimensionConfigCreate, req: Request, db: Session = Depends(get_db)):
     """Create a new dimension configuration version.
-    
+
     Only admins can create new dimension versions.
     """
     user = get_user_from_request(req)
     if user is None:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     if not user.get("is_admin"):
         raise HTTPException(status_code=403, detail="Admin access required")
-    
+
     if ScoringService.dimension_version_exists(db, config.version):
         raise HTTPException(status_code=409, detail=f"Version {config.version} already exists")
-    
+
     return ScoringService.create_dimension_config(
         db, config.version, config.name, config.weight
     )
@@ -234,10 +234,10 @@ async def approve_score_history(history_id: int, req: Request, db: Session = Dep
     user = get_user_from_request(req)
     if user is None:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     if not user.get("is_admin"):
         raise HTTPException(status_code=403, detail="Admin access required")
-    
+
     history = ScoringService.get_score_history_entry(db, history_id)
     if not history:
         raise HTTPException(status_code=404, detail="Score history entry not found")
@@ -245,9 +245,9 @@ async def approve_score_history(history_id: int, req: Request, db: Session = Dep
 
     if history.status != "draft":
         raise HTTPException(status_code=400, detail=f"Cannot approve score in '{history.status}' status")
-    
+
     use_case = ScoringService.approve_history(db, history)
-    
+
     return ManualScoreResponse(
         use_case=UseCaseResponse(**use_case.to_dict()) if use_case else None,
         scores=ScoringResponse(
@@ -267,10 +267,10 @@ async def reject_score_history(history_id: int, req: Request, db: Session = Depe
     user = get_user_from_request(req)
     if user is None:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     if not user.get("is_admin"):
         raise HTTPException(status_code=403, detail="Admin access required")
-    
+
     history = ScoringService.get_score_history_entry(db, history_id)
     if not history:
         raise HTTPException(status_code=404, detail="Score history entry not found")
@@ -278,9 +278,9 @@ async def reject_score_history(history_id: int, req: Request, db: Session = Depe
 
     if history.status != "draft":
         raise HTTPException(status_code=400, detail=f"Cannot reject score in '{history.status}' status")
-    
+
     ScoringService.reject_history(db, history)
-    
+
     return {
         "message": f"Score {history_id} rejected",
         "status": history.status,

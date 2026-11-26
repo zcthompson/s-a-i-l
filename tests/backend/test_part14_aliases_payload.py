@@ -1,4 +1,4 @@
-"""Part 14 (A4/A5) — shared-seam pins: alias payloads, import matching.
+"""shared-seam pins: alias payloads, import matching.
 
 - customer LIST/DETAIL payloads gain ``aliases`` (raw strings, sorted) —
   the list carries them via ONE batched query (the H2 fixed-query
@@ -106,7 +106,7 @@ class TestAliasPayloads:
         # One batched alias query — never one per account (H2 defect class).
         # (The total statement count is NOT pinned here: build_customer_response
         # lazy-loads the departments relationship per customer — pre-existing,
-        # out of scope for Part 14. The alias path is what this pin guards.)
+        # out of scope for this change. The alias path is what this pin guards.)
         assert _family_counts(statements, "customer_aliases") == 1
         baseline_alias_queries = _family_counts(statements, "customer_aliases")
 
@@ -210,7 +210,7 @@ class TestImportMatching:
             customer_id=alpha.id).count() == 1
 
     def test_pipeline_name_colliding_with_foreign_alias_is_skipped(self, client, db_session):
-        # Defense pin (Part 14 import remediation): names and aliases are
+        # Defense pin: names and aliases are
         # unique by rule, but if a foreign alias's norm collided with a
         # customer name (raw-DB legacy), the row must be reported as
         # ambiguous — never silently routed to either customer.

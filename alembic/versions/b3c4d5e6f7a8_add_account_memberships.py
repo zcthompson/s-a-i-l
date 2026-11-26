@@ -4,7 +4,7 @@ Revision ID: b3c4d5e6f7a8
 Revises: a2b3c4d5e6f7
 Create Date: 2026-10-15
 
-RBAC directive. ``account_memberships`` holds the per-account role grants
+RBAC model. ``account_memberships`` holds the per-account role grants
 (primary_owner / co_owner / sales_ops / inside_sales + inside-sales section
 grants). ``customers.ownership_status`` ('needs_review') marks placeholder
 accounts for the admin ownership-review queue.

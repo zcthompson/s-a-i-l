@@ -169,7 +169,7 @@ class TestGraphProjection:
         # types) plus their domain hubs — no tech/note/UC/assessment nodes.
         entity_types = {n["type"] for n in g["nodes"]} - {"customer", "domain"}
         assert entity_types <= {"risk", "opportunity"}
-        # D7: the panel's contact-coverage gap ("No contacts recorded") is an
+        # The panel's contact-coverage gap ("No contacts recorded") is an
         # honest gap card too, shown under Risks / Gaps.
         assert all(n["status"] in ("discovery_needed", "contact_coverage")
                    for n in g["nodes"] if n["type"] in ("risk", "opportunity"))
@@ -273,7 +273,7 @@ class TestGraphRouteAuth:
         _workspace_customer(db_session, 1)
         _workspace_customer(db_session, 2)
         headers = self._member_headers(db_session, 2)
-        # 404-first (R4/Q7): out-of-scope is the same 404 as a missing customer.
+        # 404-first: out-of-scope is the same 404 as a missing customer.
         assert client.get("/api/customers/1/intelligence/graph/", headers=headers).status_code == 404
 
     def test_member_200_and_admin_200(self, client, db_session):

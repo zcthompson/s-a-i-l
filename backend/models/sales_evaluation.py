@@ -18,7 +18,7 @@ class SalesEvaluation(Base):
     growth_opportunities = sa.Column(sa.JSON, nullable=True)
     risk_factors = sa.Column(sa.JSON, nullable=True)
     sales_approach = sa.Column(sa.JSON, nullable=True)
-    # S-A-I-L P5 — persona-driven evaluations (CHANGELOG 0.0.80 items 27-39):
+    # persona-driven evaluations:
     # the audience context (persona) under which the evaluation was generated,
     # the source-context metadata (provenance: which sources + indicators the
     # engine consumed), and the persona-tailored section set. All nullable so

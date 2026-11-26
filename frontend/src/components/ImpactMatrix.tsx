@@ -327,7 +327,7 @@ export function ImpactMatrix({ customerId, onBack, section = 'all' }: ImpactMatr
   // Group by department for colored bubbles. Departments are ranked by their
   // average readiness score (highest first; unscored departments last), so the
   // legend — and the cat-color assignment that follows it — present the top-
-  // scoring departments first, then the next-lower, and so on (WP30).
+  // scoring departments first, then the next-lower, and so on.
   const departments = data?.points.map(p => p.department).filter(Boolean) ?? [];
   const deptScoreSum: Record<string, number> = {};
   const deptScoreCount: Record<string, number> = {};

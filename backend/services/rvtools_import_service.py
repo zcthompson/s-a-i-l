@@ -376,15 +376,14 @@ def _customer(db, name, customer_ids):
 def _target(db, user, customer_name):
     """Resolve the import target to an EXISTING customer by name or alias.
 
-    Part 14 import remediation (operator rules 2026-11-01): the target is a
+     the target is a
     customer name OR alias, case-insensitive; imports never create a customer
     (the former new-temporary-customer path is removed). A workbook is one
     customer, so a target that does not resolve refuses the file — missing,
     ambiguous and out-of-scope are the same 404 (no existence oracle).
     """
     customer, matched_by = CustomerMatcher(db).resolve(customer_name)
-    # Central CAP_INTEL_UPLOADS write basis (Part 13 DV wave — DV11, ruling
-    # R1): scope via customer_scope (404-first), then the intel-upload
+    # Central CAP_INTEL_UPLOADS write basis: scope via customer_scope (404-first), then the intel-upload
     # capability gate — aligned with the rep-intelligence path.
     if customer is None or (user.get("is_admin") != 1
                             and customer.id not in sales_access.customer_scope(user, db)):
@@ -430,7 +429,7 @@ async def import_rvtools(db, upload, user, customer_name=None, request=None):
         db.add_all(hosts + vms + licenses)
         db.flush()
         created, refreshed, technologies = _technology_rows(db, batch, hosts, licenses)
-        # D4 reconciliation: the original workbook (license keys, serial
+        # Reconciliation: the original workbook (license keys, serial
         # numbers, UUIDs, BIOS strings) is retained ONLY on
         # rvtools_imports.file_data — a provenance column no API serves.
         # The knowledge document stores the sanitized Markdown rendering
@@ -497,7 +496,7 @@ def list_imports(db, customer_ids=None):
     if customer_ids is not None:
         query = query.filter(RvToolsImport.customer_id.in_(customer_ids))
     batches = query.order_by(RvToolsImport.id.desc()).all()
-    # ONE batched customer-name lookup (re-recon A-7 — was one query per
+    # ONE batched customer-name lookup (was one query per
     # batch, partially masked by the identity map).
     names = {
         c.id: c.name

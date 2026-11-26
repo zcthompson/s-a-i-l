@@ -1,4 +1,4 @@
-"""Thin, centrally authorized Account 360 timeline route (E1 + E10)."""
+"""Thin, centrally authorized Account 360 timeline route."""
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session

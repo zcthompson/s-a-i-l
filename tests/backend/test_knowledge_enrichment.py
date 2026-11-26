@@ -1,24 +1,23 @@
-"""LLM knowledge enrichment tests (CHANGELOG 0.1.2).
+"""LLM knowledge enrichment tests.
 
 Covers items 1, 2, 4, 5, 6, 7, 8, 13, 15, 16:
 
 - automatic enrichment after Docling success (upload → READY → ENRICHED);
-- structured LLM output via the Pydantic schema (item 13);
-- application to domain objects through the service layer (item 5):
+- structured LLM output via the Pydantic schema;
+- application to domain objects through the service layer:
   Technology Inventory, Sales Notes, Use Cases (draft/proposed);
 - dedupe: second document with the same technology strengthens the
-  existing row instead of duplicating (item 7);
-- provenance → verification_state mapping (item 6);
+  existing row instead of duplicating;
+- provenance → verification_state mapping;
 - user-selected category is authoritative; LLM suggestion only when
-  absent (item 1);
-- Docling/LLM failure isolation (item 16): LLM failure leaves the
+  absent;
+- Docling/LLM failure isolation: LLM failure leaves the
   document READY with enrichment FAILED; retry-enrichment reruns only
   the LLM stage (Docling is NOT called again);
 - reprocess reruns the full pipeline without duplicate intelligence
-  (item 15);
 - items endpoint + auth boundaries.
 
-The LLM is mocked at ``kes.AIClient`` (never a real call — charter §6);
+The LLM is mocked at ``kes.AIClient`` (never a real call);
 the conftest Docling fake handles normalization. ``AIClient.complete``
 is patched to return prebaked JSON; the real
 ``normalize_enrichment_payload`` validates it (the schema path is
@@ -468,7 +467,7 @@ class TestDedupeAndReprocess:
 
 
 # ----------------------------------------------------------------------
-# Items endpoint + authorization (charter: customer isolation)
+# Items endpoint + authorization (customer isolation)
 # ----------------------------------------------------------------------
 
 

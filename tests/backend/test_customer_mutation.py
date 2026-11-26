@@ -90,7 +90,7 @@ def test_non_owner_cannot_delete(client, customer_seed, username):
 
 
 def test_outsider_delete_is_404(client, customer_seed):
-    # 404-first (R4/Q7): out-of-scope is the same 404 as a missing customer.
+    # 404-first: out-of-scope is the same 404 as a missing customer.
     response = client.delete(f"/api/customers/{customer_seed['name']}/", headers=_token("mut_outsider"))
     assert response.status_code == 404
     assert response.json()["detail"] == "Customer not found"
@@ -132,12 +132,12 @@ def test_update_requires_authentication(client, customer_seed):
 def test_non_owner_cannot_update(client, customer_seed, username):
     response = client.put(f"/api/customers/{customer_seed['name']}/", headers=_token(username), json={"description": "After"})
     assert response.status_code == 403
-    # Part 13 DV2: the update gate is central CAP_METADATA (member = no).
+    # the update gate is central CAP_METADATA (member = no).
     assert response.json()["detail"] == "Not authorized to modify this customer"
 
 
 def test_outsider_update_is_404(client, customer_seed):
-    # 404-first (R4/Q7): out-of-scope is the same 404 as a missing customer.
+    # 404-first: out-of-scope is the same 404 as a missing customer.
     response = client.put(f"/api/customers/{customer_seed['name']}/", headers=_token("mut_outsider"),
                           json={"description": "After"})
     assert response.status_code == 404

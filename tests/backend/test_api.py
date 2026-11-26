@@ -375,7 +375,7 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
             assert r.status_code == 200
             data = r.json()
             assert "templates" in data
-            # WP19: template registry consolidated into backend/templates.py
+            # Template registry consolidated into backend/templates.py
             # (4 generic + 7 rich). Documented contract update.
             assert len(data["templates"]) == 11
 
@@ -930,7 +930,7 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
 
         def test_pdf_export_foreign_customer_404(self, client, db_session, auth):
             """A named customer the caller has no junction row for is the
-            same 404 as a missing one (404-first, R4/Q7); an admin bypasses
+            same 404 as a missing one (404-first); an admin bypasses
             the check."""
             own = self._customer(db_session, "PdfOwnCo")
             self._customer(db_session, "PdfForeignCo")

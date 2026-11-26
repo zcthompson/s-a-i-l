@@ -1,5 +1,5 @@
 /**
- * Component tests for TechnologyInventory (S-A-I-L P6a — structured technology
+ * Component tests for TechnologyInventory (structured technology
  * inventory UI). Mocks the api module (repo pattern: vi.hoisted + vi.mock
  * factory). Plain assertions — no @testing-library/jest-dom in this project.
  *

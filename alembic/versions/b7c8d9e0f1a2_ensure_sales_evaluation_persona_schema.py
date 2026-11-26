@@ -4,8 +4,7 @@ Revision ID: b7c8d9e0f1a2
 Revises: e7f8g9h0a1b2
 Create Date: 2026-09-07
 
-S-A-I-L P5 (persona-driven Sales Evaluations, CHANGELOG 0.0.80
-items 27-39) adds three columns to the existing sales_evaluations table:
+Persona-driven Sales Evaluations add three columns to the existing sales_evaluations table:
 
 - persona (String(50))      — the audience context (persona id) under which
   the evaluation was generated (NULL = generic / legacy rows)

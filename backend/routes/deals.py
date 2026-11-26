@@ -1,4 +1,4 @@
-"""Thin E6 deal and pipeline-stage routes.
+"""Thin deal and pipeline-stage routes.
 
 Reads require account read access (404-first); writes require
 CAP_OPPORTUNITIES on the "opportunities" section. Stage configuration is

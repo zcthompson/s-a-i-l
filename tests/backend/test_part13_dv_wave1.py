@@ -1,8 +1,8 @@
-"""Part 13 DV wave — W1 pins: central-policy basis for scope, reads,
-scoring, comments and notifications (DV1/DV2/DV5/DV6/DV7/DV8).
+"""W1 pins: central-policy basis for scope, reads,
+scoring, comments and notifications.
 
 Every surface here moved from a legacy junction check to the central
-``sales_access`` basis (operator ruling R1):
+``sales_access`` basis:
 
 - S1 customer list + in-scope detail → ``customer_scope``;
 - S2 metadata update → ``can(CAP_METADATA)``, create/archive round →
@@ -147,7 +147,7 @@ def _names(rows):
     return {r["name"] for r in rows}
 
 
-# ── S1 (DV1): customer list + detail ─────────────────────────────────────
+# ── S1: customer list + detail ─────────────────────────────────────
 
 
 def test_s1_list_scope_per_identity(client, world):
@@ -212,7 +212,7 @@ def test_s1_list_fixed_query_families_under_scale(client, db_session, world):
     assert scaled == baseline
 
 
-# ── S2 (DV2): metadata update + round create/archive ─────────────────────
+# ── S2: metadata update + round create/archive ─────────────────────
 
 
 @pytest.mark.parametrize("user", ["w1_sm", "w1_opsm", "w1_coown", "w1_rep"])
@@ -276,7 +276,7 @@ def test_s2_member_round_writes_unchanged(client, world):
     assert r.status_code == 200, r.text
 
 
-# ── S3 (DV5): use-case list + stats ──────────────────────────────────────
+# ── S3: use-case list + stats ──────────────────────────────────────
 
 
 def _uc_titles(client, user):
@@ -349,7 +349,7 @@ def test_s3_list_and_stats_fixed_query_families_under_scale(client, db_session, 
     assert len(_uc_titles(client, "w1_sm")) == 5
 
 
-# ── S4 (DV6): scoring / manual / bulk ────────────────────────────────────
+# ── S4: scoring / manual / bulk ────────────────────────────────────
 
 
 @pytest.mark.parametrize("user", ["w1_sm", "w1_opsm", "w1_coown", "w1_member"])
@@ -429,7 +429,7 @@ def test_s4_unrelated_rep_denied(client, world, no_ai):
     assert r.status_code == 404
 
 
-# ── S5 (DV7): comments ───────────────────────────────────────────────────
+# ── S5: comments ───────────────────────────────────────────────────
 
 
 @pytest.mark.parametrize("user", ["w1_sm", "w1_aud", "w1_sad", "w1_jaud", "w1_member", "admin"])
@@ -463,7 +463,7 @@ def test_s5_outsider_404_first(client, world):
     assert r.status_code == 200
 
 
-# ── S6 (DV8): broadcast recipients ───────────────────────────────────────
+# ── S6: broadcast recipients ───────────────────────────────────────
 
 
 def _broadcast(db_session, customer_id, exclude_user=None):

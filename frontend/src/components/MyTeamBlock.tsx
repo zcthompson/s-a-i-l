@@ -1,5 +1,5 @@
 /**
- * E4 — "My team" (decision D1): a sales manager's team rollup, shown below the
+ * "My team": a sales manager's team rollup, shown below the
  * personal dashboard sections. Data comes from GET /api/rollups/team/, which
  * the server limits to active sales managers and to accounts the manager can
  * currently read. Unknown stays unknown: amounts keep their coverage label and

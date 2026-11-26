@@ -20,7 +20,7 @@ from sqlalchemy.orm import sessionmaker
 from backend.config import get_settings
 from backend.database import create_engine
 
-# Import-time configuration (A-8 re-recon 2026-11-01 — moved from raw
+# Import-time configuration (moved from raw
 # os.environ reads into Settings; .env is loaded before this import in
 # backend/main.py, and by conftest in tests).
 _app_settings = get_settings()
@@ -108,10 +108,10 @@ ACCESS_TOKEN_EXPIRE_MINUTES = _app_settings.token_expire_minutes
 LOGIN_MAX_ATTEMPTS = _app_settings.login_max_attempts
 LOGIN_LOCKOUT_MINUTES = _app_settings.login_lockout_minutes
 
-# In-memory brute force tracker (bounded). A-8 re-recon 2026-11-01: the
+# In-memory brute force tracker (bounded). The
 # login tracker got its own bound name; SAIL_TRACKED_REQUESTS (which used
 # to control two unrelated bounds — the other consumer, main.py's dead
-# request store, is gone per A-6) still works as a fallback alias.
+# request store, is gone) still works as a fallback alias.
 _login_attempts: dict[str, list] = {}  # username -> [timestamp, ...]
 _max_tracked = int(os.environ.get("SAIL_LOGIN_TRACKED_REQUESTS")
                    or os.environ.get("SAIL_TRACKED_REQUESTS", "500"))
@@ -185,14 +185,14 @@ def record_failed_login(username: str) -> int:
     now = datetime.now(UTC)
     if username not in _login_attempts:
         _login_attempts[username] = []
-    
+
     _login_attempts[username].append(now.timestamp())
-    
+
     # Keep bounded
     while len(_login_attempts) > _max_tracked:
         oldest = min(_login_attempts.items(), key=lambda x: x[1][0])
         del _login_attempts[oldest[0]]
-    
+
     return len(_login_attempts[username])
 
 
@@ -201,17 +201,17 @@ def is_login_locked(username: str) -> tuple[bool, float]:
     now = datetime.now(UTC)
     if username not in _login_attempts:
         return False, 0
-    
+
     cutoff = now.timestamp() - LOGIN_LOCKOUT_MINUTES * 60
     recent_failures = [t for t in _login_attempts[username] if t > cutoff]
     _login_attempts[username] = recent_failures
-    
+
     if len(recent_failures) >= LOGIN_MAX_ATTEMPTS:
         # Calculate remaining lockout
         oldest = recent_failures[0]
         remaining = int((oldest + LOGIN_LOCKOUT_MINUTES * 60) - now.timestamp())
         return True, max(0, remaining)
-    
+
     return False, 0
 
 
@@ -226,24 +226,24 @@ def clear_failed_logins(username: str) -> None:
 
 def validate_password_strength(password: str) -> tuple[bool, str]:
     """Validate password meets security requirements.
-    
+
     Returns (is_valid, error_message).
     """
     if len(password) < MIN_PASSWORD_LENGTH:
         return False, f"Password must be at least {MIN_PASSWORD_LENGTH} characters"
-    
+
     if REQUIRE_UPPERCASE and not any(c.isupper() for c in password):
         return False, "Password must contain at least one uppercase letter"
-    
+
     if REQUIRE_LOWERCASE and not any(c.islower() for c in password):
         return False, "Password must contain at least one lowercase letter"
-    
+
     if REQUIRE_DIGIT and not any(c.isdigit() for c in password):
         return False, "Password must contain at least one digit"
-    
+
     if REQUIRE_SPECIAL and not any(not c.isalnum() for c in password):
         return False, "Password must contain at least one special character"
-    
+
     return True, ""
 
 
@@ -322,8 +322,7 @@ def get_user_from_request(request: Request) -> dict | None:
                     allowed.append("all")
                 return {
                     # Safe label, never the raw key (the raw key would leak
-                    # into created_by / audit display fields — operator
-                    # ruling R3, Part 13 DV wave 2026-10-30).
+                    # into created_by / audit display fields).
                     "username": "dept-api-key",
                     "department": None,
                     "allowed_departments": allowed,
@@ -390,7 +389,7 @@ _DEPT_RESTRICTIONS_RAW = os.environ.get("SAIL_DEPT_RESTRICTIONS", "")
 
 def _parse_dept_restrictions() -> dict:
     """Parse department restrictions from env var into a lookup dict.
-    
+
     Returns: {api_key: {"customers": {cust_name: [dept1, ...], ...}, "all_customers": [dept1, ...], "is_admin": bool}}
     """
     if not _DEPT_RESTRICTIONS_RAW.strip():
@@ -401,21 +400,21 @@ def _parse_dept_restrictions() -> dict:
         key_block = key_block.strip()
         if not key_block or ":" not in key_block:
             continue
-        
+
         # Split into key and scope: parts
         # Format: key:scope:dept1|dept2
         parts = key_block.split(":", 2)
         if len(parts) < 3:
             continue
-        
+
         api_key = parts[0]
         scope = parts[1]  # "all" or a customer name
         dept_string = parts[2]
         departments = [d.strip() for d in dept_string.split("|") if d.strip()]
-        
+
         if api_key not in result:
             result[api_key] = {"customers": {}, "all_customers": [], "is_admin": False}
-        
+
         if scope == "all":
             result[api_key]["all_customers"].extend(departments)
             result[api_key]["is_admin"] = True
@@ -423,7 +422,7 @@ def _parse_dept_restrictions() -> dict:
             if scope not in result[api_key]["customers"]:
                 result[api_key]["customers"][scope] = []
             result[api_key]["customers"][scope].extend(departments)
-    
+
     return result
 
 
@@ -441,7 +440,7 @@ def _user_has_dept_access(
     customer_name: str | None = None,
 ) -> bool:
     """Check if user has permission to access a department (optionally customer-scoped).
-    
+
     Returns True if:
     - No restrictions configured (open access)
     - User has 'all' access (admin)
@@ -451,22 +450,22 @@ def _user_has_dept_access(
     """
     if user is None or department is None:
         return True
-    
+
     allowed = user.get("allowed_departments")
     if allowed is None:
         return True  # No restrictions configured
-    
+
     if "all" in allowed:
         return True
-    
+
     # Direct department match
     if department in allowed:
         return True
-    
+
     # If customer-scoped restrictions are configured, check customer context
     if customer_name:
         customer_deps = user.get("customer_allowed_departments", {}).get(customer_name, [])
         if department in customer_deps:
             return True
-    
+
     return False

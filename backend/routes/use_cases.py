@@ -65,10 +65,10 @@ def list_use_cases(
     """List use cases with optional filtering, department and customer isolation.
 
     ``customer_id`` is typed and positive (``ge=1``): a zero/negative value is a
-    422, never silently widened to the global set (BE-02). ``skip``/``limit`` are
+    422, never silently widened to the global set. ``skip``/``limit`` are
     bounded (``ge=0`` / ``1..1000``) so the DB is never asked for an unlimited
-    or negative page (BE-03). ``sort`` selects the authoritative ordering so
-    pagination pages stay stable (BE-03/FE-03: updated|created|score|title).
+    or negative page. ``sort`` selects the authoritative ordering so
+    pagination pages stay stable (updated|created|score|title).
     """
     if sort not in ("updated", "created", "score", "title"):
         raise HTTPException(status_code=422, detail="sort must be one of: updated, created, score, title")
@@ -109,7 +109,7 @@ def get_use_case(
 def create_use_case(data: UseCaseCreate, request: Request, db: Session = Depends(get_db)):
     """Create a new use case with customer isolation.
 
-    404-first (R4/Q7): a customer the caller cannot reach is the same 404 as
+    404-first: a customer the caller cannot reach is the same 404 as
     a missing one (previously the service's 403 fell through the defer).
     """
     user = _require_user(request)
@@ -136,7 +136,7 @@ def create_use_case(data: UseCaseCreate, request: Request, db: Session = Depends
         scores=data.scores,
         overall_score=data.overall_score,
         customer_id=data.customer_id,
-        # Technology tracking fields (WP27+)
+        # Technology tracking fields
         tech_stack=data.tech_stack,
         devices=data.devices,
         software=data.software,
@@ -160,7 +160,7 @@ def update_use_case(
     target_customer_id = _target_customer_id(db, use_case_id)
     if "customer_id" in data.model_fields_set and data.customer_id != target_customer_id:
         raise HTTPException(status_code=422, detail="Use case customer cannot be changed.")
-    # 404-first (R4/Q7): a use case on a customer outside the caller's read
+    # 404-first: a use case on a customer outside the caller's read
     # scope is indistinguishable from a missing one; in-scope write denials
     # keep their exact 403.
     if target_customer_id is not None \
@@ -182,7 +182,7 @@ def delete_use_case(
     """Delete a use case. Admin or customer owner only (404-first)."""
     user = _require_user(request)
     target_customer_id = _target_customer_id(db, use_case_id)
-    # 404-first (R4/Q7): out-of-scope == missing (see update above).
+    # 404-first: out-of-scope == missing (see update above).
     if target_customer_id is not None \
             and not sales_access.can(user, db, sales_access.CAP_READ, target_customer_id):
         raise HTTPException(status_code=404, detail="Use case not found")

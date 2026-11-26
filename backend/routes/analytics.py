@@ -9,7 +9,7 @@ aggregates for customers outside their scope.
 Saved predictions can be deleted by global admins or the owning customer's
 owner via ``DELETE /api/analytics/predictions/{prediction_id}/``.
 
-By-id and customer-id lookups are 404-first (R4/Q7): a record or customer
+By-id and customer-id lookups are 404-first: a record or customer
 outside the caller's central READ scope returns the same 404 as a missing one.
 In-scope capability denials keep their exact 403.
 """
@@ -42,13 +42,13 @@ def _scope_kwargs(db: Session, user: dict, customer_id: int | None) -> dict[str,
     """Resolve analytics scoping for the caller.
 
     - Explicit customer_id: requires central READ on the customer (else the
-      same 404 as a missing customer — 404-first, R4/Q7).
+      same 404 as a missing customer — 404-first).
     - No customer_id: admins get global; everyone else gets their central
       READ scope (``sales_access.customer_scope``, resolved once).
     """
     if customer_id is not None:
         if not customer_access.can_read(user, db, customer_id):
-            # 404-first (R4/Q7): out of scope == missing.
+            # 404-first: out of scope == missing.
             raise HTTPException(status_code=404, detail="Customer not found")
         return {"customer_id": customer_id}
     if sales_access.is_unrestricted(user):

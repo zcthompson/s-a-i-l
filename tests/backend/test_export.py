@@ -289,7 +289,7 @@ class TestLastStateSemantics:
 
 
 class TestPDFExportDetailedContent:
-    """WP10: the PDF report carries last-state analytic detail.
+    """The PDF report carries last-state analytic detail.
 
     Verifies the detailed report content (section headings, dimension
     scores, score history, latest reasoning/recommendations, use-case

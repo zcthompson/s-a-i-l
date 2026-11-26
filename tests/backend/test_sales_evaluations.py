@@ -230,7 +230,7 @@ class TestSalesEvaluationRoutes:
 
     def test_non_admin_without_customer_user_404_list_404_by_id(self, client, db_session, customer_1):
         """Non-admin user with NO CustomerUser row: the same 404 as a missing
-        customer on list AND on per-id get (404-first, R4/Q7 — no oracle)."""
+        customer on list AND on per-id get (404-first — no oracle)."""
         from backend.auth import create_access_token, hash_password
         from backend.models.use_case import User
 
@@ -250,12 +250,12 @@ class TestSalesEvaluationRoutes:
             "Authorization": f"Bearer {create_access_token({'sub': 'member_403', 'is_admin': False})}"
         }
 
-        # 404 on list — no CustomerUser row for this customer (R4/Q7)
+        # 404 on list — no CustomerUser row for this customer
         r = client.get(f"/api/sales-evaluations/?customer_id={customer_1.id}", headers=headers)
         assert r.status_code == 404
 
         # per-id get of an existing evaluation: the same 404 as a missing one
-        # (404-first, R4/Q7)
+        # (404-first)
         _seed_environment(db_session, customer_1.id)
         admin_r = client.post(
             f"/api/sales-evaluations/?customer_id={customer_1.id}",
@@ -271,13 +271,13 @@ class TestSalesEvaluationRoutes:
 
 
 class TestAuditorWriteGap:
-    """shift-to-global-customer-management phase 3 — the auditor write gap.
+    """shift to global customer management phase 3 — the auditor write gap.
 
     An ``auditor`` junction role is read-only: it has a CustomerUser row for the
     customer (so the READ gate passes), but mutations must be rejected by the
-    central resolver's EDIT capability (a read gate is not a write gate,
-    directive §4 rule 8). A legacy ``owner`` junction (no sales_role) must
-    still write — no lockout (directive §3 / legacy preservation).
+    central resolver's EDIT capability (a read gate is not a write gate).
+    A legacy ``owner`` junction (no sales_role) must
+    still write — no lockout (legacy preservation).
     """
 
     def _user_headers(self, db_session, username):

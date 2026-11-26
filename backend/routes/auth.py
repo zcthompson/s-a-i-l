@@ -41,7 +41,7 @@ def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     """Register a new user. New registrations require admin approval before login."""
     # Local self-registration can be disabled by the admin (Application
     # Settings → directory auth area) — e.g. when the directory is the
-    # intended onboarding path (0.2.0 P2).
+    # intended onboarding path.
     from backend.services.ldap_settings import effective_ldap_settings
 
     if not effective_ldap_settings(db).local_register_enabled:
@@ -56,7 +56,7 @@ def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=error_msg,
         )
-    
+
     existing_user = UserService.find_existing(db, user_data.username, user_data.email)
     if existing_user:
         raise HTTPException(
@@ -143,7 +143,7 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials"
         )
-    
+
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -154,7 +154,7 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Account pending approval by an administrator"
         )
-    
+
     # Clear failed attempts on successful login
     clear_failed_logins(login_data.username)
     if not isinstance(identity, DirectoryIdentity) and is_legacy_password_hash(
@@ -162,7 +162,7 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     ):
         user.hashed_password = hash_password(login_data.password)
         db.commit()
-    
+
     token = create_access_token(data={"sub": user.username, "is_admin": bool(user.is_admin)})
     return LoginResponse(
         username=user.username,
@@ -192,7 +192,7 @@ def get_me(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/settings/public/")
 def get_public_auth_settings(db: Session = Depends(get_db)):
-    """Unauthenticated public auth settings (drives the Login page, 0.2.0 P2).
+    """Unauthenticated public auth settings (drives the Login page).
 
     NO secrets, NO per-account data: just the flags the login form needs —
     whether local registration is available, whether the corporate directory
@@ -267,7 +267,7 @@ def _service_error(e: ValueError) -> HTTPException:
         return HTTPException(status_code=404, detail="User not found")
     if e.args and e.args[0] == "Account is managed by the corporate directory":
         # Directory-managed row (auth_provider='ldap'): password fields are
-        # owned by the directory (0.2.0 P1, plan §4) — 400, not 500.
+        # owned by the directory (plan §4) — 400, not 500.
         return HTTPException(
             status_code=400, detail="Account is managed by the corporate directory"
         )

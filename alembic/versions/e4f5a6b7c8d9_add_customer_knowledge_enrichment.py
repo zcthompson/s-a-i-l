@@ -1,6 +1,6 @@
 """Customer knowledge enrichment: knowledge_category, enrichment status columns, customer_knowledge_items table.
 
-CHANGELOG 0.1.2 (0.1.2):
+
 - ``customer_knowledge.knowledge_category`` (controlled vocabulary;
   user-authoritative at upload, LLM-suggested when absent).
 - LLM enrichment status columns on ``customer_knowledge`` (enrichment is

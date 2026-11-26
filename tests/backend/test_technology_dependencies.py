@@ -311,7 +311,7 @@ class TestTechnologyDependencyRoutes:
         )
 
     def test_user_without_customer_access_gets_404(self, client, db_session):
-        # 404-first (R4/Q7): out-of-scope is the same 404 as a missing customer.
+        # 404-first: out-of-scope is the same 404 as a missing customer.
         _seed_customer(db_session, 1)
         _seed_customer(db_session, 2)
         headers = _non_admin_headers(db_session, customer_id=2)

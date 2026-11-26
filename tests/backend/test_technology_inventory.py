@@ -240,7 +240,7 @@ class TestTechnologyInventoryRoutes:
 
     def test_user_without_customer_access_gets_404(self, client, db_session):
         """A member of customer 2 cannot touch customer 1's inventory — and
-        gets the same 404 as a missing customer (404-first, R4/Q7)."""
+        gets the same 404 as a missing customer (404-first)."""
         _seed_customer(db_session, 1)
         _seed_customer(db_session, 2)
         headers = _non_admin_headers(db_session, customer_id=2)

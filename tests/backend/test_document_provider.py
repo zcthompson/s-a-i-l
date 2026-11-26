@@ -1,4 +1,4 @@
-"""Provider-neutral document conversion (Part 13 WS6) — Azure Document Intelligence.
+"""Provider-neutral document conversion — Azure Document Intelligence.
 
 Covers the ``DocumentConverter`` seam (backend/services/document_provider.py):
 Docling adapter parity, the Azure analyze + poll contract (mocked httpx

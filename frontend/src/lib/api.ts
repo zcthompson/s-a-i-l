@@ -106,7 +106,7 @@ export class SessionExpiredError extends Error {
 
 const API_BASE = "/api";
 
-// Connection trust model (SSL/TLS), docs/archive/PLAN_LDAP_AD_AUTH.md P0b: full = verify
+// Connection trust model (SSL/TLS): full = verify
 // chain + hostname; skip = TLS on, verification off (high-risk); ca = verify
 // against an uploaded CA bundle. Applied to inference + Docling connections
 // (and LDAP from P1) via the backend ssl_trust seam.
@@ -119,7 +119,7 @@ export interface DoclingConfigResponse {
   ssl_ca_bundle: string | null;
 }
 
-// Document processing provider (Part 13 WS6). The Azure API key is
+// Document processing provider. The Azure API key is
 // deliberately absent: it is env-only (SAIL_AZURE_DI_API_KEY) and only its
 // configured state crosses the API (api_key_configured, ignored on write).
 export type DocumentProvider = "docling" | "azure_document_intelligence";
@@ -133,7 +133,7 @@ export interface DocumentProcessingConfig {
   api_key_configured: boolean;
 }
 
-// Directory (LDAP/AD) authentication — 0.2.0 P1/P2. The service bind
+// Directory (LDAP/AD) authentication. The service bind
 // password is deliberately absent: it is env/Secret-only and never part of
 // the API surface.
 export interface LdapSettingsResponse {
@@ -182,7 +182,7 @@ export interface LdapTestResponse {
   error: string | null;
 }
 
-// Unauthenticated public auth settings (drives the Login page — 0.2.0 P2).
+// Unauthenticated public auth settings (drives the Login page).
 export interface AuthPublicSettingsResponse {
   local_register_enabled: boolean;
   ldap_enabled: boolean;
@@ -209,7 +209,7 @@ async function request<T>(endpoint: string, queryParams?: Record<string, string>
   if (token && !authEndpointPrefixes.some(prefix => endpoint.startsWith(prefix))) {
     fetchHeaders.set("Authorization", `Bearer ${token}`);
   }
-  // WP23a F4: fetch can reject with AbortError — a manual cancel (the
+  // F4: fetch can reject with AbortError — a manual cancel (the
   // overlay's Cancel button) or the 300s cap aborting the wait. Map it to
   // a clear, actionable message instead of the raw "The operation was
   // aborted.". Client-side only: the server-side work may still run to
@@ -263,7 +263,7 @@ async function request<T>(endpoint: string, queryParams?: Record<string, string>
 }
 
 /**
- * WP23 F2: deterministic API error rendering (single code path for every
+ * F2: deterministic API error rendering (single code path for every
  * `request()` caller — the banners already display `err.message`).
  *
  * FastAPI validation errors (422) carry `detail` as an ARRAY of
@@ -296,7 +296,7 @@ function formatApiError(error: any, status: number): string {
 }
 
 /**
- * WP23 F3: blob downloads must not swallow HTTP errors. The export
+ * F3: blob downloads must not swallow HTTP errors. The export
  * functions previously did `res.blob()` with no `res.ok` check — a 500
  * downloaded the JSON error body as the "export" file (a corrupt
  * report.pdf/.xlsx/.csv). Parse the error detail (same helper as
@@ -314,7 +314,7 @@ async function fetchBlobOrThrow(res: Response): Promise<Blob> {
   return res.blob();
 }
 
-// WP23a F4: the export fetch paths (manual cancel / 300s cap abort the
+// F4: the export fetch paths (manual cancel / 300s cap abort the
 // fetch BEFORE fetchBlobOrThrow runs, so map the AbortError here — same
 // clear message as request()).
 function mapAbortError<T>(p: Promise<T>): Promise<T> {
@@ -345,7 +345,7 @@ export const api = {
 
   // Scoring
   // POST /scoring/ returns the {use_case, scores} envelope (ScoredUseCaseResponse)
-  // WP23a F4: `signal` — the caller's AbortController (300s cap / cancel).
+  // F4: `signal` — the caller's AbortController (300s cap / cancel).
   score: (use_case_id: number, signal?: AbortSignal) => request<ScoredUseCaseResponse>("/scoring/", undefined, {
     method: "POST",
     body: JSON.stringify({ use_case_id }),
@@ -389,7 +389,7 @@ export const api = {
   // Bulk operations
   // The backend binds the entire body as a bare JSON array of ids (FastAPI:
   // a bare List[int] parameter without Query() IS the request body).
-  // WP23a F4: `signal` — the caller's AbortController (300s cap / cancel).
+  // F4: `signal` — the caller's AbortController (300s cap / cancel).
   bulkScore: (use_case_ids: number[], signal?: AbortSignal) => request<BulkScoreResult>("/bulk/score-multiple/", undefined, {
     method: "POST",
     body: JSON.stringify(use_case_ids),
@@ -428,7 +428,7 @@ export const api = {
 
   // Analytics
   departmentTrends: (customer_id?: number | null) => request<DepartmentTrend[]>(`/analytics/department-trends/`, customer_id != null ? { customer_id: String(customer_id) } : undefined),
-  // WP33 — persisted, LLM-generated per-customer readiness insight.
+  // Persisted, LLM-generated per-customer readiness insight.
   readinessInsight: (customer_id: number) => request<ReadinessInsightResponse>(`/analytics/readiness-insight/`, { customer_id: String(customer_id) }),
   generateReadinessInsight: (customer_id: number, signal?: AbortSignal) => request<ReadinessInsight>(`/analytics/readiness-insight/generate/`, { customer_id: String(customer_id) }, { method: "POST", signal }),
 
@@ -495,16 +495,16 @@ export const api = {
     }),
   updateCustomer: (name: string, data: { description?: string; vertical?: string }) =>
     request<Customer>(`/customers/${encodeURIComponent(name)}/`, undefined, { method: 'PUT', body: JSON.stringify(data) }),
-  // Part 14 — customer alias tags (owner/admin write; any reader lists)
+  // customer alias tags (owner/admin write; any reader lists)
   listAliases: (customerName: string) =>
     request<CustomerAlias[]>(`/customers/${encodeURIComponent(customerName)}/aliases/`),
   addAlias: (customerName: string, alias: string) =>
     request<CustomerAlias>(`/customers/${encodeURIComponent(customerName)}/aliases/`, undefined, { method: 'POST', body: JSON.stringify({ alias }) }),
   removeAlias: (customerName: string, aliasId: number) =>
     request<void>(`/customers/${encodeURIComponent(customerName)}/aliases/${aliasId}/`, undefined, { method: 'DELETE' }),
-  // WP19 — the canonical vertical list + seed departments per vertical
+  // The canonical vertical list + seed departments per vertical
   listVerticals: () => request<VerticalsResponse>('/customers/verticals/'),
-  // WP19 — bootstrap a vertical-aware template assessment for a customer
+  // Bootstrap a vertical-aware template assessment for a customer
   startTemplateAssessment: (customerName: string, templateId: string) =>
     request<BootstrapResult>(
       `/customers/${encodeURIComponent(customerName)}/assessments/from-template/`,
@@ -517,13 +517,13 @@ export const api = {
   // Assessment rounds (one active per customer)
   listAssessments: (name: string) => request<CustomerAssessment[]>(`/customers/${encodeURIComponent(name)}/assessments/`),
   // The route requires an AssessmentNameIn JSON body (name as a query param 422s)
-  // Part 13 WS5 (R4): optional `type` (server default 'ai') + `purpose` —
+  // optional `type` (server default 'ai') + `purpose` —
   // omitted keys keep the body byte-identical for existing callers.
   createAssessment: (name: string, assessmentName: string, opts?: { type?: AssessmentType; purpose?: string }) => request<CustomerAssessment>(`/customers/${encodeURIComponent(name)}/assessments/`, undefined, { method: "POST", body: JSON.stringify({ name: assessmentName, ...(opts?.type ? { type: opts.type } : {}), ...(opts?.purpose ? { purpose: opts.purpose } : {}) }) }),
   archiveAssessment: (name: string, assessmentId: number) => request<CustomerAssessment>(`/customers/${encodeURIComponent(name)}/assessments/${assessmentId}/archive/`, undefined, { method: "POST" }),
   // Model-generated predictions (persisted)
   savedPredictions: (customer_id?: number | null) => request<AIPrediction[]>(`/analytics/predictions/`, customer_id != null ? { customer_id: String(customer_id) } : undefined),
-  // WP23a F4: `signal` — the caller's AbortController (300s cap / cancel).
+  // F4: `signal` — the caller's AbortController (300s cap / cancel).
   generatePrediction: (use_case_id: number, days: number, signal?: AbortSignal) => request<AIPrediction>(`/analytics/predictions/generate/`, { use_case_id: String(use_case_id), days: String(days) }, { method: "POST", signal }),
   deletePrediction: (id: number) => request<{ message: string }>(`/analytics/predictions/${id}/`, undefined, { method: "DELETE" }),
 
@@ -578,7 +578,7 @@ export const api = {
       method: 'PUT',
       body: JSON.stringify(payload),
     }),
-  // ── Account memberships + ownership review queue (RBAC directive) ──
+  // ── Account memberships + ownership review queue (RBAC model) ──
   getOwnershipReview: () =>
     request<{ items: OwnershipReviewItem[] }>('/admin/ownership-review/'),
   resolveOwnershipReview: (customer_id: number, user_id: number) =>
@@ -592,7 +592,7 @@ export const api = {
   getMyCustomers: () => request<MyCustomerAccess[]>('/customers/me/customers/'),
 
   // ── Projections ───────────────────────────────────────────────
-  // WP23a F4: `signal` — the caller's AbortController (300s cap / cancel).
+  // F4: `signal` — the caller's AbortController (300s cap / cancel).
   generateProjection: (customer_name: string, horizon?: string, signal?: AbortSignal) =>
     request<Projection>(`/customers/${encodeURIComponent(customer_name)}/projections/${horizon ? `?horizon=${encodeURIComponent(horizon)}` : ''}`, undefined, { method: "POST", signal }),
   getProjection: (customer_name: string) =>
@@ -630,7 +630,7 @@ export const api = {
     return res.json();
   },
 
-  // ── Customer Knowledge (Phase 2 + Docling normalization, PLAN part 43) ──
+  // ── Customer Knowledge (Phase 2 + Docling normalization) ──
   listCustomerKnowledge: (customerId?: number) => request<any[]>(
     '/customer-knowledge/',
     customerId !== undefined ? { customer_id: String(customerId) } : undefined,
@@ -885,7 +885,7 @@ export const api = {
   getSalesReadiness: (customerId: number) =>
     request<Record<string, unknown>>(`/sales/customers/${customerId}/readiness`),
 
-  // ── Technology Inventory (S-A-I-L P2) ─────────────────────────────────
+  // ── Technology Inventory ─────────────────────────────────
   listCustomerTechnology: (customerId: number, params?: { category?: string; vendor?: string; verification_state?: string; search?: string; sort?: string }) => {
     const strParams: Record<string, string> = {};
     for (const [k, v] of Object.entries(params ?? {})) {
@@ -900,7 +900,7 @@ export const api = {
     request<CustomerTechnology>(`/technology/${id}/`, undefined, { method: "PUT", body: JSON.stringify(data) }),
   deleteTechnology: (id: number) => request<void>(`/technology/${id}/`, undefined, { method: "DELETE" }),
 
-  // ── Sales Notes (S-A-I-L P3) ──────────────────────────────────────────
+  // ── Sales Notes ──────────────────────────────────────────
   listCustomerSalesNotes: (customerId: number, params?: { category?: string; author?: string; search?: string; sort?: string }) => {
     const strParams: Record<string, string> = {};
     for (const [k, v] of Object.entries(params ?? {})) {
@@ -952,7 +952,7 @@ export const api = {
     request<TaskPromotionResponse>(`/customers/${customerId}/tasks/promote/`, undefined, { method: "POST", body: JSON.stringify(data) }),
   updateTask: (id: number, data: TaskUpdate) =>
     request<Task>(`/tasks/${id}/`, undefined, { method: "PUT", body: JSON.stringify(data) }),
-  // DELETE carries expected_version as a JSON BODY field (contract C3.1).
+  // DELETE carries expected_version as a JSON BODY field.
   deleteTask: (id: number, expectedVersion: number) =>
     request<void>(`/tasks/${id}/`, undefined, { method: "DELETE", body: JSON.stringify({ expected_version: expectedVersion }) }),
   myTasks: () => request<MyTask[]>(`/tasks/mine/`),
@@ -968,7 +968,7 @@ export const api = {
     return mapAbortError(fetch(`${API_BASE}/customers/${customerId}/brief/pdf/`, { headers: token ? { Authorization: `Bearer ${token}` } : undefined, signal }).then(fetchBlobOrThrow));
   },
 
-  // ── E1 account timeline + E10 QBR cadence ─────────────────────────
+  // ── account timeline + QBR cadence ─────────────────────────
   getAccountTimeline: (customerId: number, limit?: number, cursor?: string) => {
     const params = new URLSearchParams();
     if (limit !== undefined) {
@@ -981,13 +981,13 @@ export const api = {
     return request<AccountTimelineResponse>(`/customers/${customerId}/timeline/${qs ? `?${qs}` : ""}`);
   },
 
-  // ── E2 in-account cross-module search ─────────────────────────────
+  // ── in-account cross-module search ─────────────────────────────
   searchAccount: (customerId: number, query: string, includeArchived = false) =>
     request<AccountSearchResponse>(
       `/customers/${customerId}/search/?q=${encodeURIComponent(query)}&include_archived=${includeArchived}`
     ),
 
-  // ── E3 saved views + personal worklist ────────────────────────────
+  // ── saved views + personal worklist ────────────────────────────
   listSavedViews: (surface: string, customerId?: number) =>
     request<SavedViewsResponse>(`/saved-views/?surface=${encodeURIComponent(surface)}${customerId ? `&customer_id=${customerId}` : ''}`),
   saveView: (surface: string, name: string, params: Record<string, string | null>) =>
@@ -999,7 +999,7 @@ export const api = {
     request<void>(`/saved-views/${id}/`, undefined, { method: "DELETE" }),
   myWorklist: () => request<WorklistResponse>(`/worklist/mine/`),
 
-  // ── E6 deals + pipeline stages ────────────────────────────────────
+  // ── deals + pipeline stages ────────────────────────────────────
   listPipelineStages: (includeInactive = false) =>
     request<PipelineStage[]>(`/pipeline-stages/?include_inactive=${includeInactive}`),
   createPipelineStage: (data: { key: string; label: string; stage_class: string; position: number; default_probability?: number | null }) =>
@@ -1018,14 +1018,14 @@ export const api = {
     request<void>(`/deals/${id}/`, undefined, { method: "DELETE", body: JSON.stringify({ expected_version: expectedVersion }) }),
   dealHistory: (id: number) => request<DealHistoryEntry[]>(`/deals/${id}/history/`),
 
-  // ── E4 manager team rollup (active sales managers only; 403 otherwise) ──
+  // ── manager team rollup (active sales managers only; 403 otherwise) ──
   teamRollup: () => request<TeamRollupResponse>(`/rollups/team/`),
 
-  // ── E5 account health components (never a composite score) ────────
+  // ── account health components (never a composite score) ────────
   getCustomerHealth: (customerId: number) =>
     request<AccountHealthResponse>(`/customers/${customerId}/health/`),
 
-  // ── Third-Party Professional Services (S-A-I-L P2) ───────────────────
+  // ── Third-Party Professional Services ───────────────────
   listCustomerThirdPartyServices: (customerId: number, params?: { status?: string; category?: string; search?: string; sort?: string; direction?: string }) => {
     const strParams: Record<string, string> = {};
     for (const [k, v] of Object.entries(params ?? {})) {
@@ -1077,11 +1077,11 @@ export const api = {
     return request<ThirdPartyService[]>('/admin/third-party-services/', strParams);
   },
 
-  // ── Customer Intelligence Overview (S-A-I-L P4) ──────────────────────
+  // ── Customer Intelligence Overview ──────────────────────
   getCustomerIntelligenceOverview: (customerId: number) =>
     request<CustomerIntelligenceOverview>(`/customers/${customerId}/intelligence/overview/`),
 
-  // Account workspace context (CHANGELOG 0.1.0 U1): deterministic summaries +
+  // Account workspace context: deterministic summaries +
   // typed, evidence-backed Opportunities & Attention.
   getAccountWorkspace: (customerId: number) =>
     request<AccountWorkspace>(`/customers/${customerId}/intelligence/workspace/`),
@@ -1093,14 +1093,14 @@ export const api = {
   getCustomerIntelligenceGraph: (customerId: number) =>
     request<CustomerIntelligenceGraph>(`/customers/${customerId}/intelligence/graph/`),
 
-  // ── Sales Personas + Evaluation Preview (S-A-I-L P5) ─────────────────
+  // ── Sales Personas + Evaluation Preview ─────────────────
   listSalesPersonas: () => request<SalesPersona[]>(`/sales-evaluations/personas/`),
   previewSalesEvaluation: (customerId: number, persona?: string | null) =>
     request<SalesEvaluationPreview>(`/sales-evaluations/preview/`, undefined, {
       method: "POST",
       body: JSON.stringify({ customer_id: customerId, persona: persona ?? null }),
     }),
-  // Extended create: optional persona selects the audience context (S-A-I-L P5).
+  // Extended create: optional persona selects the audience context.
   createSalesEvaluationWithPersona: (customerId: number, evaluationName: string, persona?: string | null) =>
     request<any>(`/sales-evaluations/`, { customer_id: String(customerId) }, {
       method: "POST",

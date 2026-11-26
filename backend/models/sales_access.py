@@ -1,19 +1,18 @@
 """Sales access model — additive roles, reporting hierarchy, and inside-sales
-assignments for the shift-to-global-customer-management directive (phase 2).
+assignments for the shift to global customer management (phase 2).
 
-Design principles (per the directive §4 + charter):
+Design principles:
   * STRICTLY ADDITIVE. Every column/table is nullable / optional, so existing
     deployments (is_admin system admins, ps_admin, and the CustomerUser
     owner/member/auditor junction) behave EXACTLY as before until callers
     opt in by using the central resolver (backend/services/sales_access.py).
   * ``users.sales_role`` is orthogonal to ``is_admin``. A sales-manager NEVER
-    sets is_admin=1 (directive §4 rule 1); the flag stays exclusively the
+    sets is_admin=1; the flag stays exclusively the
     system-admin authority.
-  * Relationships use stable user/customer IDs (directive §4 rule 2) — never
+  * Relationships use stable user/customer IDs — never
     branch strings or display-name similarity.
   * ``CustomerUser`` remains the source of "explicitly granted customer
-    access"; these tables add the *hierarchy / scope* layer on top (rule 2
-    "Retain CustomerUser where useful").
+    access"; these tables add the *hierarchy / scope* layer on top.
 """
 
 from datetime import datetime
@@ -55,7 +54,7 @@ class SalesReporting(Base):
 class InsideSalesAssignment(Base):
     """Inside-sales → customer (optionally → supported rep) assignment.
 
-    Customer-SPECIFIC by default (directive §4 rule 3): supporting Rep A does
+    Customer-SPECIFIC by default: supporting Rep A does
     NOT grant every customer of A. Unique per (inside_sales_user, customer).
     """
     __tablename__ = "inside_sales_assignments"

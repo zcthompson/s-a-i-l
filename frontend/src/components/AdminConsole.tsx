@@ -27,10 +27,10 @@ interface AdminUser {
   is_active: number;
 }
 
-/** Part 14 C3 — the console table is a summary: the first 10 (matching) users;
+/** the console table is a summary: the first 10 (matching) users;
  *  full management stays on the All Users view. */
 const USERS_CAP = 10;
-/** Part 14 C2 — the console Portfolio summary shows the first 10 accounts by
+/** the console Portfolio summary shows the first 10 accounts by
  *  default (H2 v1: filter/sort the complete admin list, paginate locally). */
 const PORTFOLIO_NAV_DEFAULTS = { defaultPageSize: 10 };
 const PORTFOLIO_SORT_KEYS = ['newest', 'name', 'vertical', 'branch', 'owner'] as const;
@@ -68,7 +68,7 @@ export function AdminConsole({ onNavigate, showPortfolio = true }: AdminConsoleP
   useEffect(() => {
     api.getGlobalAdminStats().then(setStats).catch(() => {});
     api.getAllUsers().then(setUsers).catch(() => {});
-    // Part 14 C2 — the complete admin customer list (admin scope = all).
+    // the complete admin customer list (admin scope = all).
     if (showPortfolio) api.listCustomers().then((rows) => setAccounts(rows ?? [])).catch(() => {});
   }, [showPortfolio]);
 
@@ -82,7 +82,7 @@ export function AdminConsole({ onNavigate, showPortfolio = true }: AdminConsoleP
     return () => { active = false; };
   }, []);
 
-  // Part 14 C2 — console Portfolio summary nav. LOCAL state (no URL sync):
+  // console Portfolio summary nav. LOCAL state (no URL sync):
   // on ?view=dashboard HomeDashboard's own Portfolio table already owns the
   // URL nav state, and a second URL-synced surface on the same route would
   // share one state with conflicting page-size defaults (primary ruling on
@@ -214,7 +214,7 @@ export function AdminConsole({ onNavigate, showPortfolio = true }: AdminConsoleP
         </div>
       </div>
 
-      {/* Portfolio summary (Part 14 C2): the first 10 accounts, H2 controls,
+      {/* Portfolio summary: the first 10 accounts, H2 controls,
           click-through to the customer. LOCAL nav state — see the ruling
           note above (no URL sync on this surface). */}
       {showPortfolio && accounts.length > 0 && (

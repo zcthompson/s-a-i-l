@@ -98,7 +98,7 @@ describe('IntelligenceImport', () => {
     await waitFor(() => expect(apiMock.listIntelligenceImports).toHaveBeenCalledTimes(2));
   });
 
-  // Part 14 import remediation (operator rules 2026-11-01): unmatched rows
+  // unmatched rows
   // and unreadable amounts are non-blocking warnings on the result.
   it('warns about unmatched rows and unreadable amounts without blocking', async () => {
     apiMock.uploadIntelligenceImport.mockResolvedValue({
@@ -375,7 +375,7 @@ describe('IntelligenceImport — VMware RVTools pane', () => {
     await screen.findByTestId('rvtools-import-row-5');
   };
 
-  // Part 14 import remediation: the target is an existing customer only
+  // the target is an existing customer only
   // (picked by name or alias) — there is no new/temporary customer input.
   it('target is an existing customer only and gates submit', async () => {
     await open();

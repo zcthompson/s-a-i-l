@@ -1,6 +1,6 @@
 import { formatDealAmount } from '../lib/deals';
 /**
- * E3 — "My work": the caller's personal, portfolio-level worklist from
+ * "My work": the caller's personal, portfolio-level worklist from
  * GET /api/worklist/mine/ (scope re-evaluated server-side on every read).
  * Three sections — my tasks, renewals, QBRs — each capped at 5 rows with an
  * honest "Showing N of M" line. Money stays null-honest (never a $0 for

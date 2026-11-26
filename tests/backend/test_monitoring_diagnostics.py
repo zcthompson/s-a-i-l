@@ -1,5 +1,5 @@
-"""Regression tests: monitoring diagnostics (BE-05/BE-06) and sales readiness
-over the complete dataset (BE-07) — fe_enhancements backlog, part 48.
+"""Regression tests: monitoring diagnostics and sales readiness
+over the complete dataset.
 
 2026-09-19 review: ``/api/monitoring/health/detailed`` hardwired
 ``database: {status: healthy, connected: true}``, ``get_ai_endpoint_health``
@@ -87,7 +87,7 @@ def mon_env(db_session):
     }
 
 
-# ─────────────────────────── BE-06: privileged routes ─────────────────────────
+# ─────────────────────────── privileged routes ─────────────────────────
 
 class TestMonitoringPrivilege:
     def test_liveness_public_minimal(self, client, mon_env):
@@ -130,7 +130,7 @@ class TestMonitoringPrivilege:
         assert "requests" in r.json()
 
 
-# ─────────────────────────── BE-05: real readiness ────────────────────────────
+# ─────────────────────────── real readiness ────────────────────────────
 
 class TestMonitoringReadiness:
     def test_status_admin_healthy(self, client, mon_env):
@@ -170,7 +170,7 @@ class TestMonitoringReadiness:
         assert r.json()["database"]["connected"] is False
 
     def test_ai_health_uses_effective_settings(self, client, mon_env):
-        """BE-05: the diagnostic reports the EFFECTIVE inference configuration
+        """The diagnostic reports the EFFECTIVE inference configuration
         (DB overrides + enabled flag), not just the env var — and never the
         endpoint URL or key."""
         from backend import monitoring
@@ -213,7 +213,7 @@ class TestMonitoringReadiness:
         assert "10.0.0.9" not in str(r.json())
 
 
-# ─────────────────────────── BE-07: readiness over full dataset ───────────────
+# ─────────────────────────── readiness over full dataset ───────────────
 
 class TestSalesReadinessFullDataset:
     def test_readiness_counts_past_1000_rows(self, db_session, client, mon_env):
@@ -269,7 +269,7 @@ class TestSalesReadinessFullDataset:
         assert org_b["average_score"] == 50.0
 
     def test_sales_usecases_pagination(self, db_session, client, mon_env):
-        """The sales use-case listing is explicitly paginated (BE-07/BE-03),
+        """The sales use-case listing is explicitly paginated,
         not silently capped at 1000."""
         from backend.models.use_case import UseCase
         a = mon_env["customer"]

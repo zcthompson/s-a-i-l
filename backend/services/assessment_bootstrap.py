@@ -1,4 +1,4 @@
-"""Vertical-aware template-assessment bootstrap (WP19).
+"""Vertical-aware template-assessment bootstrap.
 
 Starting a *template* assessment for a customer no longer seeds a single
 draft use case. Instead it produces a meaningful starting point:
@@ -9,18 +9,18 @@ draft use case. Instead it produces a meaningful starting point:
   (goal text → department via deterministic keyword rules), and
 * any vertical department left with zero use cases is pre-seeded with one
   draft "good example" use case drawn from the deterministic
-  ``backend.example_use_cases`` registry (WP21) — vertical-determined,
+  ``backend.example_use_cases`` registry — vertical-determined,
   fill-empty-only, never a duplicate, idempotent on re-bootstrap.
 
-Transaction structure (Codex review P1-1, resolved 2026-08-29): the active
+Transaction structure: the active
 round is ensured via ``AssessmentService.ensure_active`` — an existing unit
-of work that commits on its own when it creates the first round (WP18
-semantics, shared with the single-use-case create path). If the subsequent
+of work that commits on its own when it creates the first round
+(shared with the single-use-case create path). If the subsequent
 department/use-case commit fails, the rollback leaves at most an EMPTY
 active round behind — a legitimate, self-healing state (rounds with zero
 use cases already exist via the manual round-create endpoint) — while the
 department/use-case writes themselves are single-transaction: every new
-department, every per-goal draft use case, and every WP21 pre-seeded
+department, every per-goal draft use case, and every pre-seeded
 example use case are added together and committed once, so partial
 seeding is impossible.
 """
@@ -54,7 +54,7 @@ class AssessmentBootstrapService:
         user: dict,
     ) -> dict:
         # 1. Access — admin bypass, else central CAP_EDIT on the customer
-        # (Part 13 DV wave — DV2/A8, ruling R1; replaces the legacy
+        # (replaces the legacy
         # owner/member junction check).
         if not sales_access.can(user, db, sales_access.CAP_EDIT, customer.id):
             raise ValueError("Not authorized to modify this customer")
@@ -66,7 +66,7 @@ class AssessmentBootstrapService:
 
         username = user.get("username")
 
-        # 3. Active round (auto-created on first use — WP18 semantics).
+        # 3. Active round (auto-created on first use).
         assessment = AssessmentService.ensure_active(db, customer.id, username)
 
         # 4. Departments for the customer's vertical.
@@ -150,7 +150,7 @@ class AssessmentBootstrapService:
             uc.department_obj = dept
             new_use_cases.append(uc)
 
-        # 6. WP21 guarantee — every vertical department has ≥1 use case.
+        # 6. Guarantee — every vertical department has ≥1 use case.
         #    Fill only the departments that (a) received no new goal UC in
         #    this call and (b) have no existing use case for this customer
         #    under that department_id (any status — see ``existing_counts``
@@ -196,7 +196,7 @@ class AssessmentBootstrapService:
         return {
             "assessment_id": assessment.id,
             "assessment_name": assessment.name,
-            # Part 13 WS5 (R6): template bootstrap always works on an AI
+            # template bootstrap always works on an AI
             # round (ensure_active creates 'ai'); the fields are passthrough.
             "assessment_type": assessment.assessment_type or "ai",
             "purpose": assessment.purpose,

@@ -7,12 +7,12 @@ interface BulkScoreProps {
   onBack: () => void;
   selectedCustomerId?: number | null;
   selectedCustomerName?: string;
-  /** Part 13 WS5 (R8): ids of the customer's GENERIC rounds — their use
+  /** ids of the customer's GENERIC rounds — their use
    *  cases cannot be AI-scored, so they are not selectable here. */
   aiScoringBlockedRoundIds?: ReadonlySet<number>;
 }
 
-// Part 13 WS5 (R8): the shared label module (source of truth) — imported for
+// the shared label module (source of truth) — imported for
 // this file's own use and re-exported for eager consumers (CustomerDashboard).
 import { AI_SCORING_REQUIRES_AI_ASSESSMENT } from '../lib/assessmentLabels';
 export { AI_SCORING_REQUIRES_AI_ASSESSMENT };

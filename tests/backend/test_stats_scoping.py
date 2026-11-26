@@ -1,16 +1,15 @@
 """Regression tests: caller authorization on aggregate stats, score trends,
-and use-case list scoping (fe_enhancements backlog — BE-01 / BE-02 / BE-03).
+and use-case list scoping.
 
 2026-09-19 review: ``/api/stats/aggregate/`` and ``/api/stats/trends/``
 authenticated the request but discarded the caller, and
 ``StatsService.get_aggregate_stats`` computed ``average_score`` globally even
 when a customer scope was supplied. Any non-admin caller therefore received
 cross-customer totals, averages, impact, top records, and trends. Separately,
-an explicit ``customer_id=0`` on the use-case list widened to the global set
-(BE-02) and unbounded/negative pagination was accepted (BE-03).
+an explicit ``customer_id=0`` on the use-case list widened to the global setand unbounded/negative pagination was accepted.
 
 ``/api/use-cases/stats/`` (UseCaseService.get_stats) had the same customer
-isolation gap and is covered here (BE-01 sibling defect).
+isolation gap and is covered here (sibling defect).
 
 Run: pytest tests/backend/test_stats_scoping.py -v
 """
@@ -130,7 +129,7 @@ def scope_env(db_session):
     }
 
 
-# ───────────────────────────── BE-01: stats/aggregate ─────────────────────────
+# ───────────────────────────── stats/aggregate ─────────────────────────
 
 class TestAggregateStatsScoping:
     def test_admin_sees_global(self, client, scope_env):
@@ -185,7 +184,7 @@ class TestAggregateStatsScoping:
         r = client.get(f"/api/stats/aggregate/?customer_id={cid}",
                        headers=scope_env["member"])
         # A foreign explicit scope is the same 404 as a missing customer
-        # (R4/Q7) — never widened and never answered with A's (or global) data.
+        # never widened and never answered with A's (or global) data.
         assert r.status_code == 404
 
     def test_admin_explicit_customer(self, client, scope_env):
@@ -207,7 +206,7 @@ class TestAggregateStatsScoping:
         assert r.status_code == 401
 
 
-# ───────────────────────────── BE-01: stats/trends ────────────────────────────
+# ───────────────────────────── stats/trends ────────────────────────────
 
 class TestScoreTrendsScoping:
     def test_member_trends_only_assigned(self, client, scope_env):
@@ -236,11 +235,11 @@ class TestScoreTrendsScoping:
         cid = scope_env["cust_b"].id
         r = client.get(f"/api/stats/trends/?customer_id={cid}",
                        headers=scope_env["member"])
-        # 404-first (R4/Q7): a foreign explicit scope is the same 404 as missing.
+        # 404-first: a foreign explicit scope is the same 404 as missing.
         assert r.status_code == 404
 
 
-# ───────────── BE-01 sibling: /api/use-cases/stats/ customer isolation ────────
+# ───────────── sibling: /api/use-cases/stats/ customer isolation ────────
 
 class TestUseCaseStatsIsolation:
     def test_member_use_case_stats_scoped(self, client, scope_env):
@@ -260,7 +259,7 @@ class TestUseCaseStatsIsolation:
         assert data["average_score"] == 60.0
 
 
-# ─────────────────────────────── BE-02: zero ID ───────────────────────────────
+# ─────────────────────────────── zero ID ───────────────────────────────
 
 class TestZeroCustomerId:
     def test_list_zero_id_rejected(self, client, scope_env):
@@ -285,9 +284,9 @@ class TestZeroCustomerId:
         assert rows == []
 
 
-# ─────────────────────────────── BE-03: pagination ───────────────────────────
+# ─────────────────────────────── pagination ───────────────────────────
 
-# ─────────────────────────────── BE-04: missing customer ─────────────────────
+# ─────────────────────────────── missing customer ─────────────────────
 
 class TestMissingCustomerErrors:
     """A missing customer is a 404, not a 200 error-dict / zero-shaped body.
@@ -317,7 +316,7 @@ class TestMissingCustomerErrors:
 
     def test_per_name_stats_member_foreign_404(self, client, scope_env):
         # Member has no junction row for B → the same 404 as a missing
-        # customer (404-first, R4/Q7; was a 200 error-dict, then 403).
+        # customer (404-first; was a 200 error-dict, then 403).
         r = client.get(f"/api/customers/{scope_env['cust_b'].name}/stats/",
                        headers=scope_env["member"])
         assert r.status_code == 404

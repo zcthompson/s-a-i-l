@@ -95,7 +95,7 @@ def get_accessible_customers(db: Session, user: dict) -> list[Customer]:
     if not user_id:
         return []
 
-    # Read scope = the central policy's complete READ scope (Part 13 DV1):
+    # Read scope = the central policy's complete READ scope:
     # junction + inside-sales + sales-ops + manager team + memberships +
     # reads-all. Computed ONCE for the list (fixed-query discipline).
     from backend.services import sales_access
@@ -156,17 +156,17 @@ def list_all_customers(db: Session) -> list[Customer]:
 
 def check_customer_access(db: Session, customer: Customer, user: dict) -> bool:
     """Check if the customer is in the user's central READ scope.
-    
+
     Admin users always have access.
     """
     if user.get("is_admin") == 1:
         return True
-    
+
     user_id = user.get("user_id") or user.get("id")
     if not user_id:
         return False
 
-    # The central policy's complete READ scope (Part 13 DV1; see
+    # The central policy's complete READ scope (see
     # get_accessible_customers).
     from backend.services import sales_access
     return customer.id in sales_access.customer_scope(user, db)
@@ -215,7 +215,7 @@ def build_customer_response(
     aliases_context: dict | None = None,
 ) -> CustomerResponse:
     """Build a complete CustomerResponse with computed fields.
-    
+
     Prefer department_id (FK) over legacy department string for
     department name resolution. Falls back to legacy string when
     department_id is not set.
@@ -226,7 +226,7 @@ def build_customer_response(
     so the LIST route stays a fixed number of batch queries (no N+1). When
     omitted, the historical per-customer ``db`` path runs unchanged.
 
-    ``aliases_context`` (Part 14, A4): the same batched pattern for customer
+    ``aliases_context``: the same batched pattern for customer
     aliases — ``{customer_id: [raw alias, ...]}`` — so the LIST route stays
     a fixed number of batch queries. When omitted and a session is present,
     a single per-customer read runs (the detail path); with neither, the
@@ -408,7 +408,7 @@ def delete_customer_with_use_cases(db: Session, customer: Customer) -> dict[str,
     for table in (strategy_task_links, strategy_contact_links, strategy_note_links):
         delete_links(table, table.c.strategy_id.in_(strategy_ids))
     delete_rows(AccountStrategySnapshot, AccountStrategySnapshot.customer_id == customer.id)
-    # E6 deals: links and stage history first (counted for the audit), then the deals.
+    # Deals: links and stage history first (counted for the audit), then the deals.
     deal_ids = [r[0] for r in db.query(Deal.id).filter_by(customer_id=customer.id)]
     for table in (deal_contacts, deal_tasks, deal_activities, deal_notes, deal_technologies, deal_vendor_evidence):
         delete_links(table, table.c.deal_id.in_(deal_ids))
@@ -424,7 +424,7 @@ def delete_customer_with_use_cases(db: Session, customer: Customer) -> dict[str,
     delete_rows(CustomerActivity, CustomerActivity.customer_id == customer.id)
     delete_rows(TaskNotificationWindow, TaskNotificationWindow.task_id.in_(task_ids))
     delete_rows(CustomerTask, CustomerTask.customer_id == customer.id)
-    # Part 14 (A1): alias tags are account-owned metadata — the delete covers
+    # alias tags are account-owned metadata — the delete covers
     # them explicitly (works with SQLite foreign keys both off and on).
     delete_rows(CustomerAlias, CustomerAlias.customer_id == customer.id)
     delete_rows(ContactBuyingRole, ContactBuyingRole.contact_id.in_(contact_ids))

@@ -1,4 +1,4 @@
-"""LLM knowledge enrichment service (CHANGELOG 0.1.2).
+"""LLM knowledge enrichment service.
 
 Two-stage pipeline over a READY knowledge document:
 
@@ -10,27 +10,27 @@ Design constraints honored:
 
 - The LLM is called through the existing configured inference
   abstraction (``AIClient.complete`` with the effective inference
-  settings) — no hard-coded model/provider (item 17).
+  settings) — no hard-coded model/provider.
 - The LLM must return STRUCTURED JSON (``KnowledgeEnrichmentResponse``);
-  arbitrary prose is never parsed by application logic (item 13).
+  arbitrary prose is never parsed by application logic.
 - Every extracted item is persisted as a ``CustomerKnowledgeItem``
   (durable evidence with provenance/confidence/evidence/source ref —
   item 6). High-value items are then APPLIED through the existing
-  service layer (item 5): Technology Inventory, Technology Dependency,
+  service layer: Technology Inventory, Technology Dependency,
   Sales Notes, Use Cases.
 - Dedupe: before creating, the extraction is compared against existing
   customer knowledge; existing rows are strengthened/linked rather than
-  duplicated (item 7). Reprocessing a document first removes its own
-  previous items (item 15).
+  duplicated. Reprocessing a document first removes its own
+  previous items.
 - Provenance mapping (items 6, 8): explicit → verified, derived →
   inferred, suggested → unverified. Suggested items are NOT auto-created
   as authoritative domain objects — they are stored as Proposed evidence
   (the knowledge item + a sales note of matching category).
-- Failure isolation (item 16): enrichment failure marks
+- Failure isolation: enrichment failure marks
   ``enrichment_status=FAILED`` but NEVER touches the Docling
   ``processing_status`` — the normalized content stays available and
   enrichment can be retried without rerunning Docling.
-- Customer isolation (charter §4): the enrichment job only reads the
+- Customer isolation: the enrichment job only reads the
   single knowledge record's customer; the route layer enforces
   CustomerUser authorization BEFORE dispatching (the worker only ever
   receives a record id from an already-authorized route).

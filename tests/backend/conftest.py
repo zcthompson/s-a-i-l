@@ -73,7 +73,7 @@ else:
 os.environ["SAIL_KNOWLEDGE_ASYNC"] = "0"
 
 # Deterministic default: knowledge normalization tests must NOT call the
-# configured LLM (charter §6). Enrichment-specific tests set this to "1"
+# configured LLM. Enrichment-specific tests set this to "1"
 # and mock AIClient instead.
 os.environ["SAIL_KNOWLEDGE_ENRICHMENT"] = "0"
 
@@ -169,8 +169,7 @@ def pytest_collection_modifyitems(config, items):
 def _mock_docling_by_default():
     """Deterministic Docling mock for the knowledge processing path.
 
-    Automated tests must never call the real Docling endpoint
-    (charter §6). The service module's ``DoclingService`` reference is
+    Automated tests must never call the real Docling endpoint The service module's ``DoclingService`` reference is
     replaced with a deterministic fake (success + Markdown). Test files
     that need a specific failure class (unavailable / timeout /
     failure / partial / empty) re-patch ``cks.DoclingService`` per test.
@@ -245,7 +244,7 @@ def db_session():
     the open driver transaction — where any ROLLBACK from another session
     on the same shared StaticPool connection (e.g. the auth
     junction-lookup session's in-request teardown) could destroy it
-    mid-test (v0.0.67 flake, layer 2). All tables are cleared (not a
+    mid-test (flake, layer 2). All tables are cleared (not a
     hand-maintained subset) so residue from any seeded table (e.g.
     score_history) cannot leak across tests via rowid reuse.
     """

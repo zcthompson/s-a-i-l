@@ -1,4 +1,4 @@
-"""WP19 — vertical-aware template-assessment bootstrap.
+"""Vertical-aware template-assessment bootstrap.
 
 Deterministic TestClient tests (no LLM). Verifies that starting a
 template assessment for a customer seeds the vertical's 4 departments and
@@ -111,7 +111,7 @@ def test_retail_customer_support_bootstrap(client, db_session, env):
 
     goals = TEMPLATES["customer-support"]["default_goals"]
     ucs = db_session.query(UseCase).filter(UseCase.customer_id == cust.id).all()
-    # Documented contract update (WP21): the 4 customer-support goals all
+    # Documented contract update: the 4 customer-support goals all
     # keyword-map to Customer Success, so the other 3 Retail departments
     # (Operations, Marketing, Sales) are pre-seeded with one example UC
     # each. count = 4 goal UCs + 3 pre-seeded = 7.
@@ -165,7 +165,7 @@ def test_bootstrap_twice_is_department_idempotent(client, db_session, env):
     depts = db_session.query(Department).filter(Department.customer_id == cust.id).all()
     assert len(depts) == 4
     ucs = db_session.query(UseCase).filter(UseCase.customer_id == cust.id).all()
-    # Documented contract update (WP21): first bootstrap seeds 4 goal UCs
+    # Documented contract update: first bootstrap seeds 4 goal UCs
     # (all Customer Success) + 3 pre-seeded examples (Operations, Marketing,
     # Sales) = 7. The second bootstrap re-seeds the 4 goal UCs but pre-seeds
     # nothing (every department now has ≥1 UC) → 7 + 4 = 11.
@@ -201,7 +201,7 @@ def test_access_owner_member_ok_outsider_404_anon_401(client, env):
     assert _bootstrap(client, "RetailCust", "customer-support", "bs_owner").status_code == 201
     assert _bootstrap(client, "OtherCust", "customer-support", "bs_member").status_code == 201
     r = _bootstrap(client, "RetailCust", "customer-support", "bs_outsider")
-    # 404-first (R4/Q7): an outsider (no grant) gets the same 404 as a
+    # 404-first: an outsider (no grant) gets the same 404 as a
     # missing customer.
     assert r.status_code == 404
     assert r.json()["detail"] == "Customer not found"
@@ -224,7 +224,7 @@ def test_unknown_template_404(client, env):
 def test_three_goal_template_seeds_three(client, db_session, env):
     r = _bootstrap(client, "RetailCust", "operations", "bs_owner")
     assert r.status_code == 201
-    # Documented contract update (WP21): the 3 "operations" goals all map to
+    # Documented contract update: the 3 "operations" goals all map to
     # Operations, so the other 3 Retail departments (Customer Success,
     # Marketing, Sales) are pre-seeded → count = 3 goal UCs + 3 examples = 6.
     body = r.json()

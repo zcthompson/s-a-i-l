@@ -1,7 +1,6 @@
 """Sales Notes API routes (S-A-I-L).
 
-Per-customer structured sales notes (CHANGELOG 0.0.80 items 16-18,
-P3). All routes are gated by CustomerUser authorization with admin bypass —
+Per-customer structured sales notes. All routes are gated by CustomerUser authorization with admin bypass —
 admins own all customers (same convention as customers.py, sales_section.py,
 customer_knowledge.py, sales_evaluations.py, technology_inventory.py).
 Out-of-scope per-id access returns 404 (no existence leakage). Business
@@ -38,9 +37,8 @@ def _require_user(request: Request) -> dict:
 def _accessible_customer(user: dict, db: Session, customer_id: int) -> Customer:
     """Return the customer if the caller may access it; else the same 404.
 
-    Missing and out-of-scope are indistinguishable (404-first, R4/Q7); the
-    in-scope basis is the central policy (A-1 re-recon ruling 2026-11-01,
-    R1 continuation): admin unrestricted or a ``customer_scope`` grant.
+    Missing and out-of-scope are indistinguishable (404-first); the
+    in-scope basis is the central policy: admin unrestricted or a ``customer_scope`` grant.
     """
     customer = db.query(Customer).filter(Customer.id == customer_id).first()
     if customer is not None and (
@@ -54,7 +52,7 @@ def _accessible_customer(user: dict, db: Session, customer_id: int) -> Customer:
 def _accessible_note(db: Session, user: dict, note_id: int) -> SNModel | None:
     """Return the note if the caller may access it; else None (→ 404).
 
-    Central-policy basis (A-1 re-recon ruling 2026-11-01): admin
+    Central-policy basis: admin
     unrestricted or a ``customer_scope`` grant on the note's customer.
     """
     note = db.query(SNModel).filter(SNModel.id == note_id).first()

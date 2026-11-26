@@ -45,11 +45,11 @@ def _require_user(request: Request) -> dict:
 def _accessible_customer_ids(user: dict, db: Session, customer_id: int | None = None) -> list[int]:
     """Customer ids the caller may act on for knowledge access.
 
-    Central-policy basis (A-1 re-recon ruling 2026-11-01, R1 continuation):
+    Central-policy basis:
     admins own all customers; everyone else the ``customer_scope`` union
     (junction + memberships + assignments + manager team scope). Raises
     the same 404 as a missing customer when an explicit ``customer_id``
-    is outside the caller's scope (404-first, R4/Q7).
+    is outside the caller's scope (404-first).
     """
     if user.get("is_admin") == 1:
         if customer_id is not None:
@@ -66,7 +66,7 @@ def _accessible_customer_ids(user: dict, db: Session, customer_id: int | None = 
 def _accessible_record(db: Session, user: dict, knowledge_id: int):
     """Return the knowledge entry if it exists and the caller may access it.
 
-    Central-policy basis (A-1 re-recon ruling 2026-11-01): admins own all
+    Central-policy basis: admins own all
     customers; other callers need the entry's customer in
     ``customer_scope``. Returns None when the entry is missing or out of
     scope (routes surface a 404).
@@ -134,7 +134,7 @@ async def upload_customer_knowledge(
     ``customer_id`` form field (validated against the caller's scope;
     admins own all customers); defaults to the first accessible customer.
 
-    ``knowledge_category`` (CHANGELOG 0.1.2 item 1): one of
+    ``knowledge_category``: one of
     the ``KNOWLEDGE_CATEGORIES`` slugs. A user-selected category is
     AUTHORITATIVE — the LLM may only suggest one when it is absent.
     422 when an out-of-vocabulary slug is supplied.
@@ -356,8 +356,7 @@ def retry_enrichment(
     knowledge_id: int,
     db: Session = Depends(get_db),
 ):
-    """Retry LLM enrichment for a READY document (CHANGELOG 0.1.2
-    items 2, 16): a Docling SUCCESS + LLM FAILURE leaves the normalized
+    """Retry LLM enrichment for a READY document: a Docling SUCCESS + LLM FAILURE leaves the normalized
     content available; this endpoint re-runs ONLY the enrichment stage
     (Docling is NOT rerun — that is Reprocess's job).
 
@@ -411,8 +410,8 @@ def list_knowledge_items(
     knowledge_id: int,
     db: Session = Depends(get_db),
 ):
-    """List the LLM-extracted intelligence items for one document
-    (CHANGELOG 0.1.2 items 6, 13): the traceable record of
+    """List the LLM-extracted intelligence items for one document:
+    the traceable record of
     what the enrichment learned — provenance, evidence, and the domain
     objects each item was applied to."""
     user = _require_user(request)

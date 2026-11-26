@@ -1,4 +1,4 @@
-// E4 — GET /api/rollups/team/ (active sales managers only).
+// GET /api/rollups/team/ (active sales managers only).
 
 export interface TeamRollupAmount {
   total: number | null;

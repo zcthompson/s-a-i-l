@@ -1,4 +1,4 @@
-"""E10 — QBR cadence: next-QBR-due derived from the last recorded QBR activity.
+"""QBR cadence: next-QBR-due derived from the last recorded QBR activity.
 
 Read-only and deterministic: all date math uses the injected ``now`` (the H6
 A2 pattern); the wall clock is read only when the caller passes none.

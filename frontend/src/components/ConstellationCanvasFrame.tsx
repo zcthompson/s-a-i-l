@@ -3,7 +3,7 @@
  * surface of the Customer Intelligence Constellation.
  *
  * The constellation canvas is PERMANENTLY BLACK in both light and dark
- * application modes (CHANGELOG 0.1.3, items 6–7):
+ * application modes:
  * the graph is an intentional theme-independent surface while the
  * surrounding S-A-I-L UI follows normal light/dark behavior.
  *

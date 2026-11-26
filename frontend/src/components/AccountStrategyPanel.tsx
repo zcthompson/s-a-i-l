@@ -56,7 +56,7 @@ const chip: React.CSSProperties = {
 const muted: React.CSSProperties = { fontSize: '0.8rem', color: 'var(--neutral-500)' };
 const errorStyle: React.CSSProperties = { fontSize: '0.85rem', color: 'var(--danger, #b91c1c)' };
 
-/** Field testids use kebab-case (contract C4: -field-discovery-gaps). */
+/** Field testids use kebab-case (-field-discovery-gaps). */
 const kebab = (f: string) => f.replace(/_/g, '-');
 
 const messageOf = (e: unknown, fallback: string): string => (e as Error)?.message || fallback;

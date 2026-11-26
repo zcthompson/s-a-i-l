@@ -230,7 +230,7 @@ def test_full_workbook_detail_technologies_knowledge_and_audit(client, db_sessio
     assert "Dedup" not in techs["VMware vSAN Advanced"].notes
     doc = db_session.query(CustomerKnowledge).one()
     assert doc.knowledge_type == "rvtools_report" and doc.knowledge_category == "infrastructure"
-    # D4: the knowledge document stores the sanitized Markdown (never the
+    # The knowledge document stores the sanitized Markdown (never the
     # original workbook bytes); the original is retained only on the import
     # row (batch.file_data == report, asserted above).
     assert doc.file_name == "report.xlsx.rvtools.md"
@@ -398,7 +398,7 @@ def test_upload_limit(client, db_session, world, report, monkeypatch):
     assert db_session.query(RvToolsImport).count() == 0
 
 
-# Part 14 import remediation (operator rules 2026-11-01): the target is an
+# the target is an
 # EXISTING customer's name or alias; imports never create a customer. The
 # removed new_customer_name field is ignored like any unknown form field.
 @pytest.mark.parametrize("target", [{}, {"customer_name": "   "}, {"new_customer_name": "Temp"}])
@@ -485,7 +485,7 @@ def test_existing_target_requires_explicit_junction_even_for_global_read_role(cl
 
 
 def test_sales_admin_middleware_block_on_mutations(client, db_session, world, report):
-    # Part 13 R11 (2026-10-29): the sales_admin content block now covers
+    # the sales_admin content block now covers
     # /api/rvtools-import — every mutating verb 403s at the middleware
     # (before the route), regardless of junction grants.
     user = _user(db_session, "sales_admin")

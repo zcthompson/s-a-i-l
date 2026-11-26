@@ -1,10 +1,10 @@
-"""E6 rep-owned deals (decision D2 option B) and admin-managed pipeline stages.
+"""Rep-owned deals and admin-managed pipeline stages.
 
 Deals are a distinct entity: separate from imported vendor pipeline rows and
 from derived attention cards. Amounts are integer minor units with an
 explicit currency and basis, never summed with vendor pipeline. Probability
-is only what a rep records (D5: a stage default is a suggestion). The owner
-is a user FK plus a display-name snapshot (D4); ownership grants no access.
+is only what a rep records (a stage default is a suggestion). The owner
+is a user FK plus a display-name snapshot; ownership grants no access.
 """
 
 import sqlalchemy as sa
@@ -37,7 +37,7 @@ class PipelineStage(Base):
     stage_class = sa.Column(sa.String(10), nullable=False)
     position = sa.Column(sa.Integer, nullable=False)
     active = sa.Column(sa.Boolean, nullable=False, default=True, server_default=sa.true())
-    # D5: a suggestion shown to reps, never stored on a deal implicitly.
+    # A suggestion shown to reps, never stored on a deal implicitly.
     default_probability = sa.Column(sa.Integer)
     created_at = sa.Column(sa.DateTime, nullable=False, server_default=sa.func.current_timestamp())
     updated_at = sa.Column(sa.DateTime, nullable=False, server_default=sa.func.current_timestamp(),

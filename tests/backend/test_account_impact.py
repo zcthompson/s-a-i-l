@@ -1,6 +1,6 @@
 """Phase 4 account-impact service — money-safety + provenance + honesty tests.
 
-Deterministic (no LLM). Pins the directive §5 invariants:
+Deterministic (no LLM). Pins the account-impact display invariants:
   * separate named measures; total = assessment customer benefit (estimated)
   * service fees NOT annualized, NOT revenue, excluded with a reason
   * qualitative carries no money; pipeline not quantified (no recorded prob)

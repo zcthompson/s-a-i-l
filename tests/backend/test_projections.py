@@ -62,55 +62,55 @@ def _token(username):
 
 class TestProjectionService:
     """Test the projection service."""
-    
+
     @pytest.mark.asyncio
     async def test_generate_projection_customer_not_found(self):
         """Test that ValueError is raised when customer is not found."""
         db = MagicMock()
-        
+
         # Mock the chain: db.query(Customer).filter(...).first() returns None
         mock_chain = MagicMock()
         mock_chain.filter.return_value.first.return_value = None
         db.query.return_value = mock_chain
-        
+
         with pytest.raises(ValueError, match="Customer test not found"):
             await ProjectionService.generate_projection(db, "test")
-    
+
     @pytest.mark.asyncio
     async def test_generate_projection_no_use_cases(self):
         """Test projection with no use cases returns defaults."""
         db = MagicMock()
-        
+
         # Mock db.query(Customer).filter(...).first() -> customer
         customer_query_chain = MagicMock()
         customer_query_chain.filter.return_value.first.return_value = Customer(
             id=1, name="test", description="Test"
         )
         db.query.return_value = customer_query_chain
-        
+
         # Mock db.query(UseCase).filter(...).all() -> empty list
         use_case_query_chain = MagicMock()
         use_case_query_chain.filter.return_value.all.return_value = []
-        
+
         def query_side_effect(model):
             if model == UseCase:
                 return use_case_query_chain
             return customer_query_chain
-        
+
         db.query.side_effect = query_side_effect
-        
+
         projection = await ProjectionService.generate_projection(db, "test")
-        
+
         assert projection["customer_name"] == "test"
         assert projection["speed"]["current"] == 0.0
         assert projection["value"]["current"] == 0.0
         assert projection["confidence"] == 0.0
-    
+
     @pytest.mark.asyncio
     async def test_generate_projection_with_use_cases(self):
         """Test projection generation with use cases."""
         db = MagicMock()
-        
+
         # Create mock use cases with all required attributes for to_dict()
         use_case1 = UseCase(
             id=1,
@@ -135,7 +135,7 @@ class TestProjectionService:
             impact_description=None,
             timeline_estimate=None,
         )
-        
+
         use_case2 = UseCase(
             id=2,
             title="Test Use Case 2",
@@ -159,24 +159,24 @@ class TestProjectionService:
             impact_description=None,
             timeline_estimate=None,
         )
-        
+
         # Mock db.query(Customer).filter(...).first() -> customer
         customer_query_chain = MagicMock()
         customer_query_chain.filter.return_value.first.return_value = Customer(
             id=1, name="test", description="Test"
         )
-        
+
         # Mock db.query(UseCase).filter(...).all() -> [use_case1, use_case2]
         use_case_query_chain = MagicMock()
         use_case_query_chain.filter.return_value.all.return_value = [use_case1, use_case2]
-        
+
         def query_side_effect(model):
             if model == UseCase:
                 return use_case_query_chain
             return customer_query_chain
-        
+
         db.query.side_effect = query_side_effect
-        
+
         # Mock the config service + AI client: the model refines
         # recommendations; the numeric axes come from the data.
         model_text = '{"recommendations": ["R1", "R2", "R3"]}'
@@ -208,7 +208,7 @@ class TestProjectionService:
             assert len(projection["key_factors"]) > 0
             assert projection["recommendations"] == ["R1", "R2", "R3"]
             assert projection["model_used"] is True
-    
+
     def test_store_projection(self):
         """Test that projection can be stored."""
         db = MagicMock()
@@ -221,14 +221,14 @@ class TestProjectionService:
             "recommendations": [],
             "confidence": 0.5,
         }
-        
+
         result = ProjectionService.store_projection(db, projection)
         assert result is True
-    
+
     def test_clear_projection(self):
         """Test that projection can be cleared."""
         db = MagicMock()
-        
+
         result = ProjectionService.clear_projection(db, "test")
         assert result is True
 
@@ -284,7 +284,7 @@ class TestProjectionDeleteAuthorization:
         "username", ["projection_member", "projection_auditor", "projection_outsider"]
     )
     def test_non_owner_is_404_first(self, client, username):
-        # R4/Q7: clearing needs owner/admin on the customer — member, auditor
+        # clearing needs owner/admin on the customer — member, auditor
         # and outsider are all out of scope for that surface, so they get the
         # same 404 as a missing customer (no existence oracle).
         response = client.delete(
@@ -301,7 +301,7 @@ class TestProjectionDeleteAuthorization:
 
 class TestProjectionTypes:
     """Test that projection types are correctly structured."""
-    
+
     def test_projection_structure(self):
         """Test that a projection has all required fields."""
         projection = {
@@ -334,7 +334,7 @@ class TestProjectionTypes:
         assert "key_factors" in projection
         assert "recommendations" in projection
         assert "confidence" in projection
-        
+
         # Verify axis structure (v2 contract: "projected", not "projected_30d")
         assert "current" in projection["speed"]
         assert "projected" in projection["speed"]
@@ -343,7 +343,7 @@ class TestProjectionTypes:
         assert "current" in projection["value"]
         assert "projected" in projection["value"]
         assert "trajectory" in projection["value"]
-        
+
         # Verify values
         assert 0 <= projection["speed"]["current"] <= 100
         assert 0 <= projection["confidence"] <= 1

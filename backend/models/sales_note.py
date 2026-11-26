@@ -1,6 +1,6 @@
 """Sales Notes SQLAlchemy models (S-A-I-L).
 
-Structured per-customer sales notes (CHANGELOG 0.0.80 items 16-18):
+Structured per-customer sales notes:
 discovery information, account observations, meeting notes, technical
 discussions, risks, initiatives, objections, competitive information,
 follow-up items, and potential opportunities.
@@ -11,7 +11,7 @@ follow-up items, and potential opportunities.
 - ``verification_state`` default is "verified" — a human-authored note with
   author/source is a first-hand record. AI-generated notes must explicitly
   use "inferred"/"unverified" so generated text never silently becomes
-  authoritative customer data (charter §4).
+  authoritative customer data.
 - Related technologies and use cases (initiatives) go through junction
   tables; cross-customer junctions are rejected in the service layer
   (customer isolation before any downstream consumption).
@@ -24,7 +24,7 @@ from sqlalchemy.orm import relationship
 from backend.models.customer_technology import CustomerTechnology
 from backend.models.use_case import Base, UseCase
 
-# Controlled vocabulary for note categories (CHANGELOG 0.0.80 item 16).
+# Controlled vocabulary for note categories.
 # Stored as free-form String(50) so the vocabulary can grow without a
 # destructive migration; the service layer validates against this list.
 CATEGORIES = [

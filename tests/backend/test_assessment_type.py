@@ -1,4 +1,4 @@
-"""Part 13 WS5 — generic customer assessments (backend pins, R1–R11).
+"""generic customer assessments (backend pins).
 
 Rounds (``CustomerAssessment``) carry ``assessment_type`` ('ai' default |
 'generic') + ``purpose``. The one-active-round invariant spans both types;
@@ -348,7 +348,7 @@ def test_round_routes_authorization_unchanged(client, world):
         assert out.status_code == miss.status_code == 404
         assert out.json() == miss.json()
     r = client.post(base, headers=_token("ws5_auditor"), json={"name": "R", "type": "generic"})
-    # Part 13 DV2: the create-round gate is central CAP_EDIT (auditor = no).
+    # the create-round gate is central CAP_EDIT (auditor = no).
     assert (r.status_code, r.json()["detail"]) == (403, "Not authorized to modify this customer")
     r = client.post(base, headers=_token("ws5_owner"), json={"name": "R", "type": "generic"})
     assert r.status_code == 201

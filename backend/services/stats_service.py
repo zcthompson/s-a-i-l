@@ -65,7 +65,7 @@ class StatsService:
         scored = StatsService._apply_scope(
             db.query(UseCase), customer_id, customer_ids
         ).filter(UseCase.overall_score.isnot(None)).count()
-        # average_score MUST use the same authorized scope (BE-01): the
+        # average_score MUST use the same authorized scope: the
         # previous global ``avg`` leaked cross-customer averages to non-admins.
         avg_score = (
             StatsService._apply_scope(
@@ -153,7 +153,7 @@ class StatsService:
     @staticmethod
     def customer_readiness_aggregates(db: Session, customer_id: int) -> dict:
         """Compute readiness aggregates in SQL over the COMPLETE customer
-        dataset (BE-07).
+        dataset.
 
         Returns ``{"total_use_cases", "scored_use_cases", "average_score"}``
         for every use case of the customer — no row cap, so counts and the
@@ -200,7 +200,7 @@ class StatsService:
             db: Database session
             days: Number of days to look back
             customer_id: Optional single-customer filter (admin explicit scope)
-            customer_ids: Optional authorized customer-union filter (BE-01):
+            customer_ids: Optional authorized customer-union filter:
                 ``None`` = global (admin only), empty list = no data authorized.
         """
         cutoff = datetime.now(UTC) - timedelta(days=days)

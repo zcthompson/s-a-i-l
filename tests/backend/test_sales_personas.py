@@ -1,6 +1,6 @@
-"""Sales persona registry + persona-driven evaluation tests (S-A-I-L P5).
+"""Sales persona registry + persona-driven evaluation tests.
 
-Covers CHANGELOG 0.0.80 items 27-39:
+Covers:
 - centralized deterministic persona registry (min 8 personas, extensible)
 - persona persisted with the generated evaluation (historical context)
 - source-context metadata / provenance on every evaluation
@@ -170,7 +170,7 @@ def _seed_context(
 
 class TestPersonaRegistry:
     def test_registry_has_minimum_personas(self):
-        """v2 item 28: the 8 minimum personas, extensible registry."""
+        """The 8 minimum personas, extensible registry."""
         ids = {p["id"] for p in list_personas()}
         assert ids == {
             "executive",
@@ -231,7 +231,7 @@ class TestPersonaEngine:
         ev = create_sales_evaluation(db_session, customer_1.id, "Generic Eval")
         assert ev.persona is None
         assert ev.persona_sections is None
-        # provenance is always set (v2 item 39)
+        # provenance is always set
         assert isinstance(ev.source_context, dict)
         assert ev.source_context["method"] == "deterministic_engine"
         assert ev.source_context["persona"] is None
@@ -254,7 +254,7 @@ class TestPersonaEngine:
         assert "provenance_note" in src
 
     def test_persona_tailoring_materially_differs(self, db_session, customer_1):
-        """v2 item 29: selection changes emphasis/framing/questions/actions."""
+        """Selection changes emphasis/framing/questions/actions."""
         _seed_context(db_session, customer_1.id)
         exec_ev = create_sales_evaluation(
             db_session, customer_1.id, "Exec Eval", persona_id="executive"
@@ -291,7 +291,7 @@ class TestPersonaEngine:
             assert "content" in section
 
     def test_recommendations_evidence_or_hypothesis(self, db_session, customer_1):
-        """v2 item 34: no generic fluff — each recommendation cites evidence
+        """No generic fluff — each recommendation cites evidence
         or is explicitly labeled a hypothesis requiring discovery."""
         _seed_context(db_session, customer_1.id)
         ev = create_sales_evaluation(
@@ -329,7 +329,7 @@ class TestPersonaEngine:
         assert "action" in comp["content"]
 
     def test_discovery_gaps_for_missing_knowledge(self, db_session, customer_1):
-        """v2 item 35: missing knowledge → actionable discovery gaps."""
+        """Missing knowledge → actionable discovery gaps."""
         # No seeding at all — bare customer.
         ev = create_sales_evaluation(
             db_session, customer_1.id, "Empty Eval", persona_id="executive"
@@ -422,7 +422,7 @@ class TestPersonaRoutes:
             json=body,
             headers=_non_admin_headers(db_session),
         )
-        # 404-first (R4/Q7): out of scope == missing customer.
+        # 404-first: out of scope == missing customer.
         assert r.status_code == 404
         r = client.post(
             "/api/sales-evaluations/preview/",

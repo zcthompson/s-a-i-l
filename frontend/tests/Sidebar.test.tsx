@@ -1,4 +1,4 @@
-// Regression tests for Sidebar navigation behavior (WP22 — fluid nav):
+// Regression tests for Sidebar navigation behavior (fluid nav):
 //   - section header click navigates to the first child WITHOUT collapsing
 //   - the active section auto-expands on arrival (deep links / back-forward)
 //   - breadcrumb root click goes to the section's first child (never the
@@ -128,7 +128,7 @@ describe('Sidebar navigation behavior', () => {
     const icon = screen.getByRole('button', { name: 'Customers' });
     expect(icon.style.background).toBe('var(--sidebar-selected)');
     // jsdom does not resolve var() from stylesheets, so the active color
-    // assertion checks the token reference itself (WP23b tokenized the
+    // assertion checks the token reference itself (the token system replaced the
     // former #6fbfc8 literal into --brand-300).
     expect(icon.style.color).toBe('var(--sidebar-accent)');
   });

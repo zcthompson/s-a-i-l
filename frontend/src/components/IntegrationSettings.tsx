@@ -779,7 +779,7 @@ export function IntegrationSettings({ onBack, onDirtyChange }: { onBack?: () => 
         <ActionButton variant="quiet" type="button" disabled={!serviceDirty.inference} onClick={() => { clearValidation('inference'); setForm({ ...baselines.current.inference }); setInferenceSaved(false); setInferenceError(null); }}>Reset AI changes</ActionButton></fieldset>
 </div></section>
 
-        {/* Document Processing provider (Part 13 WS6) */}
+        {/* Document Processing provider */}
         <section id="settings-documents" aria-labelledby="settings-documents-title" hidden={category !== 'documents'}>
           <h2 id="settings-documents-title"><SectionIcon name="📄" /> Document processing</h2>
           <p>Choose how uploaded documents are converted. Only the selected provider is used; Markdown is normalized within S-A-I-L.</p>

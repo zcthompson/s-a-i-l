@@ -1,6 +1,6 @@
 /**
  * CustomerAliasesField — the "Aliases" section of the Edit customer dialog
- * (operator directive 2026-11-01: aliases are edited under Edit Customer,
+ * (aliases are edited under Edit Customer,
  * below Description and Vertical — not a card on the Overview).
  *
  * Alias chips (raw alias; created_by/created_at as the chip title + a small

@@ -115,7 +115,7 @@ export function HomeDashboard({ onNavigate, isAdmin, username }: HomeDashboardPr
   }, [impact, customerStats, customerById]);
   // Search/filter/sort span the FULL authorized rows; the pager only slices.
   const shownRows = useMemo(() => sortRows(filterRows(rows, nav), nav), [rows, nav]);
-  // E3 — the worklist references accounts by id; the portfolio rows carry
+  // The worklist references accounts by id; the portfolio rows carry
   // the same authorized set, so resolve id → name for the by-name navigation.
   const idToName = useMemo(() => new Map(rows.map(r => [r.id, r.name] as const)), [rows]);
   const pager = paginateNav(shownRows, nav, updateNav);
@@ -145,7 +145,7 @@ export function HomeDashboard({ onNavigate, isAdmin, username }: HomeDashboardPr
         const name = idToName.get(id);
         if (name) onNavigate('customers', name, dealId ? `deal:${dealId}` : undefined);
       }} /></div>}
-      {/* D1: managers keep their personal sections first; the team rollup follows. */}
+      {/* managers keep their personal sections first; the team rollup follows. */}
       {username && <div style={{ marginBottom: '24px' }}><MyTeamBlock /></div>}
       <div style={{ marginBottom: '28px' }}>
         <h2 style={{ margin: '0 0 12px 0', fontSize: '1.1rem', color: 'var(--neutral-700)' }}>Quick Actions</h2>

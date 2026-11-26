@@ -1,6 +1,6 @@
 """Third-Party Professional Services schemas (S-A-I-L Sales section).
 
-docs/archive/PLAN_THIRD_PARTY_SERVICES.md §4.1. Controlled vocabularies live in
+Controlled vocabularies live in
 ``backend/models/third_party_service.py`` (single source, same mechanism as
 ``sales_note.py``); the service layer enforces them so API 422s are
 consistent with the existing sales endpoints.

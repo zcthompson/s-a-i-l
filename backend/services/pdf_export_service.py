@@ -3,7 +3,7 @@
 Supports user-scoped queries via the ``customer_users`` junction table for
 auditor-only read access enforcement.
 
-Report content (v0.0.69 detailed report):
+Report content (detailed report):
 - Report Details (customer / assessment scope block)
 - Executive Summary (totals, status counts, average/median/min/max, total
   impact, score distribution, top/bottom use cases, cohort trend)
@@ -47,7 +47,7 @@ from backend.models.collaboration import ScoreHistory
 from backend.models.use_case import AIPrediction, UseCase
 from backend.services.scoring import ScoringService
 
-# Palette (kept from the v0.0.68 report)
+# Palette (kept from the report)
 _DARK = HexColor('#2C3E50')
 _GRAY = HexColor('#7F8C8D')
 _BLUE = HexColor('#2980B9')

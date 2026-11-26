@@ -81,26 +81,26 @@ class UseCaseService:
                scores: dict | None = None,
                overall_score: float | None = None,
                customer_id: int | None = None,
-               # Technology tracking fields (WP27+)
+               # Technology tracking fields
                tech_stack: dict | None = None,
                devices: dict | None = None,
                software: dict | None = None,
                vendor: str | None = None) -> UseCase:
         """Create a new use case with customer isolation.
-        
+
         Prefer department_id (FK to Department model). The legacy
         department string field is deprecated — it will be auto-
         resolved from department_id when both are provided.
         """
         created_by = user.get("username") if user else "anonymous"
-        
+
         # Enforce junction access for non-admin users
         if user and user.get("is_admin") != 1 and customer_id is not None:
             junction_roles = user.get("junction_roles", {})
             user_role = junction_roles.get(customer_id)
             if not user_role or user_role not in ("owner", "member"):
                 raise HTTPException(status_code=403, detail=f"No access to customer {customer_id}")
-        
+
         # R2: a customer-less use case is admin-only
         assert_assigned_or_admin(customer_id, user)
 
@@ -129,7 +129,7 @@ class UseCaseService:
         use_case.estimated_savings = estimated_savings
         use_case.estimated_revenue = estimated_revenue
         use_case.timeline_estimate = timeline_estimate
-        # Technology tracking fields (WP27+)
+        # Technology tracking fields
         use_case.tech_stack = tech_stack
         use_case.devices = devices
         use_case.software = software
@@ -177,7 +177,7 @@ class UseCaseService:
 
         ``sort`` selects the ordering (updated|created|score|title) with a
         unique ``id`` tie-breaker so equal values do not destabilize
-        pagination pages (BE-03/FE-03).
+        pagination pages.
         """
         query = db.query(UseCase)
 
@@ -192,7 +192,7 @@ class UseCaseService:
         # honored — for non-admins it is further constrained to their
         # accessible customers (never widened).
         if user is not None and not sales_access.is_unrestricted(user):
-            # Central READ scope (Part 13 DV5), computed once per call.
+            # Central READ scope, computed once per call.
             user_customer_ids = sales_access.customer_scope(user, db)
             if customer_id is not None:
                 if customer_id not in user_customer_ids:
@@ -207,7 +207,7 @@ class UseCaseService:
             # Admin or no user: respect an explicit customer_id filter.
             # ``is not None`` (not truthiness) so a zero/negative ID is a
             # *documented validation error at the route*, never silently
-            # widened to the global set (BE-02).
+            # widened to the global set.
             query = query.filter(UseCase.customer_id == customer_id)
 
         if department:
@@ -221,7 +221,7 @@ class UseCaseService:
             )
 
         # Unique tie-breaker after the sort key so equal values do not
-        # destabilize pagination pages (BE-03). SQLite treats NULLs as the
+        # destabilize pagination pages. SQLite treats NULLs as the
         # smallest value, so a DESC score puts unscored rows last — a stable,
         # documented order for the FE's "Sort by Score" page control.
         if sort == "created":
@@ -296,7 +296,7 @@ class UseCaseService:
             )
 
             if use_case.status == "completed" and AssessmentService.is_generic(db, use_case):
-                # Part 13 WS5 (R5): the org-wide readiness insight is
+                # the org-wide readiness insight is
                 # AI-round only — skip (background path: never raise).
                 logger.warning(
                     "Readiness insight trigger skipped: use case %s (customer %s) "
@@ -346,7 +346,7 @@ class UseCaseService:
     def get_stats(db: Session, user: dict | None = None) -> dict:
         """Get aggregate statistics with department AND customer isolation.
 
-        Customer isolation (BE-01 sibling defect): non-admins are scoped to
+        Customer isolation (sibling defect): non-admins are scoped to
         their accessible customers (``CustomerUser`` union); admins see global.
         Previously this applied only department isolation, so a non-admin
         caller received aggregates blended across every customer.

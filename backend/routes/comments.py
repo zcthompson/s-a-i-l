@@ -9,7 +9,7 @@ Security (2026-08-22 collaboration audit):
 - a user can only read or mark their own notifications (admin bypass);
 - posting a comment notifies every other user with READ scope on the use
   case's customer (customer-level notification), in addition to @mentions;
-- 404-first (R4/Q7): a use case or comment whose customer is outside the
+- 404-first: a use case or comment whose customer is outside the
   caller's read scope returns the same 404 as a missing one; in-scope
   capability denials keep their exact 403.
 """
@@ -45,7 +45,7 @@ def _require_user(request: Request) -> dict:
 
 
 def _can_access_customer(user: dict, db: Session, customer_id: int | None) -> bool:
-    """Read access: the central policy's CAP_READ (Part 13 DV7; admin is
+    """Read access: the central policy's CAP_READ (admin is
     handled by ``can``)."""
     return sales_access.can(user, db, sales_access.CAP_READ, customer_id)
 
@@ -60,7 +60,7 @@ def _use_case_in_scope_or_404(db: Session, user: dict, use_case_id: int) -> UseC
 
 
 def _can_write_customer(user: dict, db: Session, customer_id: int | None) -> bool:
-    """Write access: the central policy's CAP_NOTES (Part 13 DV7; admin is
+    """Write access: the central policy's CAP_NOTES (admin is
     handled by ``can``)."""
     return sales_access.can(user, db, sales_access.CAP_NOTES, customer_id)
 
@@ -108,7 +108,7 @@ async def create_comment(
         db, use_case_id, user["username"], comment.content, use_case.customer_id
     )
     # Customer-level notification for every other in-scope reader of the
-    # customer (central READ scope, Part 13 DV wave — DV8, ruling R1)
+    # customer (central READ scope)
     if use_case.customer_id:
         CollaborationService.broadcast_to_customer(
             db,
@@ -194,7 +194,7 @@ def get_notifications(
     junction-checked)."""
     user = _require_user(request)
     if customer_id is not None and not _can_access_customer(user, db, customer_id):
-        # 404-first (R4/Q7): an out-of-scope filter is the same as a missing
+        # 404-first: an out-of-scope filter is the same as a missing
         # customer — it must not confirm the customer exists.
         raise HTTPException(status_code=404, detail="Customer not found")
     return CollaborationService.get_user_notifications(
@@ -209,7 +209,7 @@ def mark_notification_read(
     db: Session = Depends(get_db),
 ):
     """Mark the caller's notification as read (owner or admin only;
-    404-first, R4/Q7 — someone else's notification is the same 404 as a
+    404-first — someone else's notification is the same 404 as a
     missing one, so a by-id probe cannot confirm its existence)."""
     user = _require_user(request)
     notification = CollaborationService.get_notification(db, notification_id)

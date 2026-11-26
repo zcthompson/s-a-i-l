@@ -1,4 +1,4 @@
-"""WP2 — integrations honor persisted DB values (audit P0-6).
+"""Integrations honor persisted DB values.
 
 The UI persists integration credentials through the admin-config API
 (categories ``integration_<platform>`` in system_config). The send and

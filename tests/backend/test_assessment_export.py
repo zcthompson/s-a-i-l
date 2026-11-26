@@ -286,7 +286,7 @@ class TestAssessmentExportAccess:
 
         r = client.get(f"/api/stats/export/csv/?assessment_id={archived_id}",
                        headers=headers)
-        # 404-first (R4/Q7): a foreign assessment is the same 404 as a missing one.
+        # 404-first: a foreign assessment is the same 404 as a missing one.
         assert r.status_code == 404
         assert r.json()["detail"] == "Assessment not found"
 

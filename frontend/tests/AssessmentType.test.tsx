@@ -1,5 +1,5 @@
 /**
- * Part 13 WS5 (R6/R8): generic customer assessments — frontend.
+ * generic customer assessments — frontend.
  *
  *  - Rounds rail: each round shows a type chip (AI / Generic) + its purpose
  *    line when non-empty (an empty/blank purpose renders nothing).

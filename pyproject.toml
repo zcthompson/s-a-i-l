@@ -26,9 +26,9 @@ dependencies = [
     "scipy>=1.11,<2.0",
     "pydantic-settings>=2.0,<3",
     "PyJWT>=2.8,<3",
-    # Directory authentication (LDAP/AD, 0.2.0). Pure-Python (stdlib ssl for
+    # Directory authentication (LDAP/AD). Pure-Python (stdlib ssl for
     # TLS/StartTLS) — no system libldap/C build, so the slim Dockerfile is
-    # unchanged (docs/archive/PLAN_LDAP_AD_AUTH.md §3.2).
+    # unchanged.
     "ldap3>=2.9,<3",
 ]
 

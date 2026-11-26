@@ -1,18 +1,18 @@
 """Third-Party Professional Services models (S-A-I-L Sales section).
 
 Structured, customer-scoped registry of external professional-service
-engagements (SIs, MSPs, consulting partners) — docs/archive/PLAN_THIRD_PARTY_SERVICES.md:
+engagements (SIs, MSPs, consulting partners):
 
 - Engagements are a customer-associated fact set, exactly like
   ``sales_notes`` and ``customer_technologies``. ``CustomerUser`` remains
-  the sole user→customer authority (charter §3); the ``ps_admin`` global
+  the sole user→customer authority; the ``ps_admin`` global
   role (service-layer value, §4.5) is the only cross-account reader/writer
   for this surface.
 - Controlled vocabularies (categories, statuses, billing models, document
   types) are free-form columns with service-layer validation — the exact
   ``CATEGORIES`` mechanism from ``sales_note.py`` (grows without a
   destructive migration).
-- Unknown stays unknown (charter §4): every nullable field stays NULL
+- Unknown stays unknown: every nullable field stays NULL
   until a user enters a value. No defaults for dates, references, or fees.
   Recording a user-entered figure is not fabrication.
 - ``verification_state`` follows the sales_note.py item-18 precedent
@@ -28,7 +28,7 @@ from sqlalchemy.orm import relationship
 from backend.models.use_case import Base, UseCase
 
 # Controlled vocabulary for engagement service categories
-# (docs/archive/PLAN_THIRD_PARTY_SERVICES.md §3.2: user baseline technical/virtualization/
+# (user baseline technical/virtualization/
 # automation + standard IT service-catalog domains). Stored as free-form
 # String(50) so the vocabulary can grow without a destructive migration; the
 # service layer validates against this list.

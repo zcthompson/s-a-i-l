@@ -1,4 +1,4 @@
-"""E5 synthetic contracts: honest components, bounded reads and scoped actions."""
+"""Synthetic contracts: honest components, bounded reads and scoped actions."""
 
 from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta

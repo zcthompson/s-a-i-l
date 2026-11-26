@@ -1,5 +1,5 @@
 """Sales access resolver (phase 2) — role normalization, scope, and capability
-rules from the shift-to-global-customer-management directive §4.
+rules from the shift to global customer management.
 
 Pure where possible (role normalization / capability decisions over the user
 dict); DB-backed tests only for the hierarchy/inside-sales scope derivation.

@@ -1,4 +1,4 @@
-"""LDAP/AD settings tests (0.2.0 P1, docs/archive/PLAN_LDAP_AD_AUTH.md §5).
+"""LDAP/AD settings tests.
 
 Deterministic: env defaults come from Settings (test env has no
 SAIL_AUTH_LDAP_* set → plan defaults); DB overrides are written via
@@ -211,7 +211,7 @@ class TestPublicSettingsSurface:
 
     def test_user_response_carries_auth_provider(self, client, db_session):
         # /me (or the admin listing) must expose auth_provider for the
-        # admin table's provider column (0.2.0 P2).
+        # admin table's provider column.
         from backend.models.use_case import User
 
         row = User(

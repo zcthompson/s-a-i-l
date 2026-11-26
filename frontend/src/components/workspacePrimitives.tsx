@@ -1,28 +1,28 @@
 /**
- * CHANGELOG 0.1.0 U3 — shared customer-workspace primitives.
+ * shared customer-workspace primitives.
  *
- * Reusable presentation primitives for the redesigned Customer workspace
- * (CHANGELOG 0.1.0 directives 6-15, 33-38, 60): a real tab control with a proper
+ * Reusable presentation primitives for the redesigned Customer workspace:
+ * a real tab control with a proper
  * active state (not buttons-as-pseudo-tabs), a consistent secondary-nav
- * shape for Intelligence/Assessments/Sales (directive 50-53), an overflow
- * action menu (destructive actions live here, never as primary buttons —
- * directive 35), a semantic summary card (directive 21), and a
- * single-next-action empty state (directive 56).
+ * shape for Intelligence/Assessments/Sales, an overflow
+ * action menu (destructive actions live here, never as primary buttons),
+ * a semantic summary card, and a
+ * single-next-action empty state.
  *
  * No data fetching in here — these are pure presentational components so
  * every workspace surface (header, secondary nav, intelligence cards,
  * tables) reuses the same control language instead of re-implementing it.
  * All colors come from the theme tokens; semantic use only
  * (red = destructive, amber = attention, green = healthy, accent =
- * primary action/navigation — directives 43-44).
+ * primary action/navigation).
  */
 import { useEffect, useId, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
-/* ── Breadcrumbs (directive 12) ─────────────────────────────────────────── */
+/* ── Breadcrumbs ─────────────────────────────────────────── */
 /** Standard breadcrumb: Dashboard / Customers / {customer}. Replaces the
- *  "Back to Dashboard" + "My Customers" button pair (directives 11-12). */
+ * "Back to Dashboard" + "My Customers" button pair. */
 export interface Crumb {
   label: string;
   /** Click target (e.g. a navigate callback). Omitted on the last crumb. */
@@ -68,7 +68,7 @@ export function Breadcrumbs({ crumbs, homeLabel = 'Dashboard', onHome }: { crumb
   );
 }
 
-/* ── SegmentedNav (directives 14, 50) ───────────────────────────────────── */
+/* ── SegmentedNav ───────────────────────────────────── */
 export interface SegmentedNavItem {
   id: string;
   label: string;
@@ -83,7 +83,7 @@ interface SegmentedNavProps {
   onChange: (id: string) => void;
   /** 'primary' = the ~5-area customer navigation; 'secondary' = the
    *  Summary | Technology | Knowledge | Sales Notes style rail beneath an
-   *  area. Distinct visual weight for the two levels (directive 13). */
+   * area. Distinct visual weight for the two levels. */
   variant?: 'primary' | 'secondary';
   ariaLabel?: string;
 }
@@ -169,12 +169,12 @@ export function SegmentedNav({ items, activeId, onChange, variant = 'secondary',
   );
 }
 
-/* ── ActionMenu (directives 33-38, 42) ──────────────────────────────────── */
+/* ── ActionMenu ──────────────────────────────────── */
 export interface ActionMenuItem {
   label: string;
   onClick: () => void;
   /** Semantic tinting for destructive items (red text) — the action itself
-   *  still runs its own confirmation flow (directive 35). */
+   * still runs its own confirmation flow. */
   destructive?: boolean;
   disabled?: boolean;
   /** Insert a divider after this item. */
@@ -327,10 +327,10 @@ export function ActionMenu({ label, items, variant = 'ghost', ariaLabel, title, 
   );
 }
 
-/* ── RowActions (directive 42) ──────────────────────────────────────────── */
-/** A compact per-row overflow menu for table/row-level actions (directive
- *  42): replaces the repetitive per-row Delete buttons. Destructive items
- *  are red-tinted and still run their own confirmation flow (directive 35).
+/* ── RowActions ──────────────────────────────────────────── */
+/** A compact per-row overflow menu for table/row-level actions:
+ * replaces the repetitive per-row Delete buttons. Destructive items
+ * are red-tinted and still run their own confirmation flow.
  *
  *  Wrapped in a <span> that stops click/keydown propagation so a RowActions
  *  trigger inside a clickable row (role="button") does NOT also open the
@@ -355,7 +355,7 @@ export function RowActions({ ariaLabel, items }: { ariaLabel: string; items: Act
   );
 }
 
-/* ── SummaryCard (directives 19-21, 43) ─────────────────────────────────── */
+/* ── SummaryCard ─────────────────────────────────── */
 export type SummaryTone = 'neutral' | 'positive' | 'warning' | 'negative' | 'accent';
 
 const TONE_COLOR: Record<SummaryTone, string> = {
@@ -372,9 +372,9 @@ interface SummaryCardProps {
   /** Supporting text beneath the value (sub-metrics, context). */
   sub?: ReactNode;
   tone?: SummaryTone;
-  /** Clickable drill-down (directive 55). */
+  /** Clickable drill-down. */
   onCardClick?: () => void;
-  /** Provenance tooltip text (directive 21): derived metrics expose HOW via
+  /** Provenance tooltip text: derived metrics expose HOW via
    *  a tooltip instead of a "Derived — deterministic aggregation" label. */
   tooltip?: string;
   style?: CSSProperties;
@@ -416,7 +416,7 @@ export function SummaryCard({ label, value, sub, tone = 'neutral', onCardClick, 
   );
 }
 
-/* ── EmptyState (directive 56) ───────────────────────────────────────────── */
+/* ── EmptyState ───────────────────────────────────────────── */
 interface EmptyStateProps {
   title: string;
   /** What is missing / why (one clear explanation, not zero-values). */

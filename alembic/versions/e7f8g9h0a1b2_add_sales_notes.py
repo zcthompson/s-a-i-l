@@ -5,8 +5,7 @@ Revises: c5d6e7f8a9b0
 Create Date: 2026-09-07
 
 Creates the sales_notes table plus the sales_note_technologies /
-sales_note_use_cases junction tables backing the S-A-I-L Sales Notes feature
-(CHANGELOG 0.0.80, P3, items 16-18). Notes are per-customer
+sales_note_use_cases junction tables backing the S-A-I-L Sales Notes feature. Notes are per-customer
 structured records; junctions link notes to the customer's Technology
 Inventory items and use cases (initiatives). Idempotent: each table is
 created only if absent.

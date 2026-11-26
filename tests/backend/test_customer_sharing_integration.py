@@ -291,7 +291,7 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
                 params={"user_id": user.id, "role": "member"},
                 headers=user_auth,
             )
-            # 404-first (R4/Q7): out of scope for the owner/admin surface.
+            # 404-first: out of scope for the owner/admin surface.
             assert r.status_code == 404
 
         def test_unauthenticated_cannot_add_user(self, client, db_session):
@@ -336,7 +336,7 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
         def test_no_access_can_not_list(self, client, user_auth, db_session, admin_auth):
             client.post("/api/customers/", json={"name": "SecretCust"}, headers=admin_auth)
             r = client.get("/api/customers/SecretCust/users/", headers=user_auth)
-            # 404-first (R4/Q7): out-of-scope is the same 404 as a missing customer.
+            # 404-first: out-of-scope is the same 404 as a missing customer.
             assert r.status_code == 404
 
     # ───────────────── Check Access ─────────────────
@@ -372,10 +372,10 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
             assert data["permission_level"] == "none"
 
         def test_central_read_without_junction_grants_access(self, client, db_session, admin_auth):
-            # Part 13 R1 (2026-10-29): /access/ follows the CENTRAL read
+            # /access/ follows the CENTRAL read
             # policy — a membership without a legacy junction row now reports
-            # has_access=true (the legacy junction-only check reported false;
-            # DV3). permission_level stays the junction-role display ("none")
+            # has_access=true (the legacy junction-only check reported false).
+            # permission_level stays the junction-role display ("none")
             # — the server enforces every write capability per route.
             from backend.models.account_membership import AccountMembership
             from backend.models.use_case import Customer
@@ -497,7 +497,7 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
                 params={"user_id": other.id, "role": "member"},
                 headers=user_headers,
             )
-            # 404-first (R4/Q7): an auditor junction is out of scope for the
+            # 404-first: an auditor junction is out of scope for the
             # owner/admin mutation surface.
             assert r.status_code == 404
 
@@ -526,7 +526,7 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
                 params={"user_id": other.id, "role": "member"},
                 headers=user_headers,
             )
-            # 404-first (R4/Q7): a member is out of scope for the owner/admin
+            # 404-first: a member is out of scope for the owner/admin
             # mutation surface.
             assert r.status_code == 404
 

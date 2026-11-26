@@ -20,7 +20,7 @@ from backend.services.notification_service import notify_user
 VALID_JUNCTION_ROLES = ("owner", "member", "auditor")
 # Global (non-junction) roles — mirrors UserService.ROLE_VALUES. ps_admin
 # (third-party admin) grants cross-account access to the 3rd-party
-# professional services surface ONLY (docs/archive/PLAN_THIRD_PARTY_SERVICES.md §4.5).
+# professional services surface ONLY.
 GLOBAL_ROLES = ("admin", "user", "auditor", "ps_admin")
 
 
@@ -34,7 +34,7 @@ class UserRef:
     Routes pass the caller's identity (id, is_admin, optional username)
     without coupling the services to full ORM ``User`` rows or request
     dicts. Replaces the legacy ``type("MockUser", ...)`` duck-typed
-    objects (v0.0.68 WP4).
+    objects.
     """
 
     id: int
@@ -365,8 +365,8 @@ class CustomerUserService:
             .filter(CustomerUser.user_id == user_id)
             .all()
         )
-        # ONE batched lookup for the referenced customers (re-recon A-7 —
-        # was one query per junction row).
+        # ONE batched lookup for the referenced customers (was one query
+        # per junction row).
         customers = {
             c.id: c
             for c in db.query(Customer).filter(

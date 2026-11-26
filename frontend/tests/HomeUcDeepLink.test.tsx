@@ -1,5 +1,5 @@
 /**
- * FE-11 — shareable use-case destinations (part 48).
+ * FE-11 — shareable use-case destinations.
  *
  * A deep link /?view=detail&uc=<id> (and scoring-dashboard/drilldown) must
  * restore the authorized record via the API instead of bouncing to the

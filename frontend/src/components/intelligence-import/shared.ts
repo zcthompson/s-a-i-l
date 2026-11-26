@@ -10,7 +10,7 @@ export const tdStyle: CSSProperties = { padding: '10px 12px', fontSize: '0.85rem
 export const numStyle: CSSProperties = { ...tdStyle, textAlign: 'right' };
 export const linkBtn: CSSProperties = { background: 'none', border: 'none', color: 'var(--brand-700)', cursor: 'pointer', fontSize: '0.85rem', textDecoration: 'underline', padding: 0 };
 
-/** Non-blocking import warning banner (Part 14 import remediation). */
+/** Non-blocking import warning banner. */
 export const warningStyle: CSSProperties = {
   marginTop: '10px', padding: '8px 12px', fontSize: '0.85rem', fontWeight: 500,
   color: 'var(--neutral-700)', background: 'var(--neutral-50, #f5f9fa)',

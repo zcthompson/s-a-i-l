@@ -1,4 +1,4 @@
-// Regression tests for the WP25 admin subview wiring (user report,
+// Regression tests for the admin subview wiring (user report,
 // 2026-08-31):
 //
 // 1. Sidebar navigation between the admin subviews (Pending Approvals /
@@ -10,7 +10,7 @@
 //    AdminPage is now a pure function of the parent view.
 //
 // 2. The in-page tabs must write their view into the URL (?view= param),
-//    per the WP22 invariant that every in-app navigation is a
+// Per the invariant that every in-app navigation is a
 //    restorable history step — previously the tabs were local-only, so a
 //    refresh restored the URL's tab instead of the visible one.
 import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
@@ -86,7 +86,7 @@ function UrlProbe() {
 
 const url = () => screen.getByTestId('url').textContent ?? '';
 
-describe('Admin subview wiring (WP25)', () => {
+describe('Admin subview wiring', () => {
   it('sidebar Pending after sidebar All Users switches the tab and updates the URL (reported bug)', async () => {
     render(
       <MemoryRouter initialEntries={['/?view=admin-users']}>

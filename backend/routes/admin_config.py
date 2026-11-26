@@ -280,7 +280,7 @@ def update_docling_config(
     return get_docling_config(request, db)
 
 
-# ── Document processing provider (Part 13 WS6) ──────────────────────────────
+# ── Document processing provider ──────────────────────────────
 
 
 @router.get("/documents", response_model=DocumentProcessingConfig)
@@ -406,7 +406,7 @@ def test_email_connection(request: Request, db: Session = Depends(get_db)):
     return EmailTestResponse(ok=error is None, latency_ms=int((time.monotonic() - start) * 1000), error=error)
 
 
-# ── LDAP/AD directory authentication (0.2.0 P1) ──────────────────────────────
+# ── LDAP/AD directory authentication ──────────────────────────────
 
 
 @router.get("/auth_ldap", response_model=LdapSettingsResponse)

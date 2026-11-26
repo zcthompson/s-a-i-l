@@ -1,4 +1,4 @@
-"""Account-membership rules (RBAC directive): who holds which role on which
+"""Account-membership rules (RBAC model): who holds which role on which
 account, section grants for inside sales, ownership transfer and the
 ownership-review queue.
 
@@ -70,7 +70,7 @@ def _audit(db: Session, actor: User | None, action: str, customer_id: int | None
 
 
 def stage_prospect_audit(db: Session, creator_id: int, customer: Customer, request=None) -> None:
-    """Audit a manager-created prospect entering the ownership-review queue (D3)."""
+    """Audit a manager-created prospect entering the ownership-review queue."""
     creator = db.query(User).filter(User.id == creator_id).first()
     _audit(db, creator, "account.prospect_create", customer.id, creator_id, {
         "name": customer.name, "ownership_status": customer.ownership_status,
@@ -439,8 +439,8 @@ def list_ownership_review(db: Session) -> list[dict]:
         .order_by(Customer.name)
         .all()
     )
-    # ONE batched owners lookup for all review customers (re-recon A-7 —
-    # was one query per customer); the per-customer order_by membership id
+    # ONE batched owners lookup for all review customers (was one query
+    # per customer); the per-customer order_by membership id
     # ordering is preserved by the global order.
     owner_rows = (
         db.query(User, AccountMembership)

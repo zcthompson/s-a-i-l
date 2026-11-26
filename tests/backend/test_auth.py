@@ -371,7 +371,7 @@ class TestJWTToken:
 class TestUseCaseService:
     """Tests for use case CRUD via service layer.
 
-    Part 13 R2 (2026-10-29): use cases with no customer are admin-only, so
+use cases with no customer are admin-only, so
     these mechanics pins create/update with admin users (user=None remains
     the trusted in-process path)."""
 

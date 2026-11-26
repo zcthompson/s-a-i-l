@@ -1,5 +1,5 @@
 /**
- * Part 14 C2 + C3 — AdminConsole: block order Application Functions →
+ * AdminConsole: block order Application Functions →
  * Portfolio → Users Management; the Portfolio summary shows the first 10
  * accounts with H2 controls (search over name + aliases, filter, sort, count
  * line, reset; LOCAL nav state — no URL sync, primary ruling on SR-1) and
@@ -60,7 +60,7 @@ const portfolioRows = () =>
 beforeEach(seed);
 afterEach(cleanup);
 
-describe('Part 14 AdminConsole Portfolio (C2)', () => {
+describe('AdminConsole Portfolio', () => {
   it('omits its duplicate portfolio and request inside the shared dashboard', async () => {
     apiMock.listCustomers.mockClear();
     render(<AdminConsole onNavigate={() => undefined} showPortfolio={false} />);
@@ -117,7 +117,7 @@ describe('Part 14 AdminConsole Portfolio (C2)', () => {
   });
 });
 
-describe('Part 14 AdminConsole Users (C3)', () => {
+describe('AdminConsole Users', () => {
   it('caps the table at the first 10 users with an honest count line', async () => {
     render(<AdminConsole onNavigate={() => undefined} />);
     await screen.findByLabelText('Search users');

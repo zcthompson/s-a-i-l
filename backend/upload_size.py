@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from backend.config import get_settings
 
-# A-8 re-recon 2026-11-01: read through Settings (import time — the
+# Read through Settings (import time — the
 # per-process env is stable).
 MAX_UPLOAD_BYTES = get_settings().max_upload_bytes
 

@@ -1,6 +1,6 @@
 """REST API routes for department operations.
 
-Access control (404-first, R4/Q7):
+Access control (404-first):
 - Admin users: unrestricted access.
 - Other users: access limited to their central READ scope (sales_access).
 - Unauthenticated: 401.

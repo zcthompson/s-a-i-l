@@ -1,4 +1,4 @@
-"""Central sales-access policy resolver (shift-to-global-customer-management,
+"""Central sales-access policy resolver (shift to global customer management,
 phase 2).
 
 The directive (§4) requires ONE server-side policy layer that answers both
@@ -10,7 +10,7 @@ every route. This module is that layer. It is:
     user_id, customer_ids, junction_roles) plus a DB session. Nothing calls
     it yet (phase 3 converts the routes), so existing authorization behavior
     is unchanged until callers adopt it.
-  * **Empty scope = no data, never all** (directive §4 rule 11). Only a
+  * **Empty scope = no data, never all**. Only a
     system admin (``is_admin == 1``) gets the "all customers" expansion; every
     other role gets an explicit union of granted customer ids, which may be
     empty.
@@ -50,7 +50,7 @@ from backend.models.sales_access import (
 )
 from backend.models.use_case import Customer, CustomerUser
 
-# Capability vocabulary (the action axes in the directive §4 matrix).
+# Capability vocabulary (the action axes in the capability matrix).
 CAP_READ = "read"
 CAP_EXPORT = "export"
 CAP_EDIT = "edit"
@@ -59,7 +59,7 @@ CAP_KNOWLEDGE = "knowledge"
 CAP_MANAGE_TEAM = "manage_team"
 CAP_TRANSFER_OWNERSHIP = "transfer_ownership"
 CAP_SYSTEM_ADMIN = "system_admin"
-# RBAC directive axes (account memberships).
+# RBAC model axes (account memberships).
 CAP_METADATA = "metadata"
 CAP_MANAGE_COOWNERS = "manage_owners"
 CAP_INSIDE_GRANTS = "inside_grants"
@@ -71,7 +71,7 @@ CAP_CONTACTS = "contacts"
 CAP_ACTIVITIES = "activities"
 CAP_TASKS = "tasks"
 CAP_STRATEGY = "strategy"
-# Reserved for the CRM expansion (PLAN 2026-11-03 roadmap, E6/E7/E8): the
+# Reserved for the CRM expansion: the
 # section vocabulary already reserves these names in
 # models/account_membership.py; these capabilities activate the gates with
 # the H4 matrix shape (owner writes; inside-sales gated on a contribute
@@ -241,7 +241,7 @@ def _all_customer_ids(db: Session | None) -> set:
 def customer_scope(user: dict, db: Session | None) -> set:
     """Return the set of customer ids ``user`` is authorized to see.
 
-    Rules (directive §4):
+    Rules:
       * system admin (is_admin=1) -> a special sentinel is NOT returned; the
         caller treats is_admin as unrestricted (see ``is_unrestricted``).
         This function still returns the explicit union for symmetry, but the
@@ -267,7 +267,7 @@ def customer_scope(user: dict, db: Session | None) -> set:
 
     # inside-sales assignments (customer-specific; role-gated to match
     # _access — an assignment row held by a non-inside_sales user does not
-    # widen scope; primary ruling F1, Part 13 DV wave 2026-10-30)
+    # widen scope
     if uid is not None and effective_role(user) == "inside_sales":
         scope |= _inside_sales_customer_ids(db, uid)
 
@@ -293,7 +293,7 @@ def customer_scope(user: dict, db: Session | None) -> set:
 
 def is_unrestricted(user: dict) -> bool:
     """True only for a system admin. 'Global' never means bypassing
-    permissions for any other role (directive §3)."""
+    permissions for any other role."""
     return user.get("is_admin") == 1
 
 

@@ -1,4 +1,4 @@
-"""Add intelligence_imports.amount_issues (Part 14 import remediation).
+"""Add intelligence_imports.amount_issues.
 
 An unreadable amount cell on an imported pipeline row no longer rejects the
 whole file: the amount is recorded as unknown and the cell is reported as an

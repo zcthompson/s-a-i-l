@@ -42,7 +42,7 @@ const NotificationBell = lazy(() => import('../components/NotificationBell').the
 const NotificationsPage = lazy(() => import('./NotificationsPage').then(m => ({ default: m.NotificationsPage })));
 
 // Suspense fallback: lightweight spinner matching project style
-// WP23a F4(c): client-side ceiling for a long AI operation. Abort at this
+// F4(c): client-side ceiling for a long AI operation. Abort at this
 // point — the server-side model work may run to completion (no server
 // cancel protocol exists; note for a future backend WP).
 const LONG_OP_TIMEOUT_MS = 300_000;
@@ -88,7 +88,7 @@ export function Home() {
   const username = getAuthUsername();
   const userIsAdmin = getAuthIsAdmin();
   const userRole = getAuthRole();
-  // D3: sales managers may create prospect accounts (admin-reviewed).
+  // Sales managers may create prospect accounts (admin-reviewed).
   const canCreateAccounts = userIsAdmin || getAuthSalesRole() === 'sales_manager';
   // UX audit #7: seed + persist the sidebar collapse preference through the
   // preferences module — it was the only appearance setting lost on reload.
@@ -146,7 +146,7 @@ export function Home() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [unreadStale, setUnreadStale] = useState(false);
   // F5: seed the customer selection from ?customer= so refresh/deep links
-  // restore the customer's dashboard (WP23 F5 pain: "refresh loses the
+  // restore the customer's dashboard (F5 pain: "refresh loses the
   // customer context"). Only honored for the customers view.
   const [selectedCustomerName, setSelectedCustomerName] = useState<string | null>(() => {
     if (view !== 'customers') return null;
@@ -171,7 +171,7 @@ export function Home() {
   const [commentsStatus, setCommentsStatus] = useState<'loading' | 'empty' | 'error' | null>(null);
   const [commentsError, setCommentsError] = useState<string | null>(null);
 
-  // WP23a F4: the overlay names the operation in flight + elapsed time, and
+  // F4: the overlay names the operation in flight + elapsed time, and
   // a 300s cap aborts the client wait (see LONG_OP_TIMEOUT_MS).
   const [loadingLabel, setLoadingLabel] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
@@ -214,7 +214,7 @@ export function Home() {
   //
   // `internalUrlWrites` records every view value this file has written to
   // the URL so the URL→view effect can recognize its OWN writes landing
-  // (WP23a F1 root cause, the WP26 oscillation class re-opened through the
+  // (F1 root cause, the oscillation class re-opened through the
   // safety-net path): the safety-net redirects a selection-required view
   // (e.g. 'scoring-dashboard' → 'assessment-list') WITHOUT the URL having
   // caught up, and without this guard the URL→view effect re-applies the
@@ -289,7 +289,7 @@ export function Home() {
     setSearchParams(next, { replace: initialUrlSync.current || legacyViewAlias });
     initialUrlSync.current = false;
     // Deps: [view, selectedCustomerName, selectedUseCase] — this effect must
-    // NOT key on searchParams (WP26 root cause: re-running when the URL
+    // NOT key on searchParams (root cause: re-running when the URL
     // changes reads the pre-update value and pushes stale state back into the
     // URL, oscillating view and URL). It runs only when the STATE changes and
     // reads the current render's searchParams (always the live URL).
@@ -300,7 +300,7 @@ export function Home() {
   // links, manual URL edits). Changes that match a value this file itself
   // wrote (internalUrlWrites / pendingCustomerWrite) are consumed and
   // skipped — re-applying our own write is what turned the safety-net
-  // redirect into a view/URL oscillation (WP23a F1; WP26 established the
+  // redirect into a view/URL oscillation (F1; the
   // one-direction rule).
   useEffect(() => {
     const raw = searchParams.get('view');
@@ -314,7 +314,7 @@ export function Home() {
     // F5: external customer-param changes (back/forward to a different
     // customer entry, manual edit). A pending internal write that matches
     // the param is consumed (our own write just landed — re-applying it is
-    // how the WP26 oscillation class re-enters); anything else is applied.
+    // how the oscillation class re-enters); anything else is applied.
     // (setSelectedCustomerName with an equal value is a no-op — React
     // bails out — so the null case needs no special-casing.)
     const cust = searchParams.get('customer') ?? null;
@@ -331,7 +331,7 @@ export function Home() {
   // forbidden(404), and recovery state. External ?uc changes (back/forward,
   // manual edit) fetch via the API (backend enforces authorization); our OWN
   // writes (pendingUcWrite) are consumed so the URL sync doesn't re-fetch
-  // (the WP23a F1 oscillation class, same guard as ?customer=).
+  // (the F1 oscillation class, same guard as ?customer=).
   useEffect(() => {
     const ucId = searchParams.get('uc');
     const pending = pendingUcWrite.current;
@@ -629,7 +629,7 @@ export function Home() {
     setView('assessment-create');
   };
 
-  // WP23a (F1): customer-detail cross-view handoff. The customer dashboard
+  // (F1): customer-detail cross-view handoff. The customer dashboard
   // selects its use case LOCALLY; before the view changes, the use case is
   // handed up to Home state so selection-required views (scoring-dashboard,
   // scoring-drilldown) render FOR THAT use case and collab-comments opens
@@ -678,12 +678,12 @@ export function Home() {
       </div>
     );
     if (view === 'detail' && selectedUseCase) return (
-      // WP23a step 0 (F6): the shared detail component — the ~165-line
+      // (F6): the shared detail component — the ~165-line
       // inline copy is gone (it had drifted from the CustomerDashboard
       // variant: labels + navigation targets).
       <UseCaseDetail
         useCase={selectedUseCase}
-        // Part 13 WS5 (R8): AI scoring entry points are hidden on
+        // AI scoring entry points are hidden on
         // generic-round use cases (the backend 422s them) — no dead controls.
         scoringUnavailableReason={selectedUseCase.assessment_type === 'generic' ? AI_SCORING_REQUIRES_AI_ASSESSMENT : null}
         onEdit={(uc) => { setSelectedUseCase(uc); setEditMode(true); setView('assessment-create'); }}

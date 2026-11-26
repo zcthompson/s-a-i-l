@@ -1,4 +1,4 @@
-"""Deterministic, rule-based customer-vertical registry (WP19).
+"""Deterministic, rule-based customer-vertical registry.
 
 Pure data + pure functions. No LLM, no inference. Given a customer's
 vertical (industry), this module answers two questions deterministically:

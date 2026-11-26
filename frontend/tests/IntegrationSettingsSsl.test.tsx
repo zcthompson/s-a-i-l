@@ -1,6 +1,6 @@
 /**
  * Component tests for the Application Settings connection-trust surfaces
- * (docs/archive/PLAN_LDAP_AD_AUTH.md P0b, user direction 2026-09-14).
+ * (user direction 2026-09-14).
  *
  * Covers the two new/extended sections in IntegrationSettings:
  * - Inference: ssl_verify select (full/skip/ca) + ssl_ca_bundle textarea

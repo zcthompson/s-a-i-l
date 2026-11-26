@@ -1,5 +1,5 @@
 /**
- * E6 — DealsPanel component tests (synthetic fixtures only).
+ * DealsPanel component tests (synthetic fixtures only).
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, within, waitFor } from '@testing-library/react';

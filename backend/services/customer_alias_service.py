@@ -1,4 +1,4 @@
-"""Customer alias tags — write surface (Part 14, A2).
+"""Customer alias tags — write surface.
 
 Aliases are alternate names for a customer account. ``alias_norm`` uses the
 matching normalization — NFKC + casefold + whitespace collapse (gap #6:

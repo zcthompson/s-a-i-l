@@ -9,10 +9,10 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 
 # Rate limiting configuration
-# 0.1.6: default raised 1000 → 10000/hour — the old budget was exhausted
+# Default raised 1000 → 10000/hour — the old budget was exhausted
 # mid-suite by the full test run (and is tight for production use as the
 # app integrates more API surfaces). Env-overridable as before.
-# A-8 re-recon 2026-11-01: read through Settings at import time (.env is
+# Read through Settings at import time (.env is
 # loaded before this import; the per-process env is stable).
 from backend.auth import resolve_auth_enabled
 from backend.config import get_settings
@@ -37,7 +37,7 @@ ENDPOINT_RATE_LIMITS: dict[str, tuple[int, int]] = {
 
 class RateLimiter:
     """Simple in-memory rate limiter with bounded storage."""
-    
+
     def __init__(self, max_entries: int = 10000):
         self.requests: dict[tuple[str, str], list] = defaultdict(list)
         self.max_entries = max_entries
@@ -56,21 +56,21 @@ class RateLimiter:
             bucket, (RATE_LIMIT_REQUESTS, RATE_LIMIT_WINDOW)
         )
         return bucket, max_requests, window
-    
+
     def is_allowed(self, client_ip: str, endpoint: str) -> bool:
         """Check if a request is allowed."""
         now = time.time()
-        
+
         # Get rate limit for endpoint
         bucket, max_requests, window = self.get_limit(endpoint)
         key = (client_ip, bucket)
-        
+
         # Clean old requests
         self.requests[key] = [
             req_time for req_time in self.requests[key]
             if req_time > now - window
         ]
-        
+
         # Clean up oldest entries if we're hitting the limit (bounded storage)
         if len(self.requests) > self.max_entries:
             # Sort by oldest entry and remove oldest 20%
@@ -79,28 +79,28 @@ class RateLimiter:
             remove_count = len(sorted_ips) // 5
             for request_key, _ in sorted_ips[:remove_count]:
                 del self.requests[request_key]
-        
+
         # Check if limit exceeded
         if len(self.requests[key]) >= max_requests:
             return False
-        
+
         # Record request
         self.requests[key].append(now)
         return True
-    
+
     def get_remaining(self, client_ip: str, endpoint: str) -> int:
         """Get remaining requests."""
         now = time.time()
-        
+
         bucket, max_requests, window = self.get_limit(endpoint)
         key = (client_ip, bucket)
-        
+
         # Clean old requests
         self.requests[key] = [
             req_time for req_time in self.requests[key]
             if req_time > now - window
         ]
-        
+
         return max(0, max_requests - len(self.requests[key]))
 
 
@@ -110,11 +110,11 @@ rate_limiter = RateLimiter()
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """Rate limiting middleware."""
-    
+
     async def dispatch(self, request: Request, call_next):
         """Process request and apply rate limiting."""
         path = request.url.path
-        
+
         # Skip rate limiting for public routes and static assets
         public_prefixes = (
             "/health", "/readyz", "/openapi.json", "/docs", "/redoc", "/favicon.ico",
@@ -122,7 +122,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         )
         if any(path.startswith(p) for p in public_prefixes):
             return await call_next(request)
-        
+
         # Skip rate limiting if auth is disabled — per-request read BY
         # DESIGN (the SEC-02 bucket test monkeypatches SAIL_API_KEYS
         # per-request, and a deployment can flip the switch without a
@@ -132,13 +132,13 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if not resolve_auth_enabled(os.environ.get("SAIL_AUTH_ENABLED", ""),
                                     os.environ.get("SAIL_API_KEYS", "")):
             return await call_next(request)
-        
+
         client_ip = self.get_client_ip(request)
-        
+
         # Only rate limit API endpoints (not SPA fallback routes)
         if not path.startswith("/api/"):
             return await call_next(request)
-        
+
         # Check rate limit
         _, max_requests, window = rate_limiter.get_limit(path)
         if not rate_limiter.is_allowed(client_ip, path):
@@ -155,22 +155,22 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                     "X-RateLimit-Reset": str(int(time.time()) + window),
                 }
             )
-        
+
         # Process request
         response = await call_next(request)
-        
+
         # Add rate limit headers
         remaining = rate_limiter.get_remaining(client_ip, request.url.path)
         response.headers["X-RateLimit-Limit"] = str(max_requests)
         response.headers["X-RateLimit-Remaining"] = str(remaining)
         response.headers["X-RateLimit-Reset"] = str(int(time.time()) + window)
-        
+
         return response
-    
+
     def get_client_ip(self, request: Request) -> str:
         """Get client IP address."""
         direct_peer = request.client.host if request.client else "unknown"
-        # Per-request env read by design (A-8 re-recon 2026-11-01): the
+        # Per-request env read by design: the
         # trusted-proxy set is runtime-overridable and pinned as such by
         # test_security_sec0234 — unlike the import-time budgets above.
         trusted_proxies = {

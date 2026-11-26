@@ -1,7 +1,7 @@
 """Sales Notes service layer (S-A-I-L).
 
 Business logic for per-customer structured sales notes
-(CHANGELOG 0.0.80 items 16-18):
+
 - Create/read/update/delete notes with category control vocabulary
 - Related Technology Inventory items and use cases via junction tables,
   validated for CUSTOMER OWNERSHIP (a note may only link its own customer's

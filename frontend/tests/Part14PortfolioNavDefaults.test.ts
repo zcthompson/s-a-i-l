@@ -1,4 +1,4 @@
-/** Part 14 A7/B1 — portfolioNav alias search + the additive per-surface defaults
+/** portfolioNav alias search + the additive per-surface defaults
  *  argument. Synthetic names only. Omitted defaults = the H2 behavior. */
 import { describe, it, expect } from 'vitest';
 import {

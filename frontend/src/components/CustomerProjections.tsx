@@ -109,7 +109,7 @@ export const CustomerProjections: React.FC<CustomerProjectionsProps> = ({
     try {
       setGenerating(true);
       setError(null);
-      // WP23a F4(c): 300s cap on the projection fetch (client-side — the
+      // F4(c): 300s cap on the projection fetch (client-side — the
       // model may keep running on the server; the abort message says so).
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 300_000);

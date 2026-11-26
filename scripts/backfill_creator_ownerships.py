@@ -1,4 +1,4 @@
-"""Creator-ownership backfill (E0 CRM prerequisites — data repair, no schema changes).
+"""Creator-ownership backfill (CRM prerequisites — data repair, no schema changes).
 
 Closes the 2026-10-15 gap: customers created via the API/UI historically
 carried only the legacy ``customer_users`` owner row, with no
@@ -19,7 +19,7 @@ Safety properties (also pinned in tests/backend/test_e0_crm_prerequisites.py):
   without any customer details beyond the affected customer ids.
 
 Validate against a DISPOSABLE copy of the database first — never point
---apply at a live/dev DB without operator review (PLAN 2026-11-03 E0).
+--apply at a live/dev DB without operator review.
 
 Usage (host, against an explicit DB file — dry-run):
     DB_PATH=/path/to/sail.db venv/bin/python scripts/backfill_creator_ownerships.py

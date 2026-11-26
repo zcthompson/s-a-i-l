@@ -1,5 +1,5 @@
 /**
- * Regression tests for WP23a step 3 (F4 — long AI operations had no
+ * Regression tests (F4 — long AI operations had no
  * progress, no cancel, no busy state):
  *
  *   (a) the full-screen overlay is named per operation ("Scoring
@@ -157,7 +157,7 @@ function renderApp(entry = '/?view=assessment-list') {
   );
 }
 
-describe('F4 — long-operation feedback (WP23a step 3)', () => {
+describe('F4 — long-operation feedback', () => {
   it('(a) the overlay names the scoring operation while the fetch is in flight', async () => {
     renderApp();
     const scoreBtn = await screen.findByText('⚡ Score');
@@ -183,7 +183,7 @@ describe('F4 — long-operation feedback (WP23a step 3)', () => {
     renderApp('/?view=customers');
     const customerRow = await screen.findByRole('button', { name: 'Select customer Energy Test Company' });
     fireEvent.click(customerRow);
-    // CHANGELOG 0.1.0 U4: the use-case table lives under Assessments ▸ Use Cases.
+    // the use-case table lives under Assessments ▸ Use Cases.
     fireEvent.click(await screen.findByRole('tab', { name: 'Navigate to Discovery & Value' }));
     fireEvent.click(screen.getByRole('tab', { name: 'Navigate to Use Cases' }));
     const row = await screen.findByRole('button', { name: 'Open assessment Improve operational efficiency' });

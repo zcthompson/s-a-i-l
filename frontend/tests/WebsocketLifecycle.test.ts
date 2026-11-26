@@ -1,7 +1,7 @@
 /**
- * FE-04 — notification socket lifecycle & subscription cleanup.
+ * notification socket lifecycle & subscription cleanup.
  *
- * Covers the acceptance scenarios from part 48: deliberate disconnect,
+ * Covers the acceptance scenarios: deliberate disconnect,
  * repeated mount/unmount, initial network failure, reconnect failure,
  * successful recovery, 4401 (non-retryable), silent handshake (a timeout is
  * a FAILURE, not an authenticated success), and concurrent connects.

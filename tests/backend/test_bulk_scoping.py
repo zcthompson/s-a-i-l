@@ -141,7 +141,7 @@ with patch("backend.auth.hash_password", side_effect=lambda p: _FAKE_HASH):
             data = r.json()
             assert data["success_count"] == 0
             assert data["error_count"] == 2
-            # R4/Q7: out-of-scope ids report the SAME per-item error as
+            # out-of-scope ids report the SAME per-item error as
             # missing ids — a batch probe must not confirm existence.
             for err in data["errors"]:
                 assert err["error"] == f"Use case {err['use_case_id']} not found"
@@ -155,7 +155,7 @@ with patch("backend.auth.hash_password", side_effect=lambda p: _FAKE_HASH):
             )
             data = r.json()
             assert data["error_count"] == 1
-            # R2 + R4/Q7: unassigned use cases are admin-only; for a
+            # unassigned use cases are admin-only; for a
             # non-admin the id is the same per-item error as a missing one.
             assert data["errors"][0]["error"] == f"Use case {ids['uc_none']} not found"
 
@@ -168,7 +168,7 @@ with patch("backend.auth.hash_password", side_effect=lambda p: _FAKE_HASH):
             )
             data = r.json()
             assert data["error_count"] == 1
-            # Central-policy denial (Part 13 DV6): an auditor junction holds
+            # Central-policy denial: an auditor junction holds
             # no CAP_EDIT on the customer = no write access.
             assert data["errors"][0]["error"] == "scoring requires edit access to this customer"
 
@@ -227,7 +227,7 @@ class TestCreateFromTemplateScoping:
             },
             headers=_token_for("bulk_stranger"),
         )
-        # 404-first (R4/Q7): a customer the stranger cannot reach is the same
+        # 404-first: a customer the stranger cannot reach is the same
         # 404 as a missing one.
         assert r.status_code == 404
 

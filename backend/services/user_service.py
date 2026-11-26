@@ -73,8 +73,7 @@ class UserService:
         if user is None:
             raise ValueError("User not found")
         # Directory-managed rows: the corporate directory is the password
-        # authority — the app must not write a local hash on them (0.2.0 P1,
-        # plan §4).
+        # authority — the app must not write a local hash on them.
         if (user.auth_provider or "local") == "ldap":
             raise ValueError("Account is managed by the corporate directory")
 
@@ -186,7 +185,7 @@ class UserService:
         if user is None:
             raise ValueError("User not found")
         # Directory-managed rows (auth_provider='ldap') store no local hash —
-        # the directory is the password authority (0.2.0 P1, plan §4).
+        # the directory is the password authority.
         if (user.auth_provider or "local") == "ldap":
             raise ValueError("Account is managed by the corporate directory")
         user.hashed_password = hash_password(new_password)
@@ -251,7 +250,7 @@ class UserService:
                 AccountMembership.user_id == user_id
             ).delete(synchronize_session=False)
             db.query(SavedView).filter(SavedView.user_id == user_id).delete(synchronize_session=False)
-            # D4: a deal keeps its owner-name snapshot; only the user link is cleared.
+            # A deal keeps its owner-name snapshot; only the user link is cleared.
             db.query(Deal).filter(Deal.owner_user_id == user_id).update(
                 {Deal.owner_user_id: None}, synchronize_session=False)
             db.query(CustomerUser).filter(

@@ -1,26 +1,27 @@
 """Shared customer-access authorization helpers (S-A-I-L).
 
-Single home for the per-customer access gates (re-recon A-3, 2026-11-01:
-the per-route-module re-implementations consolidated here as explicit
-variants; re-recon A-1: the sales-notes / customer-knowledge /
-pipeline-import surfaces moved onto the same central basis; the DV wave
+Single home for the per-customer access gates (the per-route-module
+re-implementations consolidated here as explicit
+variants; the sales-notes / customer-knowledge /
+pipeline-import surfaces moved onto the same central basis; subsequent
+consolidation
 moved the remaining nine junction-only divergences).
 
 Account (central-policy) variants — the single authority is the central
-``sales_access`` READ capability (ruling R1); ``can_read`` is equivalent
+``sales_access`` READ capability; ``can_read`` is equivalent
 to the customer being in the caller's ``customer_scope`` (admin
 unrestricted):
 
 - ``can_read`` — the boolean central READ capability.
 - ``read_or_404`` — load by id; missing OR out-of-scope → the same 404
-  (404-first, R4/Q7 — no existence leakage).
+  (404-first — no existence leakage).
 - ``read_existing_or_404`` — same, for a pre-loaded customer object.
 - ``read_by_name_or_404`` — same, resolving by customer name.
 - ``read_or_403`` — authenticate + central READ, 403-first (the
-  documented BE-04 ordering kept by ``sales_section``).
+  documented ordering kept by ``sales_section``).
 
 PS-surface variants (3rd-party services) — junction-only BY DELIBERATE
-RULING (re-recon A-2, 2026-11-01: the central-policy ruling confines
+DESIGN (the central policy confines
 ``ps_admin`` to exactly this surface, so it is never migrated to the
 central basis; the other variants above must NOT be used here):
 
@@ -56,7 +57,7 @@ def can_read(user: dict, db: Session, customer_id: int) -> bool:
 def read_or_404(db: Session, user: dict, customer_id: int) -> Customer:
     """Load the customer by id; missing or out-of-scope → the same 404.
 
-    404-first (R4/Q7): a customer-id probe cannot reveal existence.
+    404-first: a customer-id probe cannot reveal existence.
     """
     customer = db.query(Customer).filter(Customer.id == customer_id).first()
     if customer is None or not can_read(user, db, customer_id):
@@ -82,7 +83,7 @@ def read_by_name_or_404(db: Session, user: dict, customer_name: str) -> Customer
 
 
 def read_or_403(request: Request, db: Session, customer_id: int) -> dict:
-    """Authenticate + central READ, 403-first (the documented BE-04
+    """Authenticate + central READ, 403-first (the documented
     ordering — ``sales_section`` keeps this deliberate ordering)."""
     user = get_user_from_request(request)
     if user is None:
@@ -125,8 +126,8 @@ def require_account_read(request: Request, db: Session, customer_id: int) -> tup
 
 
 def ps_customer_read_ok(user: dict, customer_id: int) -> bool:
-    """PS-surface read basis — junction-only BY DELIBERATE RULING
-    (re-recon A-2, 2026-11-01): ps_role_ok or a CustomerUser row. This
+    """PS-surface read basis — junction-only BY DESIGN:
+    ps_role_ok or a CustomerUser row. This
     surface is NOT on the central basis on purpose (ps_admin confinement)."""
     return ps_role_ok(user) or customer_id in user.get("customer_ids", [])
 

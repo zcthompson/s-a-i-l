@@ -1,5 +1,5 @@
 /**
- * F19 (Part 13 wave B): admin deep links render a fail-closed denied state
+ * admin deep links render a fail-closed denied state
  * for non-admins instead of controls that 403 on click.
  *
  *  - `?view=admin*` (AdminPage) and `?view=admin-integrations`
@@ -106,7 +106,7 @@ describe('F19 — admin deep links fail closed for non-admins', () => {
     expect(screen.queryByRole('button', { name: 'Create customer' })).toBeNull();
   });
 
-  it('D3: sales manager ?view=customer-create -> prospect form with the review note', async () => {
+  it('sales manager ?view=customer-create -> prospect form with the review note', async () => {
     authState.isAdmin = false;
     authState.salesRole = 'sales_manager';
     try {
@@ -146,7 +146,7 @@ describe('F19 — sidebar hides the admin-only New Customer entry', () => {
     expect(navArea.queryByText('New Customer')).toBeNull();
   });
 
-  it('D3 sales manager: the create entry is labelled New Prospect', () => {
+  it('sales manager: the create entry is labelled New Prospect', () => {
     const { container } = render(
       <Sidebar {...sidebarProps} is_admin={false} userRole="user" canCreateProspects />
     );

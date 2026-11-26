@@ -1,6 +1,6 @@
-"""Effective LDAP/AD directory-auth settings (0.2.0 P1).
+"""Effective LDAP/AD directory-auth settings.
 
-docs/archive/PLAN_LDAP_AD_AUTH.md §3.4 — env is the source for secrets; SystemConfig
+Env is the source for secrets; SystemConfig
 (category ``auth_ldap``) holds the non-secret values the admin UI edits.
 ``effective_ldap_settings(db)`` = env default → DB override (the
 inference-config precedent), then ``validate_effective_ldap_settings``

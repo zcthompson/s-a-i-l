@@ -1,7 +1,7 @@
 """External integration service (Slack, Teams, Jira).
 
 Credentials are resolved as a DB override over .env (the same layering
-as inference settings — v0.0.68 WP2, audit P0-6): the UI persists via
+as inference settings): the UI persists via
 the admin-config API into system_config categories
 ``integration_<platform>``, and the send/status routes honor those
 stored values. .env remains the fallback for deployments configured
@@ -131,7 +131,7 @@ class IntegrationService:
         teams = get_config_values(db, "integration_teams", ("webhook_url",)) if db else {}
         jira = (get_config_values(db, "integration_jira", ("url", "api_key", "project_key"))
                 if db else {})
-        # A-9 re-recon 2026-11-01: the SAIL_-prefixed env names are
+        # The SAIL_-prefixed env names are
         # canonical; the unprefixed legacy names (pre-rename) remain as
         # aliases. Stored values > env.
         env = get_settings()

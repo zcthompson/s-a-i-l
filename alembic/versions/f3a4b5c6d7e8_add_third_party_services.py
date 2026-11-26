@@ -7,9 +7,8 @@ Create Date: 2026-09-14
 Creates the third_party_services table, the
 third_party_service_documents table (store-first document tracking for
 POs/SOWs), and the third_party_service_use_cases junction table backing the
-S-A-I-L Third-Party Professional Services feature
-(docs/archive/PLAN_THIRD_PARTY_SERVICES.md §3). Pure additions — no batch ops required,
-existing databases upgrade without data loss (charter §3). Idempotent: each
+S-A-I-L Third-Party Professional Services feature. Pure additions — no batch ops required,
+existing databases upgrade without data loss. Idempotent: each
 table is created only if absent.
 """
 

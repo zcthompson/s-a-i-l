@@ -39,7 +39,7 @@ function critColor(c: string | null): string {
   }
 }
 
-// E5 — optional dated end-of-support evidence. Sent additively through the
+  // Optional dated end-of-support evidence. Sent additively through the
 // existing create/update payloads (the backend accepts both fields).
 
 const emptyForm = (): CustomerTechnologyCreate & { id?: number } => ({

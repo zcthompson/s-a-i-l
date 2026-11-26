@@ -1,17 +1,17 @@
 /**
- * Regression tests for WP23a step 6 (F5 — refresh/back lost the customer
+ * Regression tests (F5 — refresh/back lost the customer
  * context; the selection was component-local + a transient Home prop, and
  * the URL carried only ?view=):
  *
  *   - deep link ?view=customers&customer=X restores the customer's
  *     dashboard on load (the reported refresh pain);
  *   - in-page customer selection writes ?customer= (a restorable
- *     Back/Forward history step — the WP22 invariant);
+ * Back/Forward history step — the invariant);
  *   - an EXTERNAL URL change (browser Back) applies the previous customer
  *     state (the URL→customer direction, guarded against re-applying
- *     internal writes per the WP26 one-direction rule).
+ * internal writes per the one-direction rule).
  *
- * The WP22/26 view/URL regression tests (HomeUrlSync,
+ * The view/URL regression tests (HomeUrlSync,
  * CustomerEditOscillation) are the oscillation guard and must keep
  * passing — they run in the same suite.
  */
@@ -118,7 +118,7 @@ function NavProbe() {
   return null;
 }
 
-describe('F5 — customer-selection URL sync (WP23a step 6)', () => {
+describe('F5 — customer-selection URL sync', () => {
   it('deep link ?view=customers&customer=X restores the customer dashboard on load', async () => {
     render(
       <MemoryRouter initialEntries={['/?view=customers&customer=Energy%20Test%20Company']}>

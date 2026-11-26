@@ -213,7 +213,7 @@ async def import_csv(db, upload, user, request=None):
         imported_by=user["username"], created_at=now,
     )
     try:
-        # Part 14 import remediation: rows map to an existing customer by name
+        # rows map to an existing customer by name
         # OR alias, case-insensitive (two fixed queries). A name that equals
         # more than one customer must not silently resolve to whichever
         # appears first — it is skipped as ambiguous.
@@ -329,7 +329,7 @@ def _detail(db, batch, user):
             continue
         values = {**row.to_dict(), "customer_name": names.get(row.customer_id)}
         if row.customer_id is not None:
-            # Part 14 (A5b): per-row disposition gains matched_by (additive).
+            # (A5b): per-row disposition gains matched_by (additive).
             # Derived read-time: a row matched by name carries a norm-equal
             # supplied name; by A2 an alias can never norm-equal a customer
             # name, so legacy rows read back as "name" as they matched.
@@ -365,7 +365,7 @@ def _require_management(db, import_id, user, hide_invisible=False):
     if not _is_importer_or_admin(batch, user):
         if hide_invisible:
             # Management must match detail visibility before denying (404-first,
-            # R4/Q7): an import the caller cannot see is the same 404 as a
+            # An import the caller cannot see is the same 404 as a
             # missing one; a visible import keeps the exact 403.
             _detail(db, batch, user)
         raise HTTPException(403, "Only the importer or system admin may manage this import")

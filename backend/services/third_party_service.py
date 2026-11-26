@@ -1,12 +1,12 @@
 """Third-Party Professional Services service layer (S-A-I-L Sales section).
 
-docs/archive/PLAN_THIRD_PARTY_SERVICES.md §4.2. Module functions per repo style.
+Module functions per repo style.
 
 - CRUD with controlled-vocabulary validation (categories, statuses, billing
   models, document types — single source in
   ``backend/models/third_party_service.py``, same mechanism as
   ``sales_note.py``) and date-ordering integrity (ended_on ≥ started_on).
-- Unknown stays unknown (charter §4): every optional field stays NULL until
+- Unknown stays unknown: every optional field stays NULL until
   a user enters a value — no server-side fabrication.
 - Use-case links (junction) are validated for CUSTOMER OWNERSHIP (an
   engagement may only link its own customer's use cases — cross-customer

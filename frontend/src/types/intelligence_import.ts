@@ -105,7 +105,7 @@ export interface IntelligenceImportDeleteResult {
   deleted_technologies: number;
 }
 
-/** Amount coverage states (H1 contract C2): never a fabricated $0. */
+/** Amount coverage states (H1): never a fabricated $0. */
 export type PipelineAmountCoverage =
   | 'no_data' | 'all_unknown' | 'recorded_zero' | 'partial' | 'quantified';
 
@@ -116,7 +116,7 @@ export interface PipelineAmountGroup {
   lines_excluded: number;
 }
 
-/** Canonical read-model summary (H1 contract C2). source is null for no_data. */
+/** Canonical read-model summary (H1). source is null for no_data. */
 export interface CustomerPipelineSummary {
   calculation_version: string;
   as_of: string;

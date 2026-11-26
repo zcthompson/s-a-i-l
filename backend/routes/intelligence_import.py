@@ -29,7 +29,7 @@ def _require_manager(request):
 
 
 def _accessible_customer_ids(user, db):
-    # Central READ scope (Part 13 DV wave, ruling R1); admin -> None (all).
+    # Central READ scope; admin -> None (all).
     return None if user.get("is_admin") == 1 else sales_access.customer_scope(user, db)
 
 

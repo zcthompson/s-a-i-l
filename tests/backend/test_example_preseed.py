@@ -1,4 +1,4 @@
-"""WP21 — vertical-determined per-department example pre-seeding.
+"""Vertical-determined per-department example pre-seeding.
 
 Deterministic TestClient tests (no LLM). Two halves:
 
@@ -267,7 +267,7 @@ def test_wire_contract_has_preseeded_list(client, db_session, env):
         assert entry["department"] in DEPARTMENTS
 
 
-# ── fill-empty-only edge cases (Codex review P1-2, 2026-08-29) ─────────
+# ── fill-empty-only edge cases ─────────
 
 
 def test_preexisting_uc_in_department_gets_no_preseed(client, db_session, env):

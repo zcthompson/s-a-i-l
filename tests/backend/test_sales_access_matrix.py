@@ -1,6 +1,6 @@
-"""Sales access matrix — shift-to-global-customer-management phase 3b.
+"""Sales access matrix — shift to global customer management phase 3b.
 
-The directive §7 "Access fixture": two managers, reps in each team, an
+The access fixture: two managers, reps in each team, an
 inside-sales user assigned to only some customers, a multi-rep support
 assignment, scoped + org-wide auditors, a system admin, a service admin
 (ps_admin), an unassigned customer, and pending/inactive identities.
@@ -314,7 +314,7 @@ class TestAuditorReadOnlyEverywhere:
         spec = next(m for m in _mutations(seeded) if m[0] == label)
         r = _call(client, _headers(who), spec)
         if label == "bulk.score":
-            # RBAC directive: the auditor write-block middleware rejects the
+            # RBAC model: the auditor write-block middleware rejects the
             # mutating verb outright (403) before the per-item envelope.
             assert r.status_code == 403
             return
@@ -351,7 +351,7 @@ class TestAuditorReadOnlyEverywhere:
             assert r.status_code == 200, f"{url}: {r.status_code} {r.text[:160]}"
 
     def test_auditor_reads_other_customer(self, client, seeded):
-        # RBAC directive change: an in-role auditor reads the entire
+        # RBAC model: an in-role auditor reads the entire
         # application (was: limited to junction grants).
         r = client.get(f"/api/customers/{seeded.b1.id}/sales-notes/", headers=_headers("aud_scoped"))
         assert r.status_code == 200
@@ -442,7 +442,7 @@ class TestPerSurfaceAuditorWriteGap:
 
     def test_bulk(self, client, seeded):
         w = seeded
-        # RBAC directive: auditor mutating verbs are 403 at the middleware.
+        # RBAC model: auditor mutating verbs are 403 at the middleware.
         r = client.post("/api/bulk/score-multiple/", headers=_headers("aud_scoped"), json=[w.uc_a1.id])
         assert r.status_code == 403
         r = client.post("/api/bulk/create-from-template/", headers=_headers("aud_scoped"), json={
@@ -459,7 +459,7 @@ class TestPerSurfaceAuditorWriteGap:
         assert client.put(f"/api/departments/{w.dept_a1.id}/", headers=_headers("legacy_owner"),
                           json={"name": "Yes"}).status_code == 200
         # team mutations need owner/admin on the customer; a member is out
-        # of scope for that surface -> 404 (R4/Q7)
+        # of scope for that surface -> 404
         assert client.post(f"/api/customers/{w.a1.name}/users/?user_id={w.outsider.id}&role=member",
                            headers=_headers("legacy_member")).status_code == 404
         assert client.post(f"/api/customers/{w.a1.name}/users/?user_id={w.outsider.id}&role=member",
@@ -469,7 +469,7 @@ class TestPerSurfaceAuditorWriteGap:
         """projections POST had no access check at all before 3b."""
         # projections generate needs owner/admin or edit on the customer —
         # outsider_1 is out of scope -> the same 404 as a missing customer
-        # (R4/Q7). The scoped auditor is a global write-blocked identity:
+        # The scoped auditor is a global write-blocked identity:
         # the app-wide middleware 403 fires before the route (H4 convention).
         r = client.post(f"/api/customers/{seeded.a1.name}/projections/", headers=_headers("outsider_1"))
         assert r.status_code == 404
@@ -507,14 +507,14 @@ class TestRepCannotAcquireOtherTeamCustomer:
         w = seeded
         r = client.post(f"/api/customers/{w.b1.name}/users/?user_id={w.rep_a1.id}&role=owner",
                         headers=_headers("rep_a1"))
-        # 404-first (R4/Q7): b1 is out of scope for rep_a1 — same 404 as missing.
+        # 404-first: b1 is out of scope for rep_a1 — same 404 as missing.
         assert r.status_code == 404
         r = client.put(f"/api/customers/{w.b1.name}/users/{w.rep_a1.id}/?role=owner", headers=_headers("rep_a1"))
         assert r.status_code == 404
 
     def test_cannot_write_other_team_records_by_id(self, client, seeded):
         w, h = seeded, _headers("rep_a1")
-        # 404-first (R4/Q7): every target below is out of scope for rep_a1 —
+        # 404-first: every target below is out of scope for rep_a1 —
         # each is the same 404 as a missing record (no existence oracle).
         assert client.put(f"/api/use-cases/{w.uc_b1.id}/", headers=h, json={"title": "stolen"}).status_code == 404
         # a payload that moves another team's use case into the rep's customer
@@ -537,7 +537,7 @@ class TestRepCannotAcquireOtherTeamCustomer:
         assert not sales_access.can(u, db_session, sales_access.CAP_READ, world.orphan.id)
 
     def test_inside_assignment_is_role_gated_in_scope(self, db_session, world):
-        # F1 ruling (Part 13 DV wave): an InsideSalesAssignment held by a
+        # an InsideSalesAssignment held by a
         # NON-inside_sales user must not widen customer_scope — scope and
         # _access agree, so no listed-but-404 accounts.
         from backend.models.sales_access import InsideSalesAssignment
@@ -577,7 +577,7 @@ class TestInsideSalesLimits:
 
     def test_cannot_edit_unassigned_customer(self, client, seeded):
         # inside_1 is assigned to a1 only — a2/b1/orphan are out of scope:
-        # the same 404 as a missing customer (404-first, R4/Q7).
+        # the same 404 as a missing customer (404-first).
         for cid in (seeded.a2.id, seeded.b1.id, seeded.orphan.id):
             r = client.post(f"/api/customers/{cid}/sales-notes/", headers=_headers("inside_1"),
                             json={"category": "discovery", "title": "t", "content": "c"})
@@ -586,7 +586,7 @@ class TestInsideSalesLimits:
     def test_cannot_transfer_delete_or_elevate(self, client, db_session, seeded):
         w, h = seeded, _headers("inside_1")
         # team mutations require owner/admin on the customer — inside_1 holds
-        # neither, so those are out of scope (404-first, R4/Q7); the
+        # neither, so those are out of scope (404-first); the
         # customer-level write denials are in-scope capability 403s.
         assert client.post(f"/api/customers/{w.a1.name}/users/?user_id={w.inside.id}&role=owner",
                            headers=h).status_code == 404
@@ -624,7 +624,7 @@ class TestManagerScope:
         assert sales_access.effective_role(u) == "sales_manager"
 
     def test_manager_cannot_write_other_team_via_api(self, client, seeded):
-        # 404-first (R4/Q7): b1 is out of scope for mgr_a — same 404 as missing.
+        # 404-first: b1 is out of scope for mgr_a — same 404 as missing.
         r = client.put(f"/api/use-cases/{seeded.uc_b1.id}/", headers=_headers("mgr_a"), json={"title": "x"})
         assert r.status_code == 404
 
@@ -634,7 +634,7 @@ class TestManagerScope:
             u = _user_dict(db_session, name)
             for cap in (sales_access.CAP_READ, sales_access.CAP_EDIT, sales_access.CAP_MANAGE_TEAM):
                 if cap == sales_access.CAP_READ and name in ("aud_org", "aud_scoped"):
-                    continue  # RBAC directive: auditors read every account
+                    continue  # RBAC model: auditors read every account
                 assert not sales_access.can(u, db_session, cap, world.orphan.id), (name, cap)
 
 
@@ -714,7 +714,7 @@ class TestRevocation:
         assert client.post(url, headers=_headers("legacy_member"), json=body).status_code == 201
         db_session.query(CustomerUser).filter_by(customer_id=w.a1.id, user_id=w.legacy_member.id).delete()
         db_session.commit()
-        # revocation = out of scope = the same 404 as a missing customer (R4/Q7)
+        # revocation = out of scope = the same 404 as a missing customer
         assert client.post(url, headers=_headers("legacy_member"), json=body).status_code == 404
 
     def test_downgrade_to_auditor_revokes_write_keeps_read(self, client, db_session, seeded):
@@ -833,7 +833,7 @@ def test_notes_grant_revocation_uses_live_db_with_same_token(
     # grant gone (removed) or expired = the notes write capability is revoked.
     # "removed": inside_1 keeps the a1 assignment (in scope) -> exact 403.
     # "expired": the grant row no longer counts at all (out of scope) -> 404
-    # (404-first, R4/Q7).
+    # (404-first).
     assert client.post(url, headers=headers, json=payload).status_code == (403 if revocation == "removed" else 404)
 
 
@@ -922,7 +922,7 @@ def test_h5_capability_summary_and_sections():
 
     assert ACCOUNT_SECTIONS == ("overview", "contacts", "opportunities", "notes", "intel_uploads",
                                 "activities", "competitors", "forecasts", "tasks", "strategy")
-    assert sales_access.ALL_CAPS[-3:] == ("opportunities", "forecasts", "competitors")  # E0 reserved sections
+    assert sales_access.ALL_CAPS[-3:] == ("opportunities", "forecasts", "competitors")  # reserved sections
     assert set(sales_access.summary({"is_admin": 1}, None)["capabilities"]) == set(sales_access.ALL_CAPS)
 
 

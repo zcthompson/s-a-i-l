@@ -3,7 +3,7 @@
 Enforces junction-table access control:
 - Admin: see all customer stats
 - Junction users: see only their assigned customers (an out-of-scope
-  customer is the same 404 as a missing one — 404-first, R4/Q7)
+  customer is the same 404 as a missing one — 404-first)
 """
 
 from fastapi import APIRouter, HTTPException, Request
@@ -41,7 +41,7 @@ def get_customer_stats(customer_name: str, request: Request):
     """Get aggregate statistics for a specific customer (access-controlled).
 
     Missing customer or caller without junction access → the same 404
-    (404-first, R4/Q7; BE-04).
+    (404-first).
     The ``response_model`` validates the success shape so an error-dict body
     can no longer masquerade as statistics.
     """
@@ -51,10 +51,10 @@ def get_customer_stats(customer_name: str, request: Request):
 
     db = get_session()
     try:
-        # Resolve customer name to object (simple read query, acceptable per charter)
+        # Resolve customer name to object (simple read query, acceptable)
         customer = get_customer_by_name(db, customer_name)
         if not customer:
-            # A missing customer is a 404, not a 200 error-dict (BE-04): an
+            # A missing customer is a 404, not a 200 error-dict: an
             # error dict masquerading as stats made the FE render zeros.
             raise HTTPException(status_code=404, detail="Customer not found")
 

@@ -6,12 +6,12 @@ import { PipelineStageSettings } from './PipelineStageSettings';
 import { useAccountListState } from '../lib/useAccountListState';
 import { SavedViewsMenu } from './SavedViewsMenu';
 /**
- * E6 — Deals (Sales rail). Rep-owned deals, distinct from imported vendor
- * pipeline and from derived Attention cards (decision D6).
+ * Deals (Sales rail). Rep-owned deals, distinct from imported vendor
+ * pipeline and from derived Attention cards.
  *
  * Honesty rules: amounts render with their currency and basis and are never
  * summed (mixed currencies/bases are not comparable); probability is only
- * what a rep saved — a stage default is shown as a suggestion (D5). Backend
+ * what a rep saved — a stage default is shown as a suggestion. Backend
  * 409/422 messages render verbatim; a 409 reloads current state. Write gate
  * mirrors TasksPanel (hidden for auditor/none); the backend 403 is
  * authoritative.

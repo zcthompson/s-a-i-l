@@ -1,4 +1,4 @@
-/** Customer Knowledge contract (PLAN.md part 43 / CHANGELOG 0.1.1).
+/** Customer Knowledge contract.
  *
  * `processing_status` is the UI's source of truth (UPLOADED / PROCESSING /
  * READY / FAILED); `processed` is the legacy boolean kept for backward
@@ -12,7 +12,7 @@ export type KnowledgeProcessingStatus =
   | 'READY'
   | 'FAILED';
 
-/** LLM enrichment lifecycle (CHANGELOG 0.1.2 items 2, 16):
+/** LLM enrichment lifecycle:
  *  tracked separately from Docling processing_status. */
 export type KnowledgeEnrichmentStatus =
   | 'NOT_RUN'

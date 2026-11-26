@@ -151,7 +151,7 @@ export interface RVToolsImportDeleteResult {
 }
 
 /** The target customer's name or alias (case-insensitive). Imports never
- *  create a customer (Part 14 import remediation). */
+ * create a customer. */
 export interface RVToolsImportTarget {
   customer_name: string;
 }

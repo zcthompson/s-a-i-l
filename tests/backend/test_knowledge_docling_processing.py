@@ -1,6 +1,6 @@
 """Customer Knowledge Docling processing flow — K2 backend tests.
 
-Covers CHANGELOG 0.1.1 item 17 (backend):
+Covers:
 PDF conversion success, CSV conversion success, Markdown direct
 normalization (no Docling round-trip), Docling unavailable, timeout,
 Docling ``failure``, ``partial_success`` (retain + warning), empty
@@ -560,7 +560,7 @@ class TestKnowledgeContentEndpoints:
 
 
 # ----------------------------------------------------------------------
-# Authorization boundaries (charter §3 — CustomerUser + admin bypass)
+# Authorization boundaries (CustomerUser + admin bypass)
 # ----------------------------------------------------------------------
 
 
@@ -660,7 +660,7 @@ class TestWorkerThreadPath:
 
         The conftest forces a single StaticPool shared connection (a test
         artifact for in-fixture consistency); a second session committing on
-        it would destroy the fixture savepoint — the documented v0.0.67 flake
+        it would destroy the fixture savepoint — the documented flake
         class. Production ``get_session()`` instead builds a real
         multi-connection SQLite engine, so the worker's own-session commits
         are safe. This test isolates the worker from the fixture by patching

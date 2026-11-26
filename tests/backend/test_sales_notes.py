@@ -7,7 +7,7 @@ sales_section.py / customer_knowledge.py / sales_evaluations.py /
 technology_inventory.py convention): non-admin tests use a member user +
 junction row; admin-bypass tests use the junction-less seeded admin.
 
-Junction isolation (CHANGELOG 0.0.80 items 17-18): a note may only
+Junction isolation: a note may only
 link its own customer's technologies and use cases — cross-customer or
 missing ids are rejected with 422, both at the service and route layers.
 """
@@ -340,7 +340,7 @@ class TestSalesNoteRoutes:
 
     def test_user_without_customer_access_gets_404(self, client, db_session):
         """A member of customer 2 gets the same 404 as a missing customer on
-        customer 1's notes (404-first, R4/Q7)."""
+        customer 1's notes (404-first)."""
         _seed_customer(db_session, 1)
         _seed_customer(db_session, 2)
         headers = _non_admin_headers(db_session, customer_id=2)

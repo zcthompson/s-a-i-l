@@ -168,10 +168,10 @@ class CollaborationService:
         customer.
 
         Called when scoring, status changes, or comments occur. Recipients
-        (Part 13 DV8) = the customer's junction rows UNION every user the
+         = the customer's junction rows UNION every user the
         central policy grants READ on it (memberships, inside-sales and
         sales-ops assignments, team managers, global readers incl. admins)
-        — ONE query, one row per user (deduped by user id). ``exclude_user``
+        ONE query, one row per user (deduped by user id). ``exclude_user``
         (usually the actor) is skipped so a user is not notified about
         their own action.
         """

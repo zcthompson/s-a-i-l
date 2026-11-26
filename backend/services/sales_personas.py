@@ -1,21 +1,21 @@
-"""Sales persona registry (S-A-I-L P5).
+"""Sales persona registry.
 
 Central, deterministic registry of buyer personas for persona-driven
-Sales Evaluations (CHANGELOG 0.0.80 items 27-35).
+Sales Evaluations.
 
-Design constraints (charter + v2 plan):
+Design constraints:
 - Centrally maintained: this module (plus the GET /api/sales-evaluations/personas/
   endpoint) is the single source of persona definitions — the frontend and the
   evaluation engine consume it; persona behavior is never hardcoded separately
-  in frontend or route code (v2 item 30).
+  in frontend or route code.
 - Deterministic: pure data + rule-based selection. No LLM in this module.
 - Extensible: adding a persona = appending one entry to PERSONAS.
 - Persona selection must materially change emphasis, terminology, depth,
-  business/risk framing, recommended questions, and next actions (v2 item 29) —
+  business/risk framing, recommended questions, and next actions —
   each persona defines its own focus_dimensions, concerns, question base,
   priority and next-action angles.
 
-The minimum persona set required by v2 item 28:
+The minimum persona set:
 Executive/Business Leader, CIO/CTO, Infrastructure/Platform Leader,
 Security Leader, Data/AI Leader, Application/Development Leader,
 IT Operations Leader, Technical Architect/Engineer.

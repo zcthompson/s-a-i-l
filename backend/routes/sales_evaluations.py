@@ -7,7 +7,7 @@ CRUD endpoints for cross-domain sales evaluations:
     PUT  /api/sales-evaluations/{id}       — update evaluation name/status
     DELETE /api/sales-evaluations/{id}     — delete evaluation
 
-S-A-I-L P5 (persona-driven evaluations):
+Persona-driven evaluations:
     GET  /api/sales-evaluations/personas/  — centralized persona registry
     POST /api/sales-evaluations/preview/   — pre-generation view (no persist)
     persona on POST / (audience context) and GET / (?persona= filter)
@@ -71,7 +71,7 @@ def _require_customer_write(request: Request, customer_id: int, db: Session) -> 
 
     ``customer_access.read_auth_or_404`` is a READ gate (any in-scope caller passes,
     including an ``auditor`` junction role). A "read gate is not a write gate"
-    (directive §4 rule 8): mutations additionally require the central
+    rule: mutations additionally require the central
     resolver's EDIT capability, which an auditor does NOT have (level =
     auditor). System admins still pass; ps_admin is confined (no sales
     capability); a legacy owner/member junction keeps working (no lockout).
@@ -81,14 +81,14 @@ def _require_customer_write(request: Request, customer_id: int, db: Session) -> 
     return user
 
 
-# ── S-A-I-L P5 — persona registry + pre-generation preview ─────────────────────
+# ── persona registry + pre-generation preview ─────────────────────
 # NOTE: declared before /{evaluation_id} so "personas"/"preview" never hit the
 # int path-parameter route.
 
 
 @router.get("/personas/", response_model=list[SalesPersona])
 def list_personas(request: Request):
-    """List the centralized sales persona registry (S-A-I-L P5).
+    """List the centralized sales persona registry.
 
     Global catalog (not customer data): auth-gated (401) but not
     customer-gated. The registry in backend/services/sales_personas.py is
@@ -108,7 +108,7 @@ def preview_evaluation(
     request: Request,
     db: Session = Depends(get_db),
 ):
-    """Pre-generation view (S-A-I-L P5, v2 item 32): selected customer, persona,
+    """Pre-generation view: selected customer, persona,
     available related intelligence, generation intent, and the sections that
     WOULD be generated — computed without persisting anything.
     """
@@ -134,7 +134,7 @@ def list_evaluations(
 ):
     """List all evaluations for a customer (auth-gated).
 
-    S-A-I-L P5: optional ``persona`` query param filters by the audience
+    Optional ``persona`` query param filters by the audience
     context the evaluation was generated for.
     """
     customer_access.read_auth_or_404(request, db, customer_id)
@@ -160,7 +160,7 @@ def create_evaluation(
     Pulls organizational readiness + environment knowledge,
     runs gap/risk/growth analysis, persists result.
 
-    S-A-I-L P5: ``persona`` (body) selects the audience context; the persona id
+    ``persona`` (body) selects the audience context; the persona id
     is persisted with the evaluation (historical context) and the
     generated sections are persona-tailored.
     """

@@ -1,7 +1,6 @@
 """Technology Inventory API routes (S-A-I-L).
 
-Per-customer structured technology inventory CRUD (CHANGELOG 0.0.80
-P2). All routes are gated by CustomerUser authorization with admin bypass —
+Per-customer structured technology inventory CRUD. All routes are gated by CustomerUser authorization with admin bypass —
 admins own all customers (same convention as customers.py, sales_section.py,
 customer_knowledge.py, and sales_evaluations.py). Trailing slashes per the
 repo's redirect_slashes=False convention.

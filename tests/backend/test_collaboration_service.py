@@ -385,7 +385,7 @@ class TestBroadcastToCustomer:
 
     @pytest.fixture
     def mock_customer_users(self):
-        # Part 13 DV8: recipients are ONE row per user with READ scope on the
+        # recipients are ONE row per user with READ scope on the
         # customer (junction UNION central READ predicate). The fan-out query
         # also selects User.email — EL email delivery resolves the recipient
         # addresses from this SAME query (the settings are read once; the

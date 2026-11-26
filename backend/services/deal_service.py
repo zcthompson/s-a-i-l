@@ -1,4 +1,4 @@
-"""E6 deals and pipeline stages: validation, compare-and-swap writes, stage history.
+"""Deals and pipeline stages: validation, compare-and-swap writes, stage history.
 
 Authorization happens in the routes (account read for reads; CAP_OPPORTUNITIES
 with the "opportunities" section for writes). Every write is one transaction.
@@ -143,7 +143,7 @@ def _wire(deal, stage, links):
         "id": deal.id, "customer_id": deal.customer_id, "name": deal.name,
         "owner_user_id": deal.owner_user_id, "owner_name": deal.owner_name,
         "stage": stage_wire(stage), "stage_id": stage.id,
-        # D5: the stage default is only ever a suggestion.
+        # The stage default is only ever a suggestion.
         "probability": deal.probability, "suggested_probability": stage.default_probability,
         "close_date": deal.close_date.isoformat() if deal.close_date else None,
         "amount": _money(deal.amount_minor, deal.currency), "amount_minor": deal.amount_minor,
@@ -292,7 +292,7 @@ def _closing(stage, data, current):
 
 def create_deal(db, customer_id, payload, username, *, source=None):
     if "owner_user_id" not in payload:
-        # D4: a new deal is owned by its creator unless an owner is chosen.
+        # A new deal is owned by its creator unless an owner is chosen.
         creator = db.query(User.id).filter(User.username == username, User.is_active == 1).first()
         payload = {**payload, "owner_user_id": creator[0] if creator else None}
     data, links = _validate(db, customer_id, payload)

@@ -276,7 +276,7 @@ class TestWriteGates:
         assert r.status_code == 201, r.text
         assert client.post(url, headers=_headers(team.aud.username), json=body).status_code == 403
         # unassigned sales_ops is outside scope -> the same 404 as a missing
-        # customer (R4/Q7)
+        # customer
         assert client.post(url, headers=_headers(team.ops2.username), json=body).status_code == 404
         # sales_ops may read the account's notes
         assert client.get(url, headers=_headers(team.ops.username)).status_code == 200

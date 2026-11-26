@@ -1,4 +1,4 @@
-"""E6 deals + pipeline stages: contracts, access matrix, CAS, history, cleanup."""
+"""Deals + pipeline stages: contracts, access matrix, CAS, history, cleanup."""
 
 import pytest
 from backend.auth import create_access_token
@@ -94,7 +94,7 @@ def test_create_defaults_suggestion_and_history(client, db_session, world, stage
     assert r.status_code == 201, r.text
     deal = r.json()
     assert deal["stage"]["key"] == "qualification"            # first active open stage
-    assert deal["probability"] is None and deal["suggested_probability"] == 10   # D5: suggestion only
+    assert deal["probability"] is None and deal["suggested_probability"] == 10   # suggestion only
     assert deal["amount"] == {"minor": 1250000, "currency": "USD"} and deal["amount_basis"] == "acv"
     assert deal["owner_name"] == "Deal Owner" and deal["version"] == 1
     assert create(client, account.id).json()["owner_name"] in ("Administrator", "admin")  # defaults to creator
@@ -183,7 +183,7 @@ def test_account_and_user_deletion(client, db_session, world):
     UserService.delete_user(db_session, owner.id, admin.id)
     db_session.expire_all()
     kept = db_session.get(Deal, deal["id"])
-    assert kept.owner_user_id is None and kept.owner_name == "Deal Owner"   # D4 snapshot kept
+    assert kept.owner_user_id is None and kept.owner_name == "Deal Owner"   # snapshot kept
     assert client.delete(f"/api/customers/{account.name}/", headers=headers()).status_code == 204
     db_session.expire_all()
     assert db_session.get(Deal, deal["id"]) is None

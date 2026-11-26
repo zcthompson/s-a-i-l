@@ -1,4 +1,4 @@
-"""WP33 readiness-insight service, routes, caching, and trigger tests."""
+"""Readiness-insight service, routes, caching, and trigger tests."""
 
 import json
 import threading
@@ -238,7 +238,7 @@ def test_routes_auth_generate_cache_and_stale(db_session, client):
     db_session.commit()
     url = f"/api/analytics/readiness-insight/?customer_id={customer.id}"
     assert client.get(url).status_code == 401
-    assert client.get(url, headers=token("outsider")).status_code == 404  # 404-first (R4/Q7)
+    assert client.get(url, headers=token("outsider")).status_code == 404 # 404-first
     empty = client.get(url, headers=token("member"))
     assert empty.status_code == 200 and empty.json()["insight"] is None and empty.json()["stale"] is False
     complete = AsyncMock(return_value=VALID)

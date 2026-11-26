@@ -1,6 +1,6 @@
 """Pydantic schemas for customer knowledge operations.
 
-Contract additions (PLAN.md part 43 / CHANGELOG 0.1.1):
+Contract additions:
 - ``processing_status`` lifecycle (UPLOADED/PROCESSING/READY/FAILED)
   replaces the simple ``processed`` Yes/No as the UI's source of truth;
   ``processed`` stays for backward compatibility (mirrors READY).
@@ -33,7 +33,7 @@ class CustomerKnowledgeBase(ORMBaseModel):
     ingestion_status: str | None = None
     classification: str | None = None
     category: str | None = None
-    # Knowledge category (CHANGELOG 0.1.2 item 1)
+    # Knowledge category
     knowledge_category: str | None = None
     # Docling normalization layer
     original_content_type: str | None = None
@@ -87,7 +87,7 @@ class CustomerKnowledgeUpdate(ORMBaseModel):
     """Schema for updating a knowledge entry's structured fields."""
     classified_type: str | None = None
     category: str | None = None
-    # Knowledge category (CHANGELOG 0.1.2 item 1): the user may
+    # Knowledge category: the user may
     # change it after upload — a changed value is authoritative.
     knowledge_category: str | None = None
     extracted_text: str | None = None
@@ -128,8 +128,7 @@ class KnowledgeContentResponse(ORMBaseModel):
 
 
 class KnowledgeItemResponse(ORMBaseModel):
-    """One LLM-extracted intelligence item (CHANGELOG 0.1.2
-    items 6, 13): provenance + evidence + application pointer."""
+    """One LLM-extracted intelligence item: provenance + evidence + application pointer."""
     id: int
     customer_id: int
     source_knowledge_id: int

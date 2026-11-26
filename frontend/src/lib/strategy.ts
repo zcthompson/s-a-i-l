@@ -1,4 +1,4 @@
-// H7 — pure prefill helper (contract C4). Fills ONLY empty fields of the
+// H7 — pure prefill helper. Fills ONLY empty fields of the
 // draft, with the FIRST suggestion text for that field. A recorded non-empty
 // value is never touched; a field with no suggestion stays empty.
 import { STRATEGY_FIELDS, type StrategyField, type StrategySuggestion } from '../types/strategy';

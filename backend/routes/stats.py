@@ -32,7 +32,7 @@ def _require_user(request: Request) -> dict:
 def _resolve_stats_scope(
     db: Session, user: dict, customer_id: int | None
 ) -> tuple[int | None, list | None]:
-    """Resolve the caller's authorized stats scope (BE-01).
+    """Resolve the caller's authorized stats scope.
 
     Returns ``(explicit_customer_id, customer_ids)`` to pass to
     ``StatsService``. Authorization occurs **before** any aggregation:
@@ -59,7 +59,7 @@ def _resolve_stats_scope(
                 status_code=422, detail="customer_id must be a positive ID"
             )
         if customer_id not in accessible:
-            # 404-first (R4/Q7): an out-of-scope customer filter is the same
+            # 404-first: an out-of-scope customer filter is the same
             # as a missing customer — no existence oracle.
             raise HTTPException(
                 status_code=404, detail="Customer not found"
@@ -119,7 +119,7 @@ def get_aggregate_stats(
     customer_id: int | None = Query(None, description="Optional customer filter"),
     db: Session = Depends(get_db),
 ):
-    """Get comprehensive aggregate statistics, scoped to the caller (BE-01).
+    """Get comprehensive aggregate statistics, scoped to the caller.
 
     Admins receive global aggregates (or one customer when ``customer_id`` is
     supplied). Non-admins always receive the union of their accessible
@@ -137,7 +137,7 @@ def get_score_trends(
     customer_id: int | None = Query(None, description="Optional customer filter"),
     db: Session = Depends(get_db),
 ):
-    """Get score trends over time, scoped to the caller (BE-01)."""
+    """Get score trends over time, scoped to the caller."""
     user = _require_user(request)
     scope_id, scope_ids = _resolve_stats_scope(db, user, customer_id)
     return StatsService.get_score_trends(db, days, customer_id=scope_id, customer_ids=scope_ids)

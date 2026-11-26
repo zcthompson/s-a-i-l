@@ -1,17 +1,17 @@
-"""WP3 — contract/type hygiene (audit P1): wire-contract regression tests.
+"""Contract/type hygiene: wire-contract regression tests.
 
-Pins the backend contract fixes for v0.0.68 WP3:
+Pins the backend contract fixes:
 
-- P1-1: notification ``read`` is a JSON **bool** on the wire (the schema
+- notification ``read`` is a JSON **bool** on the wire (the schema
   used to declare ``read: int``; the model to_dict already emitted a bool,
   which the response_model coerced to 0/1).
-- P1-2: GET /api/use-cases/ and GET /api/use-cases/{id}/ both expose
+- GET /api/use-cases/ and GET /api/use-cases/{id}/ both expose
   ``assessment_id``/``assessment_name`` (the list route's UseCaseResponse
   used to strip them; the detail route now shares the same response_model,
   so both routes serve the identical field set).
-- P1-3: GET /api/scoring/dimensions/ returns {name, weight} entries (the
+- GET /api/scoring/dimensions/ returns {name, weight} entries (the
   response_model was an untyped ``list``).
-- P1-4: a malformed ``?customer_id`` on the list route is a 422 (was a 500
+- a malformed ``?customer_id`` on the list route is a 422 (was a 500
   from an unguarded ``int()``).
 
 Run: pytest tests/backend/test_contract_hygiene.py -v

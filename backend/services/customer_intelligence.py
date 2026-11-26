@@ -1,11 +1,10 @@
-"""Customer Intelligence service (S-A-I-L P4).
+"""Customer Intelligence service.
 
 Deterministic, rule-based aggregation of the per-customer intelligence
 sources (Customer Knowledge, Technology Inventory, Sales Notes, Use Cases)
-into a single structured Overview context
-(CHANGELOG 0.0.80 items 4-5, 14-15).
+into a single structured Overview context.
 
-Design constraints (charter):
+Design constraints:
 - No LLM/inference anywhere in this module — pure SQL aggregation
   (user preference: deterministic, rule-based tools).
 - No second identity/assignment/visibility model: customer isolation is
@@ -16,7 +15,7 @@ Design constraints (charter):
   never fabricated defaults.
 - Derived values are labeled: the response carries
   method="deterministic_aggregation" so consumers (and the UI) can tell
-  derived context apart from verified source data (v2 item 13).
+  derived context apart from verified source data.
 """
 
 import re
@@ -67,7 +66,7 @@ def _count(db: Session, model, customer_id: int, *extra_filters) -> int:
 
 
 def _technology_inventory_section(db: Session, customer_id: int) -> dict:
-    """Technology Inventory aggregates (S-A-I-L P2 source)."""
+    """Technology Inventory aggregates (source)."""
     cust = CustomerTechnology.customer_id == customer_id
     total = _count(db, CustomerTechnology, customer_id)
     by_category = _group_counts(
@@ -145,7 +144,7 @@ def _technology_inventory_section(db: Session, customer_id: int) -> dict:
 
 
 def _sales_notes_section(db: Session, customer_id: int) -> dict:
-    """Sales Notes aggregates (S-A-I-L P3 source)."""
+    """Sales Notes aggregates (source)."""
     cust = SalesNote.customer_id == customer_id
     total = _count(db, SalesNote, customer_id)
     by_category = _group_counts(
@@ -235,7 +234,7 @@ def _customer_knowledge_section(db: Session, customer_id: int) -> dict:
 
 
 def get_customer_overview(db: Session, customer_id: int) -> dict:
-    """Deterministic per-customer intelligence Overview (S-A-I-L P4).
+    """Deterministic per-customer intelligence Overview.
 
     Pure SQL aggregation over the four source tables. Raises nothing for
     empty customers — every indicator degrades to zero/None (unknowns stay
@@ -266,12 +265,12 @@ def get_customer_overview(db: Session, customer_id: int) -> dict:
     }
 
 
-# ── U1 (CHANGELOG 0.1.0) — Account workspace: summaries + Opportunities & Attention ──
-# Customer-workspace redesign (CHANGELOG 0.1.0 directives 17-30): richer,
+# ── Account workspace: summaries + Opportunities & Attention ──
+# Customer-workspace redesign: richer,
 # actionable context for the Overview / Intelligence / Sales workspaces
 # without creating a competing source of truth. Reuses the deterministic
 # section builders above; everything here is pure SQL aggregation +
-# rule-based typing (charter: no LLM, business logic in the service layer).
+# rule-based typing (no LLM, business logic in the service layer).
 # Isolation/auth remain enforced at the route layer (CustomerUser + admin
 # bypass, same convention as the overview endpoint).
 
@@ -300,7 +299,7 @@ def _top_pairs(rows, limit: int, none_label: str = "unknown") -> list[dict]:
 
 
 def _technology_landscape_section(db: Session, customer_id: int) -> dict:
-    """Actionable Technology Landscape summary (CHANGELOG 0.1.0 directive 23):
+    """Actionable Technology Landscape summary:
     what is known, key vendors/categories, lifecycle risk, important gaps."""
     base = _technology_inventory_section(db, customer_id)
     cust = CustomerTechnology.customer_id == customer_id
@@ -349,7 +348,7 @@ def _technology_landscape_section(db: Session, customer_id: int) -> dict:
 
 
 def _knowledge_summary_section(db: Session, customer_id: int) -> dict:
-    """Customer Knowledge summary (CHANGELOG 0.1.0 directive 24): sources,
+    """Customer Knowledge summary: sources,
     freshness, recently added, processing state."""
     base = _customer_knowledge_section(db, customer_id)
     cust = CustomerKnowledge.customer_id == customer_id
@@ -388,7 +387,7 @@ def _note_brief(n: SalesNote) -> dict:
 
 
 def _sales_activity_section(db: Session, customer_id: int) -> dict:
-    """Sales Activity summary (CHANGELOG 0.1.0 directive 25): last meaningful
+    """Sales Activity summary: last meaningful
     interaction, recent notes, active observations."""
     base = _sales_notes_section(db, customer_id)
     cust = SalesNote.customer_id == customer_id
@@ -426,7 +425,7 @@ def _sales_activity_section(db: Session, customer_id: int) -> dict:
 
 
 def _assessment_summary_section(db: Session, customer_id: int) -> dict:
-    """Assessment & Use Case summary (CHANGELOG 0.1.0 directive 26): active-round
+    """Assessment & Use Case summary: active-round
     progress, average score, highest-impact use cases, unscored items."""
     base = _use_cases_section(db, customer_id)
     cust = UseCase.customer_id == customer_id
@@ -451,7 +450,7 @@ def _assessment_summary_section(db: Session, customer_id: int) -> dict:
             "id": active.id,
             "name": active.name,
             "status": active.status,
-            # Part 13 WS5 (R7): additive round type + purpose.
+            # additive round type + purpose.
             "assessment_type": active.assessment_type or "ai",
             "purpose": active.purpose,
             "total_count": round_total,
@@ -497,7 +496,7 @@ def _assessment_summary_section(db: Session, customer_id: int) -> dict:
 
 
 def _business_impact_section(db: Session, customer_id: int) -> dict:
-    """Consolidated Business Impact (CHANGELOG 0.1.0 directive 20): savings and
+    """Consolidated Business Impact: savings and
     revenue as sub-metrics of one total, never three equal cards."""
     cust = UseCase.customer_id == customer_id
     savings = (
@@ -564,8 +563,8 @@ def _opportunities_section(
     contact_coverage_card: dict | None = None,
     eol: dict | None = None,
 ) -> list[dict]:
-    """Deterministic, evidence-backed Opportunities & Attention synthesis
-    (CHANGELOG 0.1.0 directives 27-29). Lifecycle risks, observed gaps,
+    """Deterministic, evidence-backed Opportunities & Attention synthesis.
+    Lifecycle risks, observed gaps,
     growth, discovery, follow-ups, renewals, coverage and dated EOL cards each
     carrying the supporting evidence (source + source_id + source_name) so
     the UI can answer "why does this exist?". Sorted by severity (high,
@@ -835,7 +834,7 @@ def _renewal_opportunity_cards(renewals: dict) -> list[dict]:
 
 
 def get_account_workspace(db: Session, customer_id: int) -> dict:
-    """U1 (CHANGELOG 0.1.0): account workspace context.
+    """Account workspace context.
 
     Extends the P4 overview with four actionable summaries (Technology
     Landscape, Knowledge, Sales Activity, Assessment & Use Case), a
@@ -945,7 +944,7 @@ def get_account_workspace(db: Session, customer_id: int) -> dict:
 # and the response reports the active limits.
 
 _GRAPH_MAX_PER_DOMAIN = 8
-# Synthesis card types per graph domain (D7 adds renewal, coverage and EOL).
+# Synthesis card types per graph domain (including renewal, coverage and EOL).
 _GRAPH_RISK_TYPES = ("lifecycle_risk", "observed_gap", "eol_attention", "contact_coverage")
 _GRAPH_OPPORTUNITY_TYPES = ("growth_opportunity", "follow_up", "discovery_needed", "renewal_attention")
 
@@ -982,7 +981,7 @@ def _graph_metadata_sales_note(n: SalesNote) -> dict:
 
 
 def _graph_metadata_assessment(a: CustomerAssessment) -> dict:
-    # Part 13 WS5 (R7): additive round type + purpose (the FE tooltip/legend
+    # additive round type + purpose (the FE tooltip/legend
     # data); name/status are byte-identical to before.
     return {
         "name": a.name,
@@ -1417,7 +1416,7 @@ def build_customer_intelligence_graph(db: Session, customer_id: int) -> dict:
         .first()
     )
     if active is not None:
-        # Part 13 WS5 (R7): a generic round renders under its own visual
+        # a generic round renders under its own visual
         # domain ('assessment_generic' / "Generic Assessments") so the graph
         # never presents a non-AI round as AI. The node id keeps the stable
         # 'assessment-<id>' pattern for both types (AI-round ids unchanged).
@@ -1493,8 +1492,8 @@ def build_customer_intelligence_graph(db: Session, customer_id: int) -> dict:
 
     # ── Opportunities / Risks-Gaps domains (typed synthesis, top-N) ──
     # Exactly the workspace panel's Opportunities & Attention synthesis,
-    # including its renewal, contact-coverage and dated-EOL inputs (operator
-    # decision D7, 2026-11-05), so the graph and the panel always agree.
+    # including its renewal, contact-coverage and dated-EOL inputs, so the
+    # graph and the panel always agree.
     # Gaps and lifecycle attention -> risk domain; growth, discovery,
     # follow-ups and renewal attention -> opportunity domain.
     _tech = _technology_landscape_section(db, customer_id)

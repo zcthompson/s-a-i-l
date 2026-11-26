@@ -1,6 +1,6 @@
 """Third-Party Professional Services API routes (S-A-I-L).
 
-docs/archive/PLAN_THIRD_PARTY_SERVICES.md §4.3. Thin routes — business logic (vocab
+Thin routes — business logic (vocab
 validation, junction customer-ownership, date integrity, store-first
 document storage) lives in ``backend/services/third_party_service.py``.
 
@@ -8,7 +8,7 @@ Authorization: the 3rd-party PS surface passes for (a) the ``ps_admin``
 global role or admin — cross-account, no CustomerUser row required (§4.5),
 or (b) a caller holding a CustomerUser row for the customer (existing
 semantics; junction-``auditor`` rows are read-only, same rule as sales
-notes / comments). Id-level routes are 404-first (R4/Q7): a record whose
+notes / comments). Id-level routes are 404-first: a record whose
 customer is outside the caller's PS read scope returns the same 404 as a
 missing one (no existence leak); in-scope capability denials keep their
 exact 403.
@@ -88,8 +88,8 @@ def _require_in_scope(user: dict, customer_id: int | None, detail: str) -> None:
     """404 (same as missing) when an existing record's customer is out of
     scope; a missing record (None) keeps its existing not-found path.
 
-    The PS-surface basis is junction-only by deliberate ruling (re-recon
-    A-2, 2026-11-01 — ps_admin confinement; never the central basis).
+    The PS-surface basis is junction-only by design
+    (ps_admin confinement; never the central basis).
     """
     if customer_id is not None and not ps_customer_read_ok(user, customer_id):
         raise HTTPException(status_code=404, detail=detail)

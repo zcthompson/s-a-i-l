@@ -10,7 +10,7 @@ const DEFAULT_SEED_DEPARTMENTS = ['Customer Success', 'Operations', 'Finance', '
 
 interface TemplatesPageProps {
   customer?: Customer;
-  // WP19: starting a template assessment bootstraps departments + one draft
+  // Starting a template assessment bootstraps departments + one draft
   // use case per goal. onCreated lets the caller refresh after a bootstrap.
   onCreated?: () => void | Promise<void>;
   onCancel?: () => void;
@@ -61,7 +61,7 @@ export function TemplatesPage({ customer, onCreated, onCancel, onBack, onStartBl
     ? customer
     : customers.find((c) => c.id === globalCustomerId);
 
-  // Seed-plan preview states (Codex review P1-5, 2026-08-29):
+  // Seed-plan preview states:
   // - 'known': the list shown is what the backend will seed (the mapping is
   //   loaded, or the customer is Other/vertical-less where the default set is
   //   authoritative — resolve_departments returns DEFAULT_DEPARTMENTS).

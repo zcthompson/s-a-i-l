@@ -29,7 +29,7 @@ def _scope_kwargs(db: Session, request: Request, customer_id: int | None) -> dic
     """Auth + central-policy scoping for advanced visualization queries.
 
     - Explicit customer_id: requires central READ on the customer (else the
-      same 404 as a missing customer — 404-first, R4/Q7).
+      same 404 as a missing customer — 404-first).
     - No customer_id: admins get global; everyone else gets their central
       READ scope (``sales_access.customer_scope``, resolved once).
     """
@@ -38,7 +38,7 @@ def _scope_kwargs(db: Session, request: Request, customer_id: int | None) -> dic
         raise HTTPException(status_code=401, detail="Authentication required")
     if customer_id is not None:
         if not sales_access.can(user, db, sales_access.CAP_READ, customer_id):
-            # 404-first (R4/Q7): out of scope == missing.
+            # 404-first: out of scope == missing.
             raise HTTPException(status_code=404, detail="Customer not found")
         return {"customer_id": customer_id}
     if sales_access.is_unrestricted(user):
@@ -97,7 +97,7 @@ def get_drill_down(
     if use_case.customer_id is not None and not sales_access.can(
         user, db, sales_access.CAP_READ, use_case.customer_id  # type: ignore[arg-type]
     ):
-        # 404-first (R4/Q7): out of scope == the missing use case above.
+        # 404-first: out of scope == the missing use case above.
         raise HTTPException(status_code=404, detail=f"Use case {use_case_id} not found")
     result = AdvancedVisualizationsService.get_drill_down(db, use_case_id)
     if result is None:

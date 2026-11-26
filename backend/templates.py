@@ -1,4 +1,4 @@
-"""Canonical AI use-case template registry (WP19).
+"""Canonical AI use-case template registry.
 
 Single source of truth for all assessment templates. Consolidates the
 four generic department templates that used to live in

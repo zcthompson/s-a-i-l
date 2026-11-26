@@ -1,5 +1,4 @@
-// H7 — account strategy. Field-for-field with the normative response shapes
-// (contract C2/C3/C4). Suggestions are computed read-only by the backend from
+// H7 — account strategy. Field-for-field with the normative response shapes. Suggestions are computed read-only by the backend from
 // recorded evidence; the FE only prefills EMPTY drafts (lib/strategy.ts).
 
 export const STRATEGY_FIELDS = [
@@ -42,7 +41,7 @@ export interface StrategyLinks {
 
 /**
  * The editable plan. `links` is present on the GET response only — the
- * PUT/restore responses return the plan dict without it (contract C2).
+ * PUT/restore responses return the plan dict without it.
  */
 export interface StrategyPlan extends StrategyFieldValues {
   id: number;

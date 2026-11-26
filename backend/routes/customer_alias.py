@@ -1,12 +1,12 @@
-"""REST API routes for customer alias tags (Part 14, A2/A3).
+"""REST API routes for customer alias tags.
 
 Access control — the existing read scope + the alias write gate:
 - Unauthenticated: 401.
 - Read (all verbs): the central-policy read scope
   (``sales_access.can(..., CAP_READ, ...)``); a missing or out-of-scope
-  customer returns the same 404 "Customer not found" (404-first, R4/Q7).
+  customer returns the same 404 "Customer not found" (404-first).
 - Write (POST/DELETE): customer owner or global admin — PLUS sales_admin
-  (operator directive 2026-11-01: the alias section is import-matching
+  (the alias section is import-matching
   metadata, and the sales admin manages it alongside admin and the
   account owner). The main.py app-wide sales-admin CONTENT block
   deliberately does not cover this surface. In-scope non-writers get 403.
@@ -56,7 +56,7 @@ def _readable_customer_or_404(db: Session, customer_name: str, user: dict) -> Cu
 
 def _can_manage_aliases(user: dict, customer: Customer) -> bool:
     """Alias writers: customer owner, global admin, or the sales_admin role
-    (operator directive 2026-11-01 — aliases are import-matching metadata
+    (aliases are import-matching metadata
     the sales admin manages; the app-wide sales-admin content block in
     main.py intentionally does not cover this surface)."""
     if user.get("is_admin") == 1:

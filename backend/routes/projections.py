@@ -35,11 +35,11 @@ async def generate_projection(
     user = get_user_from_request(request) if request else None
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     customer = get_customer_by_name(db, customer_name)
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-    # 404-first (R4/Q7): out of read scope == missing; in-scope capability
+    # 404-first: out of read scope == missing; in-scope capability
     # denials keep their exact 403.
     if not sales_access.can(user, db, sales_access.CAP_READ, customer.id):  # type: ignore[arg-type]
         raise HTTPException(status_code=404, detail="Customer not found")
@@ -69,15 +69,15 @@ def get_projection(
     user = get_user_from_request(request) if request else None
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     customer = get_customer_by_name(db, customer_name)
     if not customer or not sales_access.can(user, db, sales_access.CAP_READ, customer.id):
         raise HTTPException(status_code=404, detail="Customer not found")
-    
+
     projection = ProjectionService.get_projection(db, customer_name)
     if projection is None:
         raise HTTPException(status_code=404, detail="No projection found for this customer")
-    
+
     return projection
 
 
@@ -91,14 +91,14 @@ def clear_projection(
     user = get_user_from_request(request) if request else None
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     customer = get_customer_by_name(db, customer_name)
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
     try:
         ProjectionService.assert_delete_access(db, user, customer.id)
     except ValueError:
-        # 404-first (R4/Q7): not an owner/admin of this customer == missing.
+        # 404-first: not an owner/admin of this customer == missing.
         raise HTTPException(status_code=404, detail="Customer not found")
     if not sales_access.can(user, db, sales_access.CAP_EDIT, customer.id):
         raise HTTPException(status_code=403, detail="Not authorized to modify this customer")

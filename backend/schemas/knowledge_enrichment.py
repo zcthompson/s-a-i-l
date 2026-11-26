@@ -1,11 +1,11 @@
-"""Pydantic schemas for LLM knowledge enrichment (CHANGELOG 0.1.2).
+"""Pydantic schemas for LLM knowledge enrichment.
 
 Item 13: the LLM must return STRUCTURED intelligence, never prose that
 application logic parses. ``KnowledgeEnrichmentResponse`` is the typed
-contract; every item schema carries the provenance fields (item 6) and
+contract; every item schema carries the provenance fields and
 validation rejects out-of-vocabulary values instead of silently
 accepting them. Items the LLM did not populate stay NULL/empty —
-unknown information remains unknown (charter §4).
+unknown information remains unknown.
 """
 
 

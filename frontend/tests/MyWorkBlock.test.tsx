@@ -1,5 +1,5 @@
 /**
- * E3 — MyWorkBlock component tests (synthetic fixtures only).
+ * MyWorkBlock component tests (synthetic fixtures only).
  * Partial-mocks the api module (repo pattern: vi.hoisted + vi.mock factory).
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

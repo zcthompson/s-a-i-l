@@ -54,14 +54,14 @@ const labelStyle: CSSProperties = {
 const withCurrent = (options: string[], current: string) =>
   current !== '' && !options.includes(current) ? [...options, current] : options;
 
-/** E3 — the bar state as the H2 URL params (null = the surface default / absent),
+/** The bar state as the H2 URL params (null = the surface default / absent),
  *  exactly what the URL carries; no other keys. */
 export function navStateToViewParams(state: PortfolioNavState, defaults?: NavDefaults): SavedViewParams {
   const sp = navStateToSearchParams(state, undefined, defaults);
   return Object.fromEntries(PORTFOLIO_FILTER_PARAMS.map(k => [k, sp.get(k)]));
 }
 
-/** E3 — a stored view's params as a COMPLETE nav patch (absent/invalid values fall
+/** A stored view's params as a COMPLETE nav patch (absent/invalid values fall
  *  back to the surface defaults via the H2 URL codec); `view` is never touched. */
 export function viewParamsToNavPatch(params: SavedViewParams, defaults?: NavDefaults): Partial<PortfolioNavState> {
   const sp = new URLSearchParams();

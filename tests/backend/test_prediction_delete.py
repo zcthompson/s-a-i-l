@@ -131,7 +131,7 @@ def test_auditor_cannot_delete(client, prediction_seed):
 
 
 def test_outsider_delete_is_404(client, prediction_seed):
-    # 404-first (R4/Q7): out-of-scope is the same 404 as a missing prediction.
+    # 404-first: out-of-scope is the same 404 as a missing prediction.
     response = client.delete(
         f"/api/analytics/predictions/{prediction_seed['prediction_id']}/",
         headers=_token("pred_outsider"),

@@ -55,7 +55,7 @@ export function AnalyticsDashboard({ onBack, selectedCustomerId, section = 'all'
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // WP33 — persisted, LLM-generated per-customer readiness insight (rendered
+  // Persisted, LLM-generated per-customer readiness insight (rendered
   // inside the Readiness Insights block, customer-scoped only). Insight
   // fetch/generation failures set insightStatus and never touch `error`.
   const [insightResponse, setInsightResponse] = useState<ReadinessInsightResponse | null>(null);
@@ -147,7 +147,7 @@ export function AnalyticsDashboard({ onBack, selectedCustomerId, section = 'all'
       for (const ucId of Array.from(selectedUCIds)) {
         for (const h of horizons) {
           setPredictionStatus(`Generating… (${done + 1}/${total}) — the model is working, this can take a minute`);
-          // WP23a F4(c): 300s cap PER prediction fetch (the N×M loop may
+          // F4(c): 300s cap PER prediction fetch (the N×M loop may
           // legitimately run longer than 300s in total — the cap guards
           // against one stalled model call, not the whole batch).
           const predictionController = new AbortController();
@@ -366,7 +366,7 @@ export function AnalyticsDashboard({ onBack, selectedCustomerId, section = 'all'
       : `${scoredUseCases.length} of ${readinessInScopeCount} use cases scored — no dimension below target 70`;
   }
 
-  // ── Readiness Insight panel (WP33 — customer-scoped only) ──────────────
+  // ── Readiness Insight panel (customer-scoped only) ──────────────
   const insight = insightResponse?.insight ?? null;
   const insightStateData = insightResponse?.state ?? null;
   const insightStale = insightResponse?.stale === true;
@@ -621,7 +621,7 @@ export function AnalyticsDashboard({ onBack, selectedCustomerId, section = 'all'
                     {PREDICTION_HORIZONS.find(h => h.days === pred.horizon_days)?.label ?? `${pred.horizon_days} days`}
                   </span>
                   {canDelete(pred) && (
-                    // CHANGELOG 0.1.0 U7 (directive 42): per-row overflow menu instead
+                    // per-row overflow menu instead
                     // of a repetitive Delete button; handleDeletePrediction
                     // keeps its confirmation flow.
                     <RowActions

@@ -7,7 +7,7 @@ Handles:
 - Changing roles within a customer
 - Checking access permissions
 
-Access control: the user-list read is 404-first (R4/Q7) — a customer outside
+Access control: the user-list read is 404-first — a customer outside
 the caller's read scope returns the same 404 as a missing one. The team-
 mutation routes keep their existing 403s, and the ``/access/`` probe keeps
 its 200 + ``has_access`` shape (the FE access gate depends on it).
@@ -77,12 +77,12 @@ def list_customer_users(
     user = get_user_from_request(request) if request else None
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
-    # Part 13 R1 (2026-10-29): central policy read (was the legacy
-    # junction-only CustomerUserService.has_access — DV3); out-of-scope is
-    # a 404 like a missing customer (R4/Q7).
+
+    # central policy read (was the legacy
+    # junction-only CustomerUserService.has_access); out-of-scope is
+    # a 404 like a missing customer.
     customer = customer_access.read_by_name_or_404(db, user, customer_name)
-    
+
     users = CustomerUserService.list_customer_users(db, customer)
     return {"users": users}
 
@@ -99,20 +99,20 @@ def add_user_to_customer(
     user = get_user_from_request(request) if request else None
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     # Check admin/owner status
     customer = get_customer_by_name(db, customer_name)
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-    
+
     if not CustomerUserService.is_admin_for_customer(db, UserRef(id=user.get("user_id", 0), is_admin=user.get("is_admin", 0)), customer):
-        # 404-first (R4/Q7): a caller who is not an owner/admin of this
+        # 404-first: a caller who is not an owner/admin of this
         # customer is out of scope — the same 404 as a missing customer.
         raise HTTPException(status_code=404, detail="Customer not found")
     if role == "owner" and user.get("is_admin") != 1:
         raise HTTPException(status_code=403, detail="Only admins can grant owner role")
     _require_manage_team(user, db, customer, granting_role=role)
-    
+
     # Add user
     try:
         mock_user = UserRef(id=user_id, username="unknown")
@@ -134,20 +134,20 @@ def remove_user_from_customer(
     user = get_user_from_request(request) if request else None
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     customer = get_customer_by_name(db, customer_name)
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-    
+
     if not CustomerUserService.is_admin_for_customer(db, UserRef(id=user.get("user_id", 0), is_admin=user.get("is_admin", 0)), customer):
-        # 404-first (R4/Q7): out of scope == missing.
+        # 404-first: out of scope == missing.
         raise HTTPException(status_code=404, detail="Customer not found")
     _require_manage_team(user, db, customer)
-    
+
     success = CustomerUserService.remove_user_from_customer(db, customer, UserRef(id=user_id))
     if not success:
         raise HTTPException(status_code=404, detail="User not found in customer")
-    
+
     _record_audit(db, user, "remove_user", customer, target_id=user_id, details="User removed from customer", request=request)
     return {"message": f"User {user_id} removed from {customer_name}"}
 
@@ -161,10 +161,10 @@ def get_my_customers(
     user = get_user_from_request(request) if request else None
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     if "user_id" not in user:
         raise HTTPException(status_code=400, detail="User ID not available")
-    
+
     rows = CustomerUserService.list_user_customer_access(
         db, user["user_id"], user.get("is_admin", 0)
     )
@@ -183,18 +183,18 @@ def update_user_role(
     user = get_user_from_request(request) if request else None
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     customer = get_customer_by_name(db, customer_name)
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-    
+
     if not CustomerUserService.is_admin_for_customer(db, UserRef(id=user.get("user_id", 0), is_admin=user.get("is_admin", 0)), customer):
-        # 404-first (R4/Q7): out of scope == missing.
+        # 404-first: out of scope == missing.
         raise HTTPException(status_code=404, detail="Customer not found")
     if role == "owner" and user.get("is_admin") != 1:
         raise HTTPException(status_code=403, detail="Only admins can grant owner role")
     _require_manage_team(user, db, customer, granting_role=role)
-    
+
     try:
         result = CustomerUserService.update_role(db, customer, UserRef(id=user_id), role)
         _record_audit(db, user, "update_role", customer, target_id=user_id, details=f"Role changed to {role}", request=request)
@@ -213,13 +213,13 @@ def check_access(
     user = get_user_from_request(request) if request else None
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     customer = get_customer_by_name(db, customer_name)
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-    
-    # Part 13 R1 (2026-10-29): has_access follows the CENTRAL read policy
-    # (was the legacy junction-only CustomerUserService.has_access — DV3).
+
+    # has_access follows the CENTRAL read policy
+    # (was the legacy junction-only CustomerUserService.has_access).
     # The 200 + has_access:false shape is preserved (the FE access gate
     # depends on it); permission_level stays the junction role (display —
     # the server enforces every write capability per route).
@@ -228,7 +228,7 @@ def check_access(
         or sales_access.can(user, db, sales_access.CAP_READ, customer.id)
     )
     permission_level = CustomerUserService.get_permission_level(db, UserRef(id=user.get("user_id", 0), is_admin=user.get("is_admin", 0)), customer.id)
-    
+
     return {
         "has_access": has_access,
         "permission_level": permission_level,

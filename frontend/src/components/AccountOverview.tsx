@@ -1,25 +1,24 @@
 import { SectionIcon } from './SectionIcon';
 /**
- * CHANGELOG 0.1.0 U5 — Account Overview + actionable intelligence summaries.
+ * Account Overview + actionable intelligence summaries.
  *
- * Deterministic, fed by the U1 account-workspace endpoint
+ * Deterministic, fed by the account-workspace endpoint
  * (`getAccountWorkspace`) — the same data that powers the Opportunities
  * panel, so nothing is re-derived or fabricated client-side:
  *
- *  - `AccountOverview` (the executive Overview, directives 16-20, 39-40,
- *    54-55): balanced headline metrics (Business Impact is ONE card with
- *    savings + revenue as sub-metrics, directive 20 — not three equal
- *    cards), the Account Snapshot (who / what we know / what's
- *    happening), the four actionable intelligence summaries (directive
- *    22-26), and the small Priority Use Cases list (the dense working
- *    table stays one rail step away, directive 39-40).
- *  - `IntelligencePanels` (the dedicated Intelligence ▸ Summary view,
- *    directive 51): the four actionable summaries on their own.
+ *  - `AccountOverview` (the executive Overview): balanced headline metrics
+ *    (Business Impact is ONE card with savings + revenue as sub-metrics —
+ *    not three equal cards), the Account Snapshot (who / what we know /
+ *    what's happening), the four actionable intelligence summaries, and the
+ *    small Priority Use Cases list (the dense working table stays one rail
+ *    step away).
+ *  - `IntelligencePanels` (the dedicated Intelligence ▸ Summary view):
+ *    the four actionable summaries on their own.
  *
- * Provenance (directive 21): the response's `method` is exposed through
+ * Provenance: the response's `method` is exposed through
  * tooltips only — never an implementation-oriented "Derived —
  * deterministic aggregation" label in the main UX. Semantic colors
- * (directives 43-44): red = critical risk, amber = attention, green =
+ * use red = critical risk, amber = attention, green =
  * healthy, accent = primary.
  */
 import { AccountHealthCard } from './AccountHealthCard';
@@ -44,7 +43,7 @@ const VALUE_COLOR = {
   negative: 'var(--status-negative)',
 } as const;
 
-/** One "what is known / what needs attention" panel (directive 22-26). */
+/** One "what is known / what needs attention" panel. */
 function IntelligencePanel({ title, lines, tone = 'neutral', onOpen }: {
   title: string;
   lines: Array<{ label: string; value: string; tone?: keyof typeof VALUE_COLOR }>;
@@ -67,7 +66,7 @@ function IntelligencePanel({ title, lines, tone = 'neutral', onOpen }: {
 
 /** The four actionable intelligence summaries as a pure function of the
  *  workspace data — shared by the Overview and the Intelligence ▸ Summary
- *  view (directive 22-26). */
+ * view. */
 function IntelligencePanelsContent({ ws, includeAssessment = true, onNavigate }: { ws: AccountWorkspace; includeAssessment?: boolean; onNavigate?: (area: string) => void }) {
   const { technology_landscape: tl, knowledge: kn, sales_activity: sa, assessment: asmt } = ws;
   return (
@@ -179,7 +178,7 @@ function OverviewContent({ ws, onNavigate, canManageDepartments = true, section 
   const impact = headline.business_impact;
 
 
-  // Directive 56 — partial empty state: when SOME sources are empty (a sparse
+  // Partial empty state: when SOME sources are empty (a sparse
   // account), name exactly what's missing and give ONE obvious next action
   // instead of leaving a grid of bare zeros. (The fully-empty case below
   // keeps the larger EmptyState.)
@@ -191,7 +190,7 @@ function OverviewContent({ ws, onNavigate, canManageDepartments = true, section 
 
   return (
     <>
-      {section === "snapshot" && <>{/* ── Account Snapshot (directives 16-18, 48) ─────────────────── */}
+      {section === "snapshot" && <>{/* ── Account Snapshot ─────────────────── */}
       <div style={{ background: 'var(--neutral-0)', borderRadius: 'var(--radius)', border: '1px solid var(--divider)', padding: 'var(--space-4) var(--space-5)', marginBottom: 'var(--space-5)' }}>
         <h3 style={{ margin: '0 0 12px 0', fontSize: '1rem', color: 'var(--neutral-700)' }}><SectionIcon name="🏢" /> Account Snapshot</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: '14px', fontSize: '0.85rem' }}>
@@ -226,7 +225,7 @@ function OverviewContent({ ws, onNavigate, canManageDepartments = true, section 
             </div>
           </div>
         </div>
-        {/* Intelligence completeness (directive 18) — what S-A-I-L knows about
+        {/* Intelligence completeness — what S-A-I-L knows about
             this account; zeros are honest unknowns, not omissions. */}
         <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid var(--divider)', fontSize: '0.8rem', color: 'var(--neutral-600)' }}>
           <span title={PROVENANCE}>
@@ -236,7 +235,7 @@ function OverviewContent({ ws, onNavigate, canManageDepartments = true, section 
       </div>
 
       </>}
-      {section === "metrics" && <>{/* ── Headline metrics (directives 19-20, 55) ─────────────────── */}
+      {section === "metrics" && <>{/* ── Headline metrics ─────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(200px, 100%), 1fr))', gap: 'var(--space-4)', marginBottom: 'var(--space-5)' }}>
         <SummaryCard
           label="Needs attention"
@@ -266,7 +265,7 @@ function OverviewContent({ ws, onNavigate, canManageDepartments = true, section 
       </div>
 
       </>}
-      {section === "intelligence" && <>{/* ── Partial empty state (directive 56) — sparse account: name what's
+      {section === "intelligence" && <>{/* ── Partial empty state — sparse account: name what's
           missing + one obvious next action instead of a grid of bare zeros. ── */}
       {partialSparse && (
         <div style={{
@@ -282,7 +281,7 @@ function OverviewContent({ ws, onNavigate, canManageDepartments = true, section 
         </div>
       )}
 
-      {/* ── Actionable intelligence summaries (directives 22-26) ────── */}
+      {/* ── Actionable intelligence summaries ────── */}
       <div style={{ marginBottom: 'var(--space-5)' }}>
         <h3 style={{ margin: '0 0 12px 0', fontSize: '1rem', color: 'var(--neutral-700)' }}><SectionIcon name="🧭" /> Account Intelligence</h3>
         <IntelligencePanelsContent ws={ws} includeAssessment={false} onNavigate={onNavigate} />
@@ -309,7 +308,7 @@ function CustomerActions({ onNavigate }: { onNavigate?: (target: string) => void
   </>;
 }
 
-/** Dedicated Intelligence ▸ Summary view (directive 51): the four
+/** Dedicated Intelligence ▸ Summary view: the four
  *  actionable summaries on their own. Fetches the workspace independently
  *  (same convention as the other intelligence components). */
 export function IntelligencePanels({ customerId }: { customerId: number }) {

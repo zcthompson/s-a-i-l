@@ -29,7 +29,7 @@ interface SalesEvaluationResponse {
     next_steps?: string[];
   };
   gaps?: Array<{ category: string; severity: 'high' | 'medium' | 'low'; description: string; readiness_dimension?: string; environment_factor?: string }>;
-  // S-A-I-L P5 — persona-driven evaluations (nullable: legacy rows are null).
+  // persona-driven evaluations (nullable: legacy rows are null).
   persona?: string | null;
   persona_sections?: {
     persona: string | null;
@@ -48,7 +48,7 @@ interface SalesEvaluationResponse {
 interface SalesEvaluationProps {
   customerId: number;
   /** The customer's display name — the generation panel makes the
-   *  selected customer explicit (CHANGELOG 0.1.0 U6, directive 57). */
+   * selected customer explicit. */
   customerName?: string;
 }
 
@@ -138,13 +138,13 @@ export function SalesEvaluation({ customerId, customerName }: SalesEvaluationPro
   const [error, setError] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
-  // S-A-I-L P6c — persona selection + pre-generation preview (v2 items 31-33)
+  // persona selection + pre-generation preview
   const [personas, setPersonas] = useState<SalesPersona[]>([]);
   const [selectedPersona, setSelectedPersona] = useState<string>('');
   const [preview, setPreview] = useState<SalesEvaluationPreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
-  // CHANGELOG 0.1.0 U6 (directives 31, 60, 66-67): the available customer
+  // the available customer
   // intelligence is made visible in the generation panel (not only behind
   // the Preview button) via the deterministic account-workspace endpoint —
   // the same source the evaluation engine feeds from.
@@ -152,7 +152,7 @@ export function SalesEvaluation({ customerId, customerName }: SalesEvaluationPro
 
   const selectedPersonaObj = personas.find((p) => p.id === selectedPersona) || null;
 
-  // Load the centralized persona registry once (S-A-I-L P5).
+  // Load the centralized persona registry once.
   useEffect(() => {
     api.listSalesPersonas().then(setPersonas).catch(() => setPersonas([]));
   }, []);
@@ -169,7 +169,7 @@ export function SalesEvaluation({ customerId, customerName }: SalesEvaluationPro
     return () => { alive = false; };
   }, [customerId]);
 
-  // Compute the pre-generation preview (CHANGELOG 0.1.0 U6, directive 66): it
+  // Compute the pre-generation preview: it
   // refreshes automatically when the persona changes and on first load, so
   // the selected persona + customer intelligence are always visibly feeding
   // the generation experience — no manual "Preview" click required (the
@@ -200,7 +200,7 @@ export function SalesEvaluation({ customerId, customerName }: SalesEvaluationPro
   // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing dependency list; change only with UI verification
   }, [customerId]);
 
-  // Generate a new evaluation (S-A-I-L P5: pass the selected persona context)
+  // Generate a new evaluation (pass the selected persona context)
   const handleGenerate = async () => {
     if (!evaluationName.trim()) return;
     setLoading(true);
@@ -222,7 +222,7 @@ export function SalesEvaluation({ customerId, customerName }: SalesEvaluationPro
     }
   };
 
-  // S-A-I-L P6c — pre-generation preview (v2 item 32): compute, don't persist.
+  // pre-generation preview: compute, don't persist.
   const handlePreview = async () => {
     setPreviewLoading(true);
     setPreviewError(null);
@@ -283,7 +283,7 @@ export function SalesEvaluation({ customerId, customerName }: SalesEvaluationPro
     <div style={{ padding: '20px' }}>
       <h2 style={{ margin: '0 0 20px', color: 'var(--ink)' }}>Sales Evaluation</h2>
 
-      {/* ── Generation panel (CHANGELOG 0.1.0 U6, directives 30-31, 57, 60-67) ──
+      {/* ── Generation panel ──
           The selected customer, the selected persona (audience lens), and
           the available customer intelligence are all visible TOGETHER
           before invoking generation — the persona never stands in for the
@@ -295,7 +295,7 @@ export function SalesEvaluation({ customerId, customerName }: SalesEvaluationPro
           {customerName ? <>For <strong style={{ color: 'var(--neutral-700)' }}>{customerName}</strong> — the selected persona is an audience lens over the customer intelligence below; both feed the generation together.</> : 'The selected persona is an audience lens over the customer intelligence below; both feed the generation together.'}
         </p>
 
-        {/* Persona selection (directive 31) + the persona's visible context. */}
+        {/* Persona selection + the persona's visible context. */}
         <div style={{ marginBottom: '16px' }}>
           <label htmlFor="persona-select" style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--neutral-700)', marginBottom: '6px' }}>
             Audience persona
@@ -326,7 +326,7 @@ export function SalesEvaluation({ customerId, customerName }: SalesEvaluationPro
           )}
         </div>
 
-        {/* Available customer intelligence (directives 66-67): a concise
+        {/* Available customer intelligence: a concise
             pre-generation summary of the data domains, from the same
             deterministic account-workspace source the engine feeds from. */}
         {workspace && workspace.technology_landscape && (
@@ -424,8 +424,7 @@ export function SalesEvaluation({ customerId, customerName }: SalesEvaluationPro
         </select>
       </div>
 
-      {/* Pre-generation preview (S-A-I-L P6c; CHANGELOG 0.1.0 U6 directive 66 —
-          auto-computed on load and on persona change: the report the
+      {/* Pre-generation preview (auto-computed on load and on persona change: the report the
           engine WOULD produce, from persona + full authorized context). */}
       {preview && (
         <div style={{ marginTop: '24px', padding: '16px', background: 'var(--neutral-50)', border: '1px solid var(--divider)', borderRadius: 'var(--radius)' }}>
@@ -634,7 +633,7 @@ export function SalesEvaluation({ customerId, customerName }: SalesEvaluationPro
             </div>
           )}
 
-          {/* S-A-I-L P6c — persona-tailored sections (v2 item 33) */}
+          {/* persona-tailored sections */}
           {selectedEvaluation.persona_sections && (
             <div style={{ marginBottom: '24px' }}>
               <h4 style={{ margin: '0 0 4px', color: 'var(--ink)' }}>

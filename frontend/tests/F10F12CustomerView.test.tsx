@@ -1,5 +1,5 @@
 /**
- * Regression tests for WP23a steps 4-5 (CustomerDashboard):
+ * Regression tests for CustomerDashboard:
  *
  * F10 [P1]: Bulk Score's Back evicted the customer
  *   (setCustomerUseCases([]) + setSelectedCustomer(null) → "Select a
@@ -141,13 +141,12 @@ function renderDashboard() {
   );
 }
 
-describe('F10 + F12 — customer view resiliency (WP23a steps 4-5)', () => {
+describe('F10 + F12 — customer view resiliency', () => {
   it('F10: Bulk Score Back keeps the customer and refetches the use cases', async () => {
     renderDashboard();
     await screen.findByRole('heading', { level: 1, name: /Energy Test Company/ });
     const ucCallsBeforeMount = state.ucListCalls;
-    // Open the bulk-score section via the two-level navigation (CHANGELOG 0.1.0
-    // U4): Assessments primary area, then the Bulk Score secondary.
+    // Open the bulk-score section via the two-level navigation: Assessments primary area, then the Bulk Score secondary.
     fireEvent.click(screen.getByRole('tab', { name: 'Navigate to Discovery & Value' }));
     fireEvent.click(screen.getByRole('tab', { name: 'Navigate to Bulk Score' }));
     await screen.findByText('← Back');
@@ -158,7 +157,7 @@ describe('F10 + F12 — customer view resiliency (WP23a steps 4-5)', () => {
     fireEvent.click(screen.getByText('← Back'));
     // The customer is still selected (back on the Assessments area) and the
     // use-case list was refetched (fresh scores visible on return).
-    // CHANGELOG 0.1.0 U7: the emoji is dropped and the Rounds area is one
+    // the emoji is dropped and the Rounds area is one
     // consolidated card — the heading is the deterministic probe.
     await screen.findByText('Assessment Rounds', { selector: 'h2' });
     expect(screen.getByRole('heading', { level: 1, name: /Energy Test Company/ })).toBeTruthy();
@@ -184,13 +183,13 @@ describe('F10 + F12 — customer view resiliency (WP23a steps 4-5)', () => {
     state.createAssessmentShouldFail = true;
     renderDashboard();
     await screen.findByRole('heading', { level: 1, name: /Energy Test Company/ });
-    // Navigate the two-level nav (CHANGELOG 0.1.0 U4): Assessments area, then the
+    // Navigate the two-level nav: Assessments area, then the
     // Rounds secondary (it is the default rail item).
     fireEvent.click(screen.getByRole('tab', { name: 'Navigate to Discovery & Value' }));
     await screen.findByText("No assessment rounds yet. Create a discovery or AI readiness round to organize this customer's needs and use cases.");
     fireEvent.click(screen.getByText('New assessment round', { selector: 'summary' }));
     fireEvent.change(screen.getByPlaceholderText('Round name (e.g. Q4 2026)'), { target: { value: 'Q4 2026' } });
-    // Part 13 WS5 (R8): the round type is an explicit choice (no silent default).
+    // the round type is an explicit choice (no silent default).
     fireEvent.click(screen.getByLabelText('AI readiness assessment (dimension scoring, forecasts, readiness insight)'));
     fireEvent.click(screen.getByText('+ New Round'));
     // Inline error in the rounds card — no full-view reload banner.

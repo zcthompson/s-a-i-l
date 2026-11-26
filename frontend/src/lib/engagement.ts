@@ -1,6 +1,6 @@
 /**
  * H5 — pure date-boundary helpers mirroring the backend evaluator rules
- * (contract C3 evaluator section). All comparisons are UTC.
+ * (evaluator section). All comparisons are UTC.
  *
  *   date-only due: today = due_soon (NEVER overdue); before today = overdue;
  *                  tomorrow or later = neither.

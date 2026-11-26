@@ -24,7 +24,7 @@ html[data-compact='true'] {
   --full-viewport: calc(100vh / 0.85);
 }
 
-/* ── Design tokens (WP23b — the compact token system, direction D1) ─────────
+/* ── Design tokens (the compact token system) ─────────
  * Single source of truth for palette and geometry. Every color, radius,
  * shadow, and divider in components/pages is referenced through these
  * custom properties from inline styles (e.g. `style={{ color: 'var(--brand-500)' }}`)
@@ -42,7 +42,7 @@ html[data-compact='true'] {
  * - status: ONE canonical value per state (Material/Tailwind/Bootstrap
  *   variants removed); `--status-info` is the brand — one accent hue for
  *   primary/link/info.
- * - score: the D1 "migration readout" device — band accents on brand hues,
+ * - score: the "migration readout" device — band accents on brand hues,
  *   low scores deliberately fading to neutral.
  * - geometry: one standard radius (6px/8px/12px collapse to 8px), one card
  *   shadow, one divider.
@@ -81,9 +81,8 @@ html[data-compact='true'] {
   --status-warning-soft: #fff9e6;
   --status-info: var(--brand-500);
 
-  /* Score bands (WP29 — threshold semantics, one canonical value per band;
-   * WP30 adjustment 2026-09-02: red <35, amber 35–69, green 70–100 —
-   * supersedes the initial WP29 75/50 boundaries and the D1 brand-hue readout):
+  /* Score bands (threshold semantics, one canonical value per band:
+   * red <35, amber 35–69, green 70–100):
    * the user-facing requirement is that 70+ is consistently GREEN/strong and
    * that weak/moderate/strong read as red/amber/green in every score
    * visualization. Reuses the status tokens — one canonical value per state.
@@ -94,7 +93,7 @@ html[data-compact='true'] {
   --score-low: var(--status-negative);
   --score-unscored: var(--neutral-400);
 
-  /* Categorical palette (WP29 — the Business Impact Matrix department
+  /* Categorical palette (the Business Impact Matrix department
    * series). 13 Okabe-Ito colorblind-safe hues (7 core + 6 extended) so
    * that every department bubble color is immediately distinguishable from
    * the other departments. The matrix is the only surface where point color
@@ -120,7 +119,7 @@ html[data-compact='true'] {
   --radius-pill: 999px;
   --divider: var(--neutral-200);
 
-  /* Spacing scale (PLAN_UI U8, directives 45-46) — the single source of
+  /* Spacing scale — the single source of
      truth for vertical/horizontal rhythm in the customer workspace.
      4 = 4px (intra-control), 8 = 8px (inline groups), 12 = 12px (dense
      card content), 16 = 16px (card padding / grid gaps), 24 = 24px

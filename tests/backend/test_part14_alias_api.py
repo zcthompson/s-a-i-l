@@ -1,4 +1,4 @@
-"""Part 14 (A2/A3) — customer alias write surface.
+"""customer alias write surface.
 
 - write rules: empty / own name / another customer's name → exact 422;
   duplicate (any customer, normalized) → exact 409, race-safe via the
@@ -192,7 +192,7 @@ def test_member_and_auditor_read_only(client, world, db_session, user):
 
 @pytest.mark.parametrize("user", ["al_sales_admin", "al_sales_admin_member"])
 def test_sales_admin_writes_aliases(client, world, db_session, user):
-    """2026-11-01 operator directive: admin, the account owner, and the
+    """Admin, the account owner, and the
     sales admin all manage the alias section. The global sales_admin has
     NO junction row on Zeta Co (role-based write, read-all scope); the
     member+junction sales_admin proves the role, not the junction,

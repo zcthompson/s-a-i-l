@@ -1,4 +1,4 @@
-"""Regression tests for the template-assessment creation flow (WP18).
+"""Regression tests for the template-assessment creation flow.
 
 The frontend template page (CustomerDashboard "Start a New Assessment" and the
 global deep-link TemplatesPage) sends a template-derived UseCaseCreate payload
@@ -188,7 +188,7 @@ def test_template_create_outsider_without_junction_404(client, template_customer
     payload = dict(TEMPLATE_PAYLOAD, title="Outsider template create",
                    customer_id=template_customer.id)
     response = client.post("/api/use-cases/", json=payload, headers=_token("tplflow_outsider"))
-    # 404-first (R4/Q7): a customer the outsider cannot reach is the same 404
+    # 404-first: a customer the outsider cannot reach is the same 404
     # as a missing one.
     assert response.status_code == 404
     assert response.json()["detail"] == "Customer not found"

@@ -1,5 +1,5 @@
 // H5 — activities, tasks, and engagement. Field-for-field with the
-// normative response shapes (contract C3.1). Unknown values are null.
+// normative response shapes. Unknown values are null.
 
 export const ACTIVITY_TYPES = ['call', 'meeting', 'email', 'demo', 'qbr'] as const;
 export type ActivityType = (typeof ACTIVITY_TYPES)[number];

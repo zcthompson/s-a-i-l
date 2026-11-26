@@ -1,11 +1,11 @@
-"""Auth provider seam (0.2.0 — LDAP/AD federated identity).
+"""Auth provider seam (LDAP/AD federated identity).
 
-docs/archive/PLAN_LDAP_AD_AUTH.md §3.2 — a pluggable provider layer so directory
+A pluggable provider layer so directory
 (LDAP/AD) authentication runs ALONGSIDE local (bcrypt) auth without
-weakening or touching the local path (charter §18: never weaken auth).
+weakening or touching the local path (never weaken auth).
 
 The seam is deliberately thin and lives in the service layer (business
-logic, never routes — charter §2). ``routes/auth.py`` resolves a backend and
+logic, never routes). ``routes/auth.py`` resolves a backend and
 calls ``authenticate``; everything downstream (is_active, approval gate, JWT
 shape, ``CustomerUser`` authorization) is UNCHANGED — directory login maps
 into the same local ``User`` row (federated identity with a local identity
@@ -209,7 +209,7 @@ def link_or_create_directory_user(
       §3.6 rule 5, re-checked here as defense in depth).
 
     ``CustomerUser`` is never touched (directory groups grant nothing —
-    §3.5; customer access stays admin-driven, charter §3).
+    customer access stays admin-driven).
     """
     from datetime import UTC, datetime
 

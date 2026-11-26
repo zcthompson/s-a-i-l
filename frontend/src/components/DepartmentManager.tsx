@@ -156,7 +156,7 @@ export function DepartmentManager({
                 </div>
                 <div style={{ display: 'flex', gap: '6px' }}>
                   {canManage && renamingDept?.id !== dept.id && (
-                    // CHANGELOG 0.1.0 U7 (directive 42): per-row Rename/Delete move
+                    // per-row Rename/Delete move
                     // into a compact overflow menu — the destructive delete
                     // keeps its inline confirmation panel below.
                     <RowActions

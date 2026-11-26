@@ -1,5 +1,5 @@
 /**
- * E3 — SavedViewsMenu: the caller's named portfolio filter views (self-contained).
+ * SavedViewsMenu: the caller's named portfolio filter views (self-contained).
  *
  * A view persists ONLY the H2 filter description (PORTFOLIO_FILTER_PARAMS); it
  * is re-evaluated against the caller's CURRENT scope on every load (the parent

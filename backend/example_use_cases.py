@@ -1,4 +1,4 @@
-"""Deterministic per-department "good example" use-case registry (WP21).
+"""Deterministic per-department "good example" use-case registry.
 
 Pure data + pure functions, mirroring ``backend/verticals.py`` and
 ``backend/templates.py``. Every value in this module is **curated

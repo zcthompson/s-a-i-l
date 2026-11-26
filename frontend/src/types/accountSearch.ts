@@ -1,4 +1,4 @@
-// E2 — In-account cross-module search (normative FE contract).
+// In-account cross-module search (normative FE contract).
 // Backend: GET /api/customers/{customer_id}/search/?q=
 
 export type AccountSearchModule =

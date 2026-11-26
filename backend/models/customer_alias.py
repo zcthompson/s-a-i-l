@@ -1,4 +1,4 @@
-"""Customer alias tags (Part 14, A1).
+"""Customer alias tags.
 
 An alias is an alternate name for a customer account — the flexibility
 mechanism for vendor / NS / pipeline naming that differs from the S-A-I-L

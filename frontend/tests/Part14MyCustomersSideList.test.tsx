@@ -1,5 +1,5 @@
 /**
- * Part 14 B1/B2 — CustomerDashboard "My Customers" side list on the H2 stack:
+ * CustomerDashboard "My Customers" side list on the H2 stack:
  * A–Z default (client-side over the full list; payload stays newest-first),
  * no nav params when unfiltered, sort serializes, pager slices the filtered
  * list, alias search. Synthetic names only.
@@ -71,7 +71,7 @@ const azSorted = () => data.list.map(c => c.name).sort((a: string, b: string) =>
 beforeEach(seed);
 afterEach(cleanup);
 
-describe('Part 14 My Customers side list', () => {
+describe('My Customers side list', () => {
   it('defaults to A–Z over the complete list, with no nav params in the URL', async () => {
     mountAt();
     await ready();

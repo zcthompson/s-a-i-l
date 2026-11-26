@@ -139,7 +139,7 @@ def activities(db: Session, ids) -> None:
 
 
 def deals(db: Session, ids) -> None:
-    """Links and stage history of deals (E6)."""
+    """Links and stage history of deals."""
     ids = list(ids)
     if not ids:
         return

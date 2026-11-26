@@ -1,5 +1,5 @@
 /**
- * Component tests for SalesNotes (S-A-I-L P6b — structured sales notes UI).
+ * Component tests for SalesNotes (structured sales notes UI).
  * Mocks the api module (repo pattern: vi.hoisted + vi.mock factory).
  * Plain assertions — no @testing-library/jest-dom in this project.
  *

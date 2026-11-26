@@ -1,12 +1,12 @@
 /**
- * FE-02 / FE-06 / FE-07 — wizard (AssessmentForm) regressions, part 48.
+ * Wizard (AssessmentForm) regressions.
  *
- * - FE-07: edit mode starts at "Step 1: Basic Info" (the old code indexed an
+ * - edit mode starts at "Step 1: Basic Info" (the old code indexed an
  *   unadjusted stepNames array and showed "Step 1: Select Template"); create
  *   mode includes the template step.
- * - FE-02: a blank CREATE assessment starts empty even when Home still holds
+ * - a blank CREATE assessment starts empty even when Home still holds
  *   a previously viewed record (field init only happens in edit mode).
- * - FE-06: a failed save surfaces in the wizard (submitError) with the input
+ * - a failed save surfaces in the wizard (submitError) with the input
  *   intact and no success navigation — Home's handlers rethrow to the form.
  *
  * Deterministic: the api module is mocked; no network, no inference.

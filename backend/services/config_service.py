@@ -38,7 +38,7 @@ def get_inference_overrides(db: Session | None) -> dict[str, Any]:
 
 
 def get_engagement_overrides(db: Session | None) -> dict[str, Any]:
-    """Active DB overrides for the 'engagement' category (E10 QBR cadence)."""
+    """Active DB overrides for the 'engagement' category (QBR cadence)."""
     return _get_overrides(db, "engagement", ("qbr_cadence_days",))
 
 
@@ -87,7 +87,7 @@ def effective_inference_settings(db: Session | None) -> dict[str, Any]:
 def effective_docling_settings(db: Session | None) -> dict[str, Any]:
     """Merge .env defaults (Settings) with DB overrides for Docling Serve.
 
-    Mirrors ``effective_inference_settings`` (docs/archive/PLAN_LDAP_AD_AUTH.md P0b):
+    Mirrors ``effective_inference_settings``:
     ``ssl_verify``/``ssl_ca_bundle`` feed ``DoclingService``'s httpx
     ``verify=``. ``api_key`` is env/Secret-only and never persisted or
     returned here (empty string = no Authorization header, current behavior).

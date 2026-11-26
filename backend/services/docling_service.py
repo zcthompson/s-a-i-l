@@ -4,9 +4,8 @@ Docling (docling-serve) is the common conversion abstraction between
 uploaded customer documents (PDF, CSV, DOCX, PPTX, HTML, ODF, images, ...)
 and the canonical Markdown representation that Customer Knowledge features,
 search, AI context, and report generation consume
-(CHANGELOG 0.1.1, PLAN.md part 43).
 
-Charter invariants honored here:
+Invariants honored here:
 - The browser never talks to Docling; this service is the only Docling-aware
   code, and routes/services above it never construct Docling HTTP calls.
 - The Docling host is environment-configured (``docling_server_url``),

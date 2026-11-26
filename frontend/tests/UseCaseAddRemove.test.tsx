@@ -1,6 +1,6 @@
 /**
  * Regression tests for direct use-case add/remove in the customer Overview
- * (user report, 2026-09-01; WP27):
+ * (user report, 2026-09-01):
  *
  * The Overview use-case table was view-only — a use case could be viewed
  * and edited (row click → detail tab → Edit wizard) but NEITHER added NOR
@@ -177,9 +177,9 @@ afterEach(() => {
 async function openOverview() {
   const customerRow = await screen.findByRole('button', { name: 'Select customer Energy Test Company' }, { timeout: 5000 });
   fireEvent.click(customerRow);
-  // CHANGELOG 0.1.0 U4: the use-case working table lives under
+  // the use-case working table lives under
   // Assessments ▸ Use Cases (it was removed from the Overview proper).
-  // Part 13 WS1: the primary tabs render only after the fail-closed access
+  // the primary tabs render only after the fail-closed access
   // check resolves — await the tab instead of asserting it synchronously.
   fireEvent.click(await screen.findByRole('tab', { name: 'Navigate to Discovery & Value' }));
   fireEvent.click(screen.getByRole('tab', { name: 'Navigate to Use Cases' }));
@@ -187,7 +187,7 @@ async function openOverview() {
   return screen.findByRole('button', { name: /Add use case/ });
 }
 
-describe('Use-case add/remove in the customer Overview (WP27)', () => {
+describe('Use-case add/remove in the customer Overview', () => {
   it('owner sees the Add affordance and a per-row Delete (in an overflow menu, with an Actions column)', async () => {
     state.role = 'owner';
     render(
@@ -198,7 +198,7 @@ describe('Use-case add/remove in the customer Overview (WP27)', () => {
     const addButton = await openOverview();
     expect(addButton).toBeTruthy();
     expect(addButton.hasAttribute('disabled')).toBe(false);
-    // CHANGELOG 0.1.0 U7 (directive 42): the per-row Delete is no longer a bare
+    // the per-row Delete is no longer a bare
     // button — it lives in a compact per-row overflow (RowActions) menu.
     expect(screen.getByRole('button', { name: `Actions for use case ${useCase.title}` })).toBeTruthy();
     expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeTruthy();
@@ -282,15 +282,15 @@ describe('Use-case add/remove in the customer Overview (WP27)', () => {
     );
     const customerRow = await screen.findByRole('button', { name: 'Select customer Energy Test Company' }, { timeout: 5000 });
     fireEvent.click(customerRow);
-    // CHANGELOG 0.1.0 U4: the table (and its empty state) live under
+    // the table (and its empty state) live under
     // Assessments ▸ Use Cases.
-    // Part 13 WS1: await the tab — it renders after the access check resolves.
+    // await the tab — it renders after the access check resolves.
     fireEvent.click(await screen.findByRole('tab', { name: 'Navigate to Discovery & Value' }));
     fireEvent.click(screen.getByRole('tab', { name: 'Navigate to Use Cases' }));
     const emptyState = await screen.findByText('No use cases for this customer yet.');
     expect(emptyState).toBeTruthy();
     // The table-header Add button renders even with an empty list — the
-    // empty state is not a dead end (WP23 F22 pattern).
+    // empty state is not a dead end (F22 pattern).
     const addButton = screen.getByRole('button', { name: 'Add use case' });
     expect(addButton).toBeTruthy();
     expect(addButton.hasAttribute('disabled')).toBe(false);

@@ -1,5 +1,5 @@
 /**
- * Component tests for CustomerKnowledgeBrowser (PLAN part 43 — Docling
+ * Component tests for CustomerKnowledgeBrowser (Docling
  * normalization UI). Mocks the api module (repo pattern: vi.hoisted +
  * vi.mock factory). Covers: the four processing states (Uploaded neutral /
  * Processing blue / Ready green / Failed red with diagnostic in the `...`

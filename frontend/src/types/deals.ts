@@ -1,4 +1,4 @@
-// E6 — rep-owned deals and admin-managed pipeline stages.
+// Rep-owned deals and admin-managed pipeline stages.
 
 export type StageClass = 'open' | 'won' | 'lost';
 export type AmountBasis = 'one_time' | 'acv' | 'tcv' | 'mrr';
@@ -11,7 +11,7 @@ export interface PipelineStage {
   stage_class: StageClass;
   position: number;
   active: boolean;
-  /** D5: a suggestion only — never stored on a deal implicitly. */
+  /** A suggestion only — never stored on a deal implicitly. */
   default_probability: number | null;
 }
 

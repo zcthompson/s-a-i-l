@@ -1,19 +1,19 @@
-"""Part 13 DV wave — W2 pins: central-policy basis for cross-account read
-surfaces and import reads (DV4 / DV11 route reads / DV12).
+"""W2 pins: central-policy basis for cross-account read
+surfaces and import reads (route reads).
 
 Every surface here moved from a legacy junction check to the central
-``sales_access`` basis (operator ruling R1):
+``sales_access`` basis:
 
 - S7 sales evaluations / departments / analytics / advanced / technology
   inventory + dependencies → ``can(CAP_READ, customer_id)`` per customer
   (404-first kept, byte-identical to a missing record) and
   ``customer_scope`` for the unscoped analytics / advanced aggregates;
 - S7 sales section → ``can(CAP_READ)`` with the documented 403-first
-  ordering kept (BE-04, ruling F3);
+  ordering kept;
 - S8 RVTools route reads (list / detail / customer dashboard) →
-  ``customer_scope`` (admin → all; ruling C2.6); the manager route gate is
-  unchanged (ruling C2.5);
-- S9 pipeline import detail → ``customer_scope`` (admin → all); the F12
+  ``customer_scope`` (admin → all); the manager route gate is
+  unchanged;
+- S9 pipeline import detail → ``customer_scope`` (admin → all); the
   totals cover exactly that scope.
 
 Run: pytest tests/backend/test_part13_dv_wave2.py -v
@@ -177,7 +177,7 @@ def test_s7_sales_evaluations_write_stays_edit_gated(client, world):
     assert r.status_code == 200, r.text
 
 
-# ── S7 sales section (403-first kept, ruling F3) ────────────────────────
+# ── S7 sales section (403-first kept) ────────────────────────
 
 
 @pytest.mark.parametrize("user", READERS)
@@ -195,7 +195,7 @@ def test_s7_sales_section_403_first_kept(client, world):
             r = client.get(f"/api/sales/customers/{cid}/knowledge", headers=_token(user))
             assert r.status_code == 403
             assert r.json() == {"detail": "Not authorized for this customer"}
-    # reads-all roles pass the gate, so a missing customer is the BE-04 404
+    # reads-all roles pass the gate, so a missing customer is the 404
     r = client.get("/api/sales/customers/999999/knowledge", headers=_token("w2_aud"))
     assert r.status_code == 404 and r.json() == {"detail": "Customer not found"}
 
@@ -218,7 +218,7 @@ def test_s7_departments_outsider_404_first(client, world):
         _same_404(client, user, f"/api/departments/{world['dept']}/", "/api/departments/999999/")
 
 
-# ── S7 analytics (caller-based central READ, ruling C1) ─────────────────
+# ── S7 analytics (caller-based central READ) ─────────────────
 
 
 @pytest.mark.parametrize("user", READERS)
@@ -376,7 +376,7 @@ def test_s7_technology_write_stays_edit_gated(client, world):
     assert r.status_code == 200, r.text
 
 
-# ── S8 RVTools route reads (ruling C2.6) + manager gate (C2.5) ──────────
+# ── S8 RVTools route reads + manager gate ──────────
 
 
 @pytest.fixture()
@@ -435,7 +435,7 @@ def test_s8_rvtools_manager_gate_unchanged(client, world):
 
 
 def test_s8_rvtools_target_central_gate(client, db_session, world):
-    # DV11 (ruling R1): _target gates on the central scope +
+    # _target gates on the central scope +
     # CAP_INTEL_UPLOADS — the old junction gate 404'd a manager on their
     # own team account. (Service-level: the HTTP flow parses the workbook
     # before _target, so the gate itself is the unit under test.)
@@ -451,7 +451,7 @@ def test_s8_rvtools_target_central_gate(client, db_session, world):
                 "junction_roles": {r.customer_id: r.role for r in rows}}
 
     # SM on a team account: gate passes (was 404 under the junction basis)
-    # (Part 14 import remediation: _target returns (customer, matched_by);
+    # (_target returns (customer, matched_by);
     # the 404 detail is "No matching customer name or alias".)
     customer, matched_by = _target(db_session, udict("w2_sm"), world["team_name"])
     assert customer.id == world["team"] and matched_by == "name"

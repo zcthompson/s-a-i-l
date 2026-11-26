@@ -191,7 +191,7 @@ class TestMembershipRoutes:
         members = {(m["username"], m["role"]) for m in r.json()["members"]}
         assert ("co_user", "co_owner") in members and ("ins_user", "inside_sales") in members
         assert "hashed_password" not in r.text
-        # 404-first (R4/Q7): no read scope is the same 404 as a missing customer.
+        # 404-first: no read scope is the same 404 as a missing customer.
         assert client.get(_url(w.acme, "memberships/"),
                           headers=_headers(w.nobody.username)).status_code == 404
         assert client.get(_url(w.acme, "memberships/")).status_code == 401
@@ -247,7 +247,7 @@ class TestMembershipRoutes:
     def test_nobody_cannot_grant(self, client, db_session, w):
         r = client.post(_url(w.acme, "memberships/"), headers=_headers(w.nobody.username),
                         json={"user_id": w.nobody.id, "role": "inside_sales"})
-        # nobody has no read scope on acme: 404-first (R4/Q7).
+        # nobody has no read scope on acme: 404-first.
         assert r.status_code == 404
 
     def test_sales_admin_grant_limits(self, client, db_session, w):
@@ -349,7 +349,7 @@ class TestSectionGrants:
         assert client.put(url, headers=h, json={"section_grants": {"notes": "write"}}).status_code == 400
         assert client.put(url, headers=_headers(w.ins.username),
                           json={"section_grants": {"notes": "contribute"}}).status_code == 403
-        # out of scope: the same 404 as a missing customer (404-first, R4/Q7)
+        # out of scope: the same 404 as a missing customer (404-first)
         assert client.put(url, headers=_headers(w.nobody.username),
                           json={"section_grants": {"notes": "contribute"}}).status_code == 404
 

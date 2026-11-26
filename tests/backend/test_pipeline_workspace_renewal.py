@@ -170,7 +170,7 @@ def test_workspace_reads_selected_snapshot_and_graph_shows_renewal_attention(db_
         assert after[key] == before[key]
     assert after["headline"]["open_opportunities_count"] == before["headline"]["open_opportunities_count"] + 1
 
-    # D7: the graph uses the panel synthesis, so the renewal card appears once,
+    # The graph uses the panel synthesis, so the renewal card appears once,
     # as an Opportunities node with the panel's title and pipeline evidence.
     graph = intelligence.build_customer_intelligence_graph(db_session, cid)
     renewal_nodes = [n for n in graph["nodes"] if n["status"] == "renewal_attention"]

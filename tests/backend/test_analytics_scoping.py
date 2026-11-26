@@ -131,7 +131,7 @@ def test_department_trends_member_rejected_for_foreign_customer(client, db_sessi
     ids = _seed(db_session)
     r = client.get(f"/api/analytics/department-trends/?customer_id={ids['cust_b']}",
                    headers=_token("an_member"))
-    # 404-first (R4/Q7): a foreign explicit scope is the same 404 as missing.
+    # 404-first: a foreign explicit scope is the same 404 as missing.
     assert r.status_code == 404
 
 
@@ -159,7 +159,7 @@ def test_correlations_member_foreign_customer_rejected(client, db_session):
     ids = _seed(db_session)
     r = client.get(f"/api/analytics/correlations/?customer_id={ids['cust_b']}",
                    headers=_token("an_member"))
-    # 404-first (R4/Q7): a foreign explicit scope is the same 404 as missing.
+    # 404-first: a foreign explicit scope is the same 404 as missing.
     assert r.status_code == 404
 
 
@@ -171,7 +171,7 @@ def test_predictive_requires_auth(client):
 def test_predictive_cross_customer_rejected(client, db_session):
     ids = _seed(db_session)
     r = client.get(f"/api/analytics/predictive/{ids['uc_b1']}/", headers=_token("an_member"))
-    # 404-first (R4/Q7): an out-of-scope use case is the same 404 as a missing one.
+    # 404-first: an out-of-scope use case is the same 404 as a missing one.
     assert r.status_code == 404
     assert r.json()["detail"] == "Use case not found"
 

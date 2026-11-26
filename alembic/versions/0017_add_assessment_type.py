@@ -1,4 +1,4 @@
-"""Add assessment round type + purpose (Part 13 WS5, R1/R2/R11).
+"""Add assessment round type + purpose.
 
 ``assessments.assessment_type`` — String(20) NOT NULL, server_default 'ai';
 vocabulary ``ai | generic``. Every existing round is an AI round: the

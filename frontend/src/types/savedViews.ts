@@ -1,4 +1,4 @@
-// E3 — saved views + personal worklist (normative FE contract).
+// Saved views + personal worklist (normative FE contract).
 // Backend: /api/saved-views/ + /api/worklist/mine/
 import type { MyTask } from "./engagement";
 

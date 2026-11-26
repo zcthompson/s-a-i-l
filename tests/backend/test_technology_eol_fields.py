@@ -1,4 +1,4 @@
-"""E5 additive technology facts persist and retain existing update semantics."""
+"""Additive technology facts persist and retain existing update semantics."""
 
 import pytest
 from backend.auth import create_access_token

@@ -1,9 +1,8 @@
-"""Customer Intelligence API routes (S-A-I-L P4).
+"""Customer Intelligence API routes.
 
-Per-customer deterministic intelligence Overview aggregation
-(CHANGELOG 0.0.80 items 4-5, 14-15). Reads use the central account policy
+Per-customer deterministic intelligence Overview aggregation Reads use the central account policy
 before any content is assembled; an out-of-scope customer returns the same
-404 as a missing one (404-first, R4/Q7). Business logic (the aggregation itself) lives in
+404 as a missing one (404-first). Business logic (the aggregation itself) lives in
 backend/services/customer_intelligence.py.
 """
 
@@ -24,7 +23,7 @@ def _require_account_read(request: Request, db: Session, customer_id: int) -> No
 
     The existing in-scope basis for these routes (the central account-read
     policy of ``customer_access.require_account_read``, unchanged). Out-of-
-    scope is remapped to 404 (oracle-closing, R4/Q7); the shared helper keeps
+    scope is remapped to 404 (oracle-closing); the shared helper keeps
     its 403 for its other callers.
     """
     user = get_user_from_request(request)
@@ -39,7 +38,7 @@ def _require_account_read(request: Request, db: Session, customer_id: int) -> No
 def customer_intelligence_overview(
     request: Request, customer_id: int, db: Session = Depends(get_db)
 ):
-    """Deterministic per-customer intelligence Overview (S-A-I-L P4).
+    """Deterministic per-customer intelligence Overview.
 
     Aggregates Customer Knowledge, Technology Inventory, Sales Notes, and
     Use Cases into counts + derived indicators. No LLM — pure rule-based
@@ -53,7 +52,7 @@ def customer_intelligence_overview(
 def customer_intelligence_workspace(
     request: Request, customer_id: int, db: Session = Depends(get_db)
 ):
-    """Account workspace context (CHANGELOG 0.1.0 U1).
+    """Account workspace context.
 
     Four actionable summaries (Technology Landscape, Knowledge, Sales
     Activity, Assessment & Use Case) + consolidated Business Impact +

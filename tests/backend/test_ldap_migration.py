@@ -1,6 +1,6 @@
-"""Migration regression tests for c7d8e9f0a1b2 (LDAP/directory auth fields, 0.2.0 P0).
+"""Migration regression tests for c7d8e9f0a1b2 (LDAP/directory auth fields).
 
-docs/archive/PLAN_LDAP_AD_AUTH.md §5, gate: existing-DB copy —
+gate: existing-DB copy —
   * ``upgrade`` keeps every row + its ``id`` + ``hashed_password`` intact;
   * new columns present with correct defaults (``auth_provider`` backfilled to
     'local', ``external_id``/``last_directory_login_at`` NULL, unique constraint
@@ -8,8 +8,7 @@ docs/archive/PLAN_LDAP_AD_AUTH.md §5, gate: existing-DB copy —
   * ``downgrade`` REFUSES while any ``auth_provider='ldap'`` row exists
     (preservation-first — plan §3.6 rule 8), and succeeds once none do.
 
-Deterministic: runs against a scratch DB (not the dev DB, not production data
-— charter §6). The alembic CLI is driven via subprocess with ``DATABASE_URL``
+Deterministic: runs against a scratch DB (not the dev DB, not production data). The alembic CLI is driven via subprocess with ``DATABASE_URL``
 pointed at the scratch file (``env.py`` honours it over .env).
 """
 

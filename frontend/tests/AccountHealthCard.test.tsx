@@ -1,5 +1,5 @@
 /**
- * E5 — AccountHealthCard component tests (synthetic fixtures only).
+ * AccountHealthCard component tests (synthetic fixtures only).
  * Partial-mocks the api module (repo pattern: vi.hoisted + vi.mock factory),
  * so the real module need not export getCustomerHealth for these to run.
  */

@@ -443,7 +443,7 @@ def test_upload_authorizes_every_row_for_any_authenticated_role(
 
 
 def test_sales_admin_write_block_applies_to_generic_import(client, db_session, world):
-    """Part 13 R11 (2026-10-29): the app-wide sales_admin content block
+    """The app-wide sales_admin content block
     covers the generic import surface — mutating verbs 403 at the middleware
     before per-row authorization runs (the old 0-rows-imported behavior is
     superseded)."""
@@ -545,7 +545,7 @@ def test_delete_hidden_batch_is_404_and_missing_resources_are_404(client, db_ses
 
 @pytest.mark.parametrize("suffix", ["source/", "issues.csv/"])
 def test_hidden_batch_source_and_issues_are_404_first(client, db_session, world, suffix):
-    # Part 13 wave B (R4/Q7): an import the caller cannot see is the same 404
+    # an import the caller cannot see is the same 404
     # as a missing one; a visible import keeps the exact management 403.
     hidden = _import(client, [_row(customer_name=world["globex"].name)], "intel_rep_b")
     out_of_scope = client.get(f"{BASE}{hidden['import_id']}/{suffix}", headers=_headers("intel_rep_a"))

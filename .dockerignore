@@ -1,4 +1,4 @@
-# Build-context hygiene (WP16 — Node 20 → 24 migration).
+# Build-context hygiene (Node 20 → 24 migration).
 # The frontend stage runs a fresh `npm ci`; host-local dev artifacts must not
 # be shipped into the build context (a host node_modules copy carries
 # host-arch native binaries and would overlay the stage-1 npm ci output).

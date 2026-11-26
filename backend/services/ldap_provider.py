@@ -1,6 +1,6 @@
-"""LDAP/AD directory authentication backend (0.2.0 P1).
+"""LDAP/AD directory authentication backend.
 
-docs/archive/PLAN_LDAP_AD_AUTH.md §3.1/§3.2/§3.6 — directory auth maps into the existing
+Directory auth maps into the existing
 local ``User`` row (federated identity with a local identity anchor). This
 module owns the ldap3 mechanics:
 
@@ -16,7 +16,7 @@ module owns the ldap3 mechanics:
   optional ``start_tls`` upgrade. The connection trust model comes from
   P0b's ``ssl_trust`` seam (full/skip/ca — custom CA bundle).
 
-Error discipline (charter §18, plan §3.6 rule 1): the backend never leaks
+Error discipline (plan §3.6 rule 1): the backend never leaks
 "which" failure — a wrong password and an unknown username both surface as
 :class:`LdapAuthError` (route → unified 401); only a directory OUTAGE
 surfaces as :class:`LdapUnavailable` (route → 503) so ops knows the

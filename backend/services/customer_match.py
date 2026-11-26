@@ -1,4 +1,4 @@
-"""Customer matching for the Intelligence Import (Part 14 import remediation).
+"""Customer matching for the Intelligence Import.
 
 Operator rules (2026-11-01): every Intelligence Import maps a supplied account
 name to an EXISTING customer by customer name OR alias, case-insensitive

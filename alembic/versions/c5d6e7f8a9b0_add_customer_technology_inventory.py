@@ -5,7 +5,7 @@ Revises: c9d0e1f2a3b4
 Create Date: 2026-09-07
 
 Creates the customer_technologies table backing the S-A-I-L Technology
-Inventory feature (CHANGELOG 0.0.80, P2). Per-customer structured
+Inventory feature. Per-customer structured
 technology records with controlled vocabularies (validated in the service
 layer; see backend/models/customer_technology.py) and explicit unknown
 handling (NULL = unknown, never fabricated).

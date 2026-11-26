@@ -1,7 +1,7 @@
-"""Account-impact service (shift-to-global-customer-management, phase 4).
+"""Account-impact service (shift to global customer management, phase 4).
 
 Replaces the legacy use-case-only ``total_impact = savings + revenue`` headline
-with an EXPLAINABLE, money-safe account-impact summary. Per the directive §5:
+with an EXPLAINABLE, money-safe account-impact summary. Per the display rule:
 
   * **Separately named measures** — customer benefit (assessment-derived),
     service commitments/cost, qualitative intelligence, and pipeline. NEVER
@@ -216,7 +216,7 @@ def _compute_account_impact(db: Session, customer_id: int, pipeline_summary: dic
     #
     # The monetary total is reported ONLY when a comparable total can be
     # established (at least one eligible benefit). Otherwise it is None
-    # (unknown — distinct from zero), per directive §5: "display 'Not
+    # (unknown — distinct from zero), per the display rule: "display 'Not
     # quantified' or 'Partial' with the missing inputs rather than inventing
     # assumptions."
     total_value = _r(benefit_subtotal) if eligible_count > 0 else None

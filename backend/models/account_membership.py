@@ -1,7 +1,7 @@
-"""Account membership model — the RBAC directive's per-account role grants.
+"""Account membership model — the RBAC model's per-account role grants.
 
 ``CustomerUser`` stays the junction of record for the legacy
-owner/member/auditor roles; this table ADDS the directive's role set
+owner/member/auditor roles; this table ADDS the model's role set
 (primary_owner / co_owner / sales_ops / inside_sales) and the per-section
 grants for inside sales. A user may hold several roles on one account, so the
 unique constraint is on (user, customer, role).

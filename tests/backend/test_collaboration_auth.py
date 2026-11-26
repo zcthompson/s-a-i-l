@@ -176,7 +176,7 @@ class TestJunctionScoping:
     def test_stranger_without_junction_404(self, client, db_session):
         s = _seed(db_session)
         r = client.get(f"/api/use-cases/{s['uc1'].id}/comments/", headers=_token("cb_stranger"))
-        # 404-first (R4/Q7): out-of-scope is the same 404 as a missing use case.
+        # 404-first: out-of-scope is the same 404 as a missing use case.
         assert r.status_code == 404
         assert r.json()["detail"] == "Use case not found"
 
@@ -197,7 +197,7 @@ class TestJunctionScoping:
         r = client.post(f"/api/use-cases/{s['uc2'].id}/comments/",
                         json={"content": "hi"}, headers=_token("cb_member"))
         # A customer-less use case is out of every non-admin's scope (R2), so
-        # it is the same 404 as a missing one (404-first, R4/Q7).
+        # it is the same 404 as a missing one (404-first).
         assert r.status_code == 404
 
 
@@ -320,7 +320,7 @@ class TestNotificationOwnership:
             Notification.user_name == "cb_stranger").first()
         r = client.post(f"/api/use-cases/notifications/{foreign.id}/read/",
                         headers=_token("cb_member"))
-        # 404-first (R4/Q7): someone else's notification is the same 404 as a
+        # 404-first: someone else's notification is the same 404 as a
         # missing one — no existence oracle.
         assert r.status_code == 404
         assert r.json()["detail"] == "Notification not found"
@@ -355,7 +355,7 @@ class TestNotificationOwnership:
         r = client.get("/api/use-cases/notifications/",
                        params={"customer_id": other.id},
                        headers=_token("cb_member"))
-        # 404-first (R4/Q7): an out-of-scope filter must not confirm the
+        # 404-first: an out-of-scope filter must not confirm the
         # customer exists.
         assert r.status_code == 404
 

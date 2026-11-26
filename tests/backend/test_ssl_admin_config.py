@@ -1,4 +1,4 @@
-"""Admin config surface for the connection trust model (docs/archive/PLAN_LDAP_AD_AUTH.md P0b).
+"""Admin config surface for the connection trust model.
 
 Pins the API contract the expanded Application Settings UI consumes:
 

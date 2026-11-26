@@ -1,6 +1,6 @@
 """Provider-neutral document conversion seam for Customer Knowledge.
 
-Part 13 WS6: Customer Knowledge normalization no longer assumes Docling. The
+Customer Knowledge normalization no longer assumes Docling. The
 worker asks ``build_converter(db)`` for the configured ``DocumentConverter``
 (Docling Serve or Azure Document Intelligence) at JOB RUNTIME, so an admin
 provider switch is effective for the next job without a restart. A provider

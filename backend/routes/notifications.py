@@ -5,7 +5,7 @@ The single authoritative ``ConnectionManager`` lives in
 scoring, status changes) broadcasts into the same connection pool that this
 endpoint accepts clients into.
 
-Auth: browsers cannot set headers on a WebSocket handshake, and the charter
+Auth: browsers cannot set headers on a WebSocket handshake, and
 forbids placing the JWT in a URL — so the client must send
 ``{"auth": "<JWT>"}`` as the FIRST message after the connection is
 established. Connections that do not authenticate (or send an invalid

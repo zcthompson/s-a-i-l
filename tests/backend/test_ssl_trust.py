@@ -1,4 +1,4 @@
-"""Tests for the connection trust model seam (docs/archive/PLAN_LDAP_AD_AUTH.md P0b).
+"""Tests for the connection trust model seam.
 
 Covers ``services.ssl_trust`` (resolve_verify full/skip/ca + PEM validation),
 the httpx ``verify=`` passthrough in ``AIClient`` and ``DoclingService``, and

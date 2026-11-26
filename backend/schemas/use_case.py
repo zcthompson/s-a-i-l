@@ -34,8 +34,8 @@ class UserResponse(ORMBaseModel):
     approved: int
     created_at: datetime
     is_active: int
-    # 0.2.0 federated identity (docs/archive/PLAN_LDAP_AD_AUTH.md): 'local' | 'ldap'.
-    # Additive — pre-0.2.0 clients ignore the extra field.
+    # federated identity: 'local' | 'ldap'.
+    # Additive — older clients ignore the extra field.
     auth_provider: str = "local"
 
 
@@ -103,7 +103,7 @@ class LoginResponse(ORMBaseModel):
     token: str
     department: str | None = None
     is_admin: bool = False
-    # Global role (0.1.6, additive — old clients ignore the new field):
+    # Global role (additive — old clients ignore the new field):
     # drives the frontend's ps_admin render gates. No JWT payload change;
     # old sessions carry no claim, the live DB value is what matters.
     role: str = "user"
@@ -130,7 +130,7 @@ class UseCaseCreate(ORMBaseModel):
     estimated_savings: float | None = None
     estimated_revenue: float | None = None
     timeline_estimate: str | None = None
-    # Technology tracking fields (WP27+)
+    # Technology tracking fields
     tech_stack: dict | None = None
     devices: dict | None = None
     software: dict | None = None
@@ -156,7 +156,7 @@ class UseCaseUpdate(ORMBaseModel):
     estimated_savings: float | None = None
     estimated_revenue: float | None = None
     timeline_estimate: str | None = None
-    # Technology tracking fields (WP27+)
+    # Technology tracking fields
     tech_stack: dict | None = None
     devices: dict | None = None
     software: dict | None = None
@@ -184,7 +184,7 @@ class UseCaseResponse(ORMBaseModel):
     estimated_savings: float | None = None
     estimated_revenue: float | None = None
     timeline_estimate: str | None = None
-    # Technology tracking fields (WP27+)
+    # Technology tracking fields
     tech_stack: dict | None = None
     devices: dict | None = None
     software: dict | None = None
@@ -196,11 +196,11 @@ class UseCaseResponse(ORMBaseModel):
     updated_at: datetime
     created_by: str | None = None
     updated_by: str | None = None
-    # Assessment round membership (audit P1-2: the list route's
+    # Assessment round membership (the list route's
     # UseCaseResponse used to strip these; to_dict() provides both)
     assessment_id: int | None = None
     assessment_name: str | None = None
-    # Part 13 WS5 (R5/R8): round type — 'ai' (default incl. legacy NULL) |
+    # round type — 'ai' (default incl. legacy NULL) |
     # 'generic'; AI-only surfaces gate on this from the payload alone.
     assessment_type: str = "ai"
 
@@ -229,7 +229,7 @@ class ScoringResponse(ORMBaseModel):
 
 class DimensionInfo(ORMBaseModel):
     """A scoring dimension definition (name + weight) as served by
-    GET /api/scoring/dimensions/ (audit P1-3: was untyped ``list``)."""
+    GET /api/scoring/dimensions/ (was untyped ``list``)."""
     name: str
     weight: float
 
@@ -238,7 +238,7 @@ class CustomerCreate(ORMBaseModel):
     """Schema for creating a new customer."""
     name: str = Field(..., min_length=1, max_length=255)
     description: str | None = None
-    # Industry vertical (WP19) — validated case-insensitively against
+    # Industry vertical — validated case-insensitively against
     # backend.verticals.VERTICALS in the route; stored canonical-case.
     vertical: str | None = Field(None, max_length=100)
     # Sales branch home (free text; see /api/customers/branches/ for the
@@ -272,13 +272,13 @@ class CustomerResponse(ORMBaseModel):
     use_case_count: int = 0
     departments: list[str] = []
     total_impact: float = 0.0
-    # Part 14 (A4): raw alias strings, sorted. Additive — every existing
+    # raw alias strings, sorted. Additive — every existing
     # consumer is unchanged; the list payload carries this via ONE batched
     # query (no N+1), the detail response via a single read.
     aliases: list[str] = []
 
 
-# ── WP19 — template-assessment bootstrap response ────────────────────────────
+# ── template-assessment bootstrap response ────────────────────────────
 
 
 class BootstrapDepartmentOut(ORMBaseModel):
@@ -295,7 +295,7 @@ class BootstrapUseCaseOut(ORMBaseModel):
 
 
 class BootstrapResultOut(ORMBaseModel):
-    """POST /customers/{name}/assessments/from-template/ response (WP19).
+    """POST /customers/{name}/assessments/from-template/ response.
 
     The service returns a plain dict; this model pins the wire shape so the
     backend and the frontend `BootstrapResult` type cannot drift apart
@@ -305,7 +305,7 @@ class BootstrapResultOut(ORMBaseModel):
     assessment_name: str
     departments: list[BootstrapDepartmentOut]
     use_cases: list[BootstrapUseCaseOut]
-    # WP21 — example use cases pre-seeded into vertical departments that the
+    # Example use cases pre-seeded into vertical departments that the
     # per-goal seeding left empty (vertical-determined; fill-empty-only).
     preseeded: list[BootstrapUseCaseOut] = Field(default_factory=list)
     count: int

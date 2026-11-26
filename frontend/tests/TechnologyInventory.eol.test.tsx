@@ -1,5 +1,5 @@
 /**
- * E5 — TechnologyInventory optional EOL fields (end_of_support_date +
+ * TechnologyInventory optional EOL fields (end_of_support_date +
  * eol_source). Same mocking pattern as TechnologyInventory.test.tsx
  * (vi.hoisted + vi.mock factory). Synthetic fixtures only.
  */

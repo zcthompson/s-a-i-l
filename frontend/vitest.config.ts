@@ -15,7 +15,7 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['tests/**/*.test.{ts,tsx}'],
     // Cap worker parallelism: the full-suite dashboard/navigation tests
-    // (F1/F5/U4/WP23a/WP27) race the default 1000ms findBy timeout under
+    // (F1/F5) race the default 1000ms findBy timeout under
     // high parallel load (verified flake 2026-10-19: 0–6 failures across
     // runs, 0 in isolation). 2 forks keeps the suite fast and deterministic.
     pool: 'forks',

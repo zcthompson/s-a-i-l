@@ -1,10 +1,10 @@
-"""Account-membership routes (RBAC directive).
+"""Account-membership routes (RBAC model).
 
 HTTP only: authenticate, resolve the customer, delegate to
 ``membership_service`` (which owns every authorization and data rule and
 raises before any content is assembled).
 
-404-first (R4/Q7): a customer outside the caller's read scope returns the
+404-first: a customer outside the caller's read scope returns the
 same 404 as a missing one, so a by-name probe cannot reveal existence.
 In-scope capability denials keep the service's exact 403.
 """

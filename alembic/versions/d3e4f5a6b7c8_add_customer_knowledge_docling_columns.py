@@ -3,8 +3,7 @@
 Revision ID: d3e4f5a6b7c8
 Revises: a1b2c3d4e5f9
 
-Adds the Docling document-normalization layer (PLAN.md part 43 /
-CHANGELOG 0.1.1 item 7) to the existing
+Adds the Docling document-normalization layer to the existing
 ``customer_knowledge`` table:
 
 - original_*      : original document provenance (retained source artifact)

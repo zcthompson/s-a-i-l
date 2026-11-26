@@ -1,6 +1,6 @@
 /**
  * Component tests for the Application Settings "Document Processing"
- * provider section (Part 13 WS6, contract F1-F4).
+ * provider section .
  *
  * Pins: provider select + verbatim capability matrix; azure inputs disabled
  * under docling / enabled under azure; the data-leaves-the-app notice only

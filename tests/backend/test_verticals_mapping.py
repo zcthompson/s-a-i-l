@@ -1,4 +1,4 @@
-"""WP19 — unit tests for the deterministic verticals/registry helpers.
+"""Unit tests for the deterministic verticals/registry helpers.
 
 Pure-function coverage of the goal→department mapping (including the
 out-of-set fallback chain: in-set keyword match → alias → template default

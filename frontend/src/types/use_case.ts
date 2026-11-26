@@ -31,7 +31,7 @@ export interface UseCase {
   updated_by?: string;
   assessment_id?: number;
   assessment_name?: string;
-  /** Part 13 WS5 (R5/R8): the use case's round type ('ai' default incl.
+  /** the use case's round type ('ai' default incl.
    *  legacy no-round; 'generic' → AI scoring surfaces are gated). */
   assessment_type?: 'ai' | 'generic';
 }
@@ -48,7 +48,7 @@ export interface UseCaseCreate {
   software?: Record<string, unknown>;
   vendor?: string;
   // Mirrors the backend UseCaseCreate.status (backend/schemas/use_case.py) —
-  // the wire contract accepts it; the WP23-era type just omitted it.
+  // the wire contract accepts it; the type just omitted it.
   status?: string;
   goals?: string[];
   challenges?: string[];
@@ -140,7 +140,7 @@ export interface TemplateInfo {
   default_goals: string[];
   default_challenges: string[];
   default_pain_points: string[];
-  // WP19 additive keys (present for every template in backend/templates.py)
+  // additive keys (present for every template in backend/templates.py)
   id?: string;
   icon?: string;
   description?: string;
@@ -151,19 +151,19 @@ export interface TemplateInfo {
 }
 
 /** GET /customers/verticals/ — the canonical vertical list + the 4 seed
- *  departments per vertical (WP19). */
+ * departments per vertical. */
 export interface VerticalsResponse {
   verticals: string[];
   departments_by_vertical: Record<string, string[]>;
 }
 
-/** POST /customers/{name}/assessments/from-template/ result (WP19). */
+/** POST /customers/{name}/assessments/from-template/ result. */
 export interface BootstrapResult {
   assessment_id: number;
   assessment_name: string;
   departments: Array<{ name: string; created: boolean }>;
   use_cases: Array<{ id: number; title: string; department: string | null }>;
-  /** WP21 — example use cases pre-seeded into vertical departments left empty by the per-goal seeding. */
+  /** example use cases pre-seeded into vertical departments left empty by the per-goal seeding. */
   preseeded: Array<{ id: number; title: string; department: string | null }>;
   count: number;
 }
@@ -288,7 +288,7 @@ export interface DepartmentTrend {
   total_impact: number;
 }
 
-// ── Contract hygiene (WP3): dimension definitions, departments, access ──
+// ── Contract hygiene: dimension definitions, departments, access ──
 
 /** A scoring dimension definition as served by GET /scoring/dimensions/
  *  (name + weight only — NOT a scored dimension). */
@@ -408,7 +408,7 @@ export interface UserResponse {
   approved: number;
   created_at: string;
   is_active: number;
-  /** 0.2.0 federated identity: 'local' | 'ldap'. */
+  /** federated identity: 'local' | 'ldap'. */
   auth_provider: string;
 }
 
@@ -436,7 +436,7 @@ export interface CustomerSalesTeamUpdate {
   sales_ops_user_ids: number[];
 }
 
-// ── Account memberships + ownership review queue (RBAC directive) ─────────
+// ── Account memberships + ownership review queue (RBAC model) ─────────
 
 export type MembershipRole = 'primary_owner' | 'co_owner' | 'sales_ops' | 'inside_sales';
 
@@ -479,11 +479,11 @@ export interface Customer {
   use_case_count?: number;
   departments: string[];
   total_impact?: number;
-  /** Part 14 — alias tags (raw strings, sorted). */
+  /** alias tags (raw strings, sorted). */
   aliases?: string[];
 }
 
-/** Part 14 — GET/POST /customers/{name}/aliases/ row. */
+/** GET/POST /customers/{name}/aliases/ row. */
 export interface CustomerAlias {
   id: number;
   alias: string;
@@ -498,8 +498,8 @@ export interface CustomerCreate {
 }
 
 /** GET /customers/{name}/stats/ — per-customer aggregate stats. The route
- *  re-shapes the service output; this models the WIRE shape (audit P1 —
- *  the old interface modeled the service shape, not the wire shape). */
+ * re-shapes the service output; this models the WIRE shape
+ * (the old interface modeled the service shape, not the wire shape). */
 export interface CustomerStats {
   customer_name: string;
   customer_description: string | null;
@@ -708,7 +708,7 @@ export interface CustomerAssessment {
   created_at: string | null;
   archived_at: string | null;
   use_case_count: number;
-  // Part 13 WS5 (R1/R2/R6): round type + optional "why". Generic rounds
+  // round type + optional "why". Generic rounds
   // carry no AI scoring / forecasts / readiness insight / template bootstrap.
   assessment_type: AssessmentType;
   purpose: string | null;
@@ -734,9 +734,9 @@ export interface AIPrediction {
   created_at: string | null;
 }
 
-// ── Readiness Insight (WP33 — persisted, LLM-generated per-customer) ──────
+// ── Readiness Insight (persisted, LLM-generated per-customer) ──────
 // GET/POST /api/analytics/readiness-insight/ — the backend implements exactly
-// this shape (see the WP33 API contract).
+// this shape (see the API contract).
 
 export interface ReadinessInsightData {
   summary: string;

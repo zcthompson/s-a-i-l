@@ -1,5 +1,5 @@
 /**
- * E3 — SavedViewsMenu + PortfolioFilterBar saved-views integration (synthetic fixtures only).
+ * SavedViewsMenu + PortfolioFilterBar saved-views integration (synthetic fixtures only).
  * Partial-mocks the api module (repo pattern: vi.hoisted + vi.mock factory).
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

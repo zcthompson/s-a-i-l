@@ -1,5 +1,5 @@
 /**
- * FE-12 — assessment-work discard guard (part 48).
+ * FE-12 — assessment-work discard guard.
  *
  * The wizard tracks meaningful changes relative to the initial draft and
  * warns before abandoning a dirty assessment. The Cancel button (first step)

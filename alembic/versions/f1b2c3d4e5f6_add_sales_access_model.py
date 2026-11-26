@@ -4,19 +4,18 @@ Revision ID: f1b2c3d4e5f6
 Revises: f0a1b2c3d4e5
 Create Date: 2026-10-12
 
-shift-to-global-customer-management directive, phase 2 (sales access model).
+shift to global customer management, phase 2 (sales access model).
 STRICTLY ADDITIVE — nothing existing changes behavior:
 
   - ``users.sales_role`` (String(20), nullable): orthogonal to ``is_admin``.
-    A sales-manager NEVER sets is_admin=1 (directive §4 rule 1); is_admin
+    A sales-manager NEVER sets is_admin=1; is_admin
     remains the exclusive system-admin authority.
   - ``sales_reporting`` (rep_user_id UNIQUE -> manager_user_id): the sales
     reporting hierarchy. Manager scope = customers owned by (transitive)
     reports. Relationships use stable user IDs, not branch/display-name
-    similarity (directive §4 rule 2).
+    similarity.
   - ``inside_sales_assignments`` (inside_sales_user_id + customer_id UNIQUE,
-    optional rep_user_id): customer-specific inside-sales assignments
-    (directive §4 rule 3).
+    optional rep_user_id): customer-specific inside-sales assignments.
 
 Idempotent: each step is guarded by an inspector check, so a re-run (and a
 fresh DB that already has the columns/tables via create_all) is a no-op.

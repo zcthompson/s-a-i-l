@@ -1,4 +1,4 @@
-"""RBAC directive: the auditor reads the whole application and writes nothing."""
+"""RBAC model: the auditor reads the whole application and writes nothing."""
 
 import pytest
 from backend.services import sales_access as sa

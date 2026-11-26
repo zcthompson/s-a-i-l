@@ -1,11 +1,11 @@
 /**
- * CHANGELOG 0.1.0 U3 — workspace primitives + compact CustomerHeader tests.
+ * workspace primitives + compact CustomerHeader tests.
  *
  * Covers the reusable control language for the redesigned customer
- * workspace: Breadcrumbs (directive 12), SegmentedNav (directive 14),
- * ActionMenu (directives 33-38), SummaryCard (directives 21, 43),
- * EmptyState (directive 56), and the compact persistent CustomerHeader
- * (directives 6-10, 47) — including the departments-as-count popover,
+ * workspace: Breadcrumbs, SegmentedNav,
+ * ActionMenu, SummaryCard,
+ * EmptyState, and the compact persistent CustomerHeader
+ * including the departments-as-count popover,
  * the emoji-free semantic role chip, the compact active-assessment status
  * element that replaces the full-width banner, and the + Add / More menus.
  */

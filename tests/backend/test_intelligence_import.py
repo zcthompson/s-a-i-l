@@ -266,7 +266,7 @@ def test_managers_and_admin_can_upload_list_read_delete(client, db_session, worl
     username = "admin" if role == "admin" else _user(db_session, role).username
     headers = _headers(username)
     if role == "sales_admin":
-        # Part 13 R11 (2026-10-29): the sales_admin content block now covers the
+        # the sales_admin content block now covers the
         # import surface — mutations 403 at the middleware, reads stay open.
         response = _upload(client, report, headers)
         assert response.status_code == 403
@@ -716,7 +716,7 @@ def test_manager_upload_and_detail_are_scoped(client, db_session, world, report)
     assert upload["unmatched"] == admin["unmatched"]
 
 
-# Part 14 import remediation (operator 2026-11-01): a dollar amount the parser
+# a dollar amount the parser
 # cannot read never rejects the file — the amount is recorded as unknown and
 # the cell is reported as an amount warning; common export formats parse.
 @pytest.mark.parametrize("cell,expected", [

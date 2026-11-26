@@ -15,7 +15,7 @@ It is authoritative customer data, not a visualization artifact:
 - provenance + epistemics — ``source``/``date_observed`` record how the
   relationship was established; ``verification_state`` distinguishes
   verified facts from inferred/unverified observations, with
-  ``confidence`` (0.0-1.0) for inferred rows (charter §4: inference is
+  ``confidence`` (0.0-1.0) for inferred rows (inference is
   explicitly represented, never silently becomes fact);
 - business value beyond the graph — migration/displacement analysis
   ("what runs on the EOL vSphere?") consumes the same rows.

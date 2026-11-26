@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 def _batched_user_contexts(db, usernames) -> tuple[dict, dict]:
     """One batched load of the resolver context for the given assignees
-    (re-recon A-7 — was one query per flagged task).
+    (was one query per flagged task).
 
     Returns {username: user dict} with the junction customer ids and the
     live membership roles preloaded, so ``sales_access`` never issues
@@ -95,8 +95,8 @@ def scan_task_notifications(db, now=None):
     if flagged:
         contexts, orm_users = _batched_user_contexts(db, {task.assignee for task, _ in flagged})
         scopes: dict = {}
-        # ONE batched customer-name lookup for the flagged tasks (re-recon
-        # A-7 — the notification message embeds the customer name).
+        # ONE batched customer-name lookup for the flagged tasks (the
+        # notification message embeds the customer name).
         customer_names = {
             c.id: c.name
             for c in db.query(Customer).filter(

@@ -1,6 +1,6 @@
-"""E0 CRM prerequisites — reserved-section capabilities + creator membership parity.
+"""CRM prerequisites — reserved-section capabilities + creator membership parity.
 
-PLAN.md "Feature Expansion & CRM Functionality Roadmap (2026-11-03)" package E0:
+CRM prerequisites:
 
 * ``CAP_OPPORTUNITIES`` / ``CAP_FORECASTS`` / ``CAP_COMPETITORS`` activate the
   already-reserved section vocabulary (``models/account_membership.py``

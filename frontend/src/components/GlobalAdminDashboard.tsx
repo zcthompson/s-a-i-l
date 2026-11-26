@@ -1,7 +1,7 @@
 /**
  * GlobalAdminDashboard.tsx — System-wide admin dashboard
  *
- * Layout follows the application-administrator flow (WP31):
+ * Layout follows the application-administrator flow:
  * 1. Global Totals          — customer count + account impact (account-impact contract)
  * 2. Customer Portfolio     — the per-customer account table (no use-case/readiness data)
  * 3. Users                  — the operational/identity domain (user management)

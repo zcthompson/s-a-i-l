@@ -106,7 +106,7 @@ app = FastAPI(
     lifespan=_lifespan,
 )
 
-# CORS (A-8 re-recon 2026-11-01: through Settings — .env is loaded above)
+# CORS (through Settings — .env is loaded above)
 _allowed_settings = get_settings()
 allowed_origins = _allowed_settings.cors_origins.split(",")
 if not allowed_origins or (len(allowed_origins) == 1 and allowed_origins[0] == ""):
@@ -120,7 +120,7 @@ if AUTH_ENABLED:
 
 # Track request timing — the bounded metrics store is
 # monitoring.record_request (this module's ``_request_times`` second store
-# was dead code — written, never read; re-recon A-6).
+# was dead code — written, never read).
 @app.middleware("http")
 async def track_requests(request: Request, call_next):
     start_time = time.time()

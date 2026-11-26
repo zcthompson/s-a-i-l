@@ -1,4 +1,4 @@
-"""E5 migration preserves technology rows and tolerates already-added columns."""
+"""Migration preserves technology rows and tolerates already-added columns."""
 
 import os
 import sqlite3

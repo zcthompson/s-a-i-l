@@ -1,4 +1,4 @@
-"""E1 Account 360 timeline + E10 QBR cadence — synthetic acceptance tests."""
+"""Account 360 timeline + QBR cadence — synthetic acceptance tests."""
 
 import base64
 import json
@@ -362,7 +362,7 @@ def test_membership_whitelist_only(db_session, account):
     assert "SECRET" not in json.dumps(items)
 
 
-# ── QBR (E10) ───────────────────────────────────────────────────────────
+# ── QBR ───────────────────────────────────────────────────────────
 
 
 @pytest.mark.parametrize("last, state, days_until", [

@@ -1,6 +1,6 @@
-"""Pydantic schemas for the auth (directory/LDAP) admin surface (0.2.0 P1).
+"""Pydantic schemas for the auth (directory/LDAP) admin surface.
 
-docs/archive/PLAN_LDAP_AD_AUTH.md §3.2 — the admin settings surface carries ONLY the
+The admin settings surface carries ONLY the
 non-secret values. The service bind password is env/Secret-only: it has no
 schema field, is never persisted, and never appears in any response
 (§3.6 rule 3).
@@ -43,7 +43,7 @@ class LdapSettingsResponse(BaseModel):
 class AuthPublicSettingsResponse(BaseModel):
     """Unauthenticated public auth settings (drives the Login page).
 
-    No secrets, no per-account data (docs/archive/PLAN_LDAP_AD_AUTH.md §4 P2).
+    No secrets, no per-account data.
     ``ldap_enabled`` is True only when the directory is enabled AND not
     kill-switched off — the login hint must not advertise a disabled link.
     """

@@ -1,4 +1,4 @@
-"""Add customer alias tags (Part 14, A1).
+"""Add customer alias tags.
 
 ``customer_aliases`` — alternate names for a customer account. ``alias``
 keeps the raw as-typed string; ``alias_norm`` carries the SAME normalization

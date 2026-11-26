@@ -1,5 +1,5 @@
 /**
- * UX audit 0.1.4 (2026-09-13) regression tests.
+ * UX audit (2026-09-13) regression tests.
  *
  * Covers the audit fixes that changed user-facing behavior:
  *   #1  Global error boundary — a render crash degrades to a reload card

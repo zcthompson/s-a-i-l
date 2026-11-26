@@ -1,10 +1,9 @@
 """Customer list ordering regression (newest-first).
 
-BUG (operator report 2026-10-15): a just-created customer (e.g. "Estes
-Express Lines") was persisted and returned by the API but was NOT visible
-in the UI. Root cause: the list was returned in unsorted rowid order, so a
-fresh customer (the highest id) landed at the END of a 900+ row,
-20-per-page list and was invisible on page 1.
+Regression: a just-created customer was persisted and returned by the API
+but was NOT visible in the UI. Root cause: the list was returned in
+unsorted rowid order, so a fresh customer (the highest id) landed at the END
+of a long, 20-per-page list and was invisible on page 1.
 
 Fix: `list_all_customers` / `get_accessible_customers` order newest-first
 (created_at DESC, id DESC). These tests pin that ordering — a new customer

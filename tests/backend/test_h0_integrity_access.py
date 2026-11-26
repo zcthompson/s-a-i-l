@@ -185,7 +185,7 @@ def _seed_integrity(db):
             RedHatOpportunityRow(customer_id=customer.id, import_id=redhat_batch.id,
                                  source_row=len(accounts), source_account=name,
                                  matched_by="name", fields_json="{}"),
-            # Part 14 (A1): alias tags are account-owned metadata — the
+            # alias tags are account-owned metadata — the
             # metadata-derived walk covers them; the delete must too.
             CustomerAlias(customer_id=customer.id, alias=f"{name} Synthetic",
                           alias_norm=f"{name.lower()} synthetic", created_by=owner.username),
@@ -238,7 +238,7 @@ def _seed_integrity(db):
         db.execute(strategy_task_links.insert().values(strategy_id=strategy.id, task_id=task.id))
         db.execute(strategy_contact_links.insert().values(strategy_id=strategy.id, contact_id=contact.id))
         db.execute(strategy_note_links.insert().values(strategy_id=strategy.id, note_id=note.id))
-        # E6 deals with every link kind and stage history.
+        # Deals with every link kind and stage history.
         from backend.models.deal import (
             Deal,
             DealStageHistory,
@@ -431,7 +431,7 @@ def test_account_read_service_without_request(db_session, access_world, name, st
 
 
 @pytest.mark.parametrize("surface", ["overview", "workspace", "graph"])
-# Out-of-scope callers get the same 404 as a missing customer (404-first, R4/Q7).
+# Out-of-scope callers get the same 404 as a missing customer (404-first).
 @pytest.mark.parametrize("name, status", [(None, 401), ("h0_member", 200), ("h0_other", 404),
                                           ("h0_outsider", 404), ("h0_auditor", 200),
                                           ("h0_ps", 404), ("h0_sales_admin", 200), ("admin", 200)])

@@ -1,10 +1,10 @@
-"""add LDAP/directory auth fields to users (S-A-I-L federated identity, 0.2.0 P0)
+"""add LDAP/directory auth fields to users (S-A-I-L federated identity)
 
 Revision ID: c7d8e9f0a1b2
 Revises: f3a4b5c6d7e8
 Create Date: 2026-09-14
 
-docs/archive/PLAN_LDAP_AD_AUTH.md §3.3 — federated identity with a local identity anchor.
+Federated identity with a local identity anchor.
 Adds the three columns that drive directory authentication (auth provider
 resolution, idempotent JIT linking, audit trail) and relaxes
 ``hashed_password`` to NULL so JIT-provisioned directory rows can store no
@@ -12,7 +12,7 @@ local password (the value is self-describing via ``auth_provider='ldap'`` —
 no sentinel string).
 
 SQLite cannot ``ALTER COLUMN ... DROP NOT NULL`` — the ``users`` table is
-rebuilt via Alembic batch operations (charter §3). The rebuild:
+rebuilt via Alembic batch operations. The rebuild:
   - preserves every existing row and its ``id`` (the ``customer_users``
     junction references users.id, so ids must be stable);
   - keeps all populated ``hashed_password`` values (existing local users are
@@ -22,7 +22,7 @@ rebuilt via Alembic batch operations (charter §3). The rebuild:
 Idempotent: the batch step runs only when ``auth_provider`` is absent, so a
 re-run (and a fresh DB that already has the columns via create_all) is a no-op.
 ``alembic check`` stays clean afterwards (no create_all / startup mutation —
-charter prohibitions).
+prohibited).
 """
 
 from typing import Sequence, Union

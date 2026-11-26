@@ -28,7 +28,7 @@ class Settings(BaseSettings):
 
 
     # Docling Serve — document normalization for Customer Knowledge uploads
-    # (PLAN.md part 43 / CHANGELOG 0.1.1). The hostname is
+    # The hostname is
     # deliberately configurable: the backend container reaches Docling on the
     # host LAN IP (same path as AI_ENDPOINT), never on 127.0.0.1. An empty
     # api_key means no Authorization header is sent (current deployment
@@ -38,14 +38,14 @@ class Settings(BaseSettings):
     docling_timeout_seconds: float = Field(default=600.0, gt=0, validation_alias=AliasChoices("DOCLING_TIMEOUT_SECONDS", "SAIL_DOCLING_TIMEOUT_SECONDS"))
 
     # Azure Document Intelligence — alternative Customer Knowledge document
-    # provider (Part 13 WS6). The endpoint is the env default for the
+    # provider. The endpoint is the env default for the
     # admin-editable SystemConfig 'documents' category; the API key is
     # env/Secret-only (never persisted or returned). Env:
     #   SAIL_AZURE_DI_ENDPOINT / SAIL_AZURE_DI_API_KEY
     azure_di_endpoint: str = ""
     azure_di_api_key: str = ""
 
-    # ── Connection trust model (SSL/TLS), docs/archive/PLAN_LDAP_AD_AUTH.md P0b ────────
+    # ── Connection trust model (SSL/TLS) ────────
     # Every outbound connection (inference, docling, and — from P1 — LDAP)
     # resolves its httpx ``verify=`` through services.ssl_trust.resolve_verify.
     # full = verify chain+hostname (default, today's behavior); skip = TLS on
@@ -72,7 +72,7 @@ class Settings(BaseSettings):
     email_smtp_security: str = "starttls"
     email_from_address: str = ""
 
-    # ── LDAP/AD directory auth (0.2.0 P1) ──────────────────────────────
+    # ── LDAP/AD directory auth ──────────────────────────────
     # Env is the source for the SECRET (service bind password) — the rest
     # live in SystemConfig category 'auth_ldap' (non-secret, admin-editable)
     # and override these env defaults via effective_ldap_settings().
@@ -98,10 +98,10 @@ class Settings(BaseSettings):
     auth_ldap_login_disabled: bool = False
     # Local self-registration (default true = today's behavior; the admin
     # Application-Settings area can hide the Register form when the
-    # directory is the intended onboarding path — 0.2.0 P2).
+    # directory is the intended onboarding path).
     auth_ldap_local_register_enabled: bool = True
 
-    # ── JWT / authentication (backend/auth.py; A-8 re-recon 2026-11-01 —
+    # ── JWT / authentication (backend/auth.py;
     # moved from raw import-time os.environ reads into Settings) ──────────
     jwt_secret: str = ""
     api_keys: str = ""
@@ -119,8 +119,7 @@ class Settings(BaseSettings):
     require_digit: bool = False
     require_special: bool = False
 
-    # ── Rate limiting / network (backend/rate_limit.py, backend/main.py;
-    # A-8 re-recon 2026-11-01) ─────────────────────────────────────────────
+    # ── Rate limiting / network (backend/rate_limit.py, backend/main.py) ──
     cors_origins: str = ""
     rate_limit_requests: int = 10000
     rate_limit_window: int = 3600
@@ -133,7 +132,7 @@ class Settings(BaseSettings):
     metrics_history: int = 1000
 
     # ── Integration env fallbacks (services/integration_service.py;
-    # A-9 re-recon 2026-11-01 — SAIL_-prefixed names are canonical; the
+    # SAIL_-prefixed names are canonical; the
     # unprefixed legacy names survive as aliases at the read site) ───────
     slack_webhook_url: str = ""
     teams_webhook_url: str = ""
@@ -153,7 +152,7 @@ class Settings(BaseSettings):
 
 def get_settings() -> Settings:
     """Return fresh settings instance — always reads environment variables.
-    
+
     Previously cached with @lru_cache() but that prevented test environments
     from overriding SAIL_DATABASE_URL after import time. Removing the
     cache ensures settings always reflect the current environment.

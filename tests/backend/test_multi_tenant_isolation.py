@@ -222,7 +222,7 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
 
             # Try to access Customer B -> should fail
             r = client.get("/api/customers/IsoCustB/", headers=user_headers1)
-            assert r.status_code == 404  # 404-first (R4/Q7): out-of-scope == missing
+            assert r.status_code == 404 # 404-first: out-of-scope == missing
 
         def test_user2_cannot_access_customer_b(self, client, admin_auth, db_session):
             """user2 (member of Customer A) cannot access Customer B."""
@@ -249,7 +249,7 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
 
             # Try to access Customer B -> should fail
             r = client.get("/api/customers/IsoCustB2/", headers=user_headers2)
-            assert r.status_code == 404  # 404-first (R4/Q7): out-of-scope == missing
+            assert r.status_code == 404 # 404-first: out-of-scope == missing
 
         def test_admin_can_access_all_customers(self, client, admin_auth, db_session):
             """Admin user can access all customers regardless of junction."""
@@ -320,7 +320,7 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
                 json={"title": "Unauthorized UC", "description": "Test", "customer_id": cust_b.id, "status": "draft"},
                 headers=user_headers1,
             )
-            # 404-first (R4/Q7): out of scope == missing customer.
+            # 404-first: out of scope == missing customer.
             assert r.status_code == 404
 
         def test_user_can_create_use_case_in_accessible_customer(self, client, admin_auth, db_session):
@@ -431,7 +431,7 @@ with patch("backend.auth.hash_password", side_effect=_fake_hash_password):
                 json={"use_case_id": uc_id, "reasoning": "Test"},
                 headers=user_headers1,
             )
-            # 404-first (R4/Q7): out of scope == missing use case.
+            # 404-first: out of scope == missing use case.
             assert r.status_code == 404
 
         def test_user_can_score_use_case_in_accessible_customer(self, client, admin_auth, db_session):

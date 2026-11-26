@@ -1,5 +1,5 @@
 /**
- * Regression tests for WP23a steps 1-2 (lib/api.ts):
+ * Regression tests for lib/api.ts:
  *
  * F2 [P0] — FastAPI 422 validation errors carry `detail` as an ARRAY of
  *   {loc, msg, type}; the previous `new Error(error.detail)` rendered

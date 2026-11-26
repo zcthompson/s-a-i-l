@@ -1,8 +1,8 @@
 
-"""WP1 contract regression tests — the exact wire shapes the frontend sends/expects.
+"""Contract regression tests — the exact wire shapes the frontend sends/expects.
 
 Pins the five P0 contract breaks found in the 2026-08-25 end-to-end audit
-(PLAN.md part 13) against the exact payload shapes the React client uses:
+against the exact payload shapes the React client uses:
 
 - P0-1: bulk scoring body must be a BARE JSON array of ids — the old
   frontend object body ``{"use_case_ids": [...]}`` must keep 422-ing.
@@ -242,7 +242,7 @@ with patch("backend.auth.hash_password", side_effect=lambda pw: _FAKE_BCRYPT_HAS
             r = client.get("/api/bulk/templates/", headers=admin_headers)
             assert r.status_code == 200
             data = r.json()
-            # WP19: the template registry was consolidated into a single
+            # The template registry was consolidated into a single
             # backend module (backend/templates.py) — 4 generic + 7 rich =
             # 11. Documented contract update, not a weakening: the
             # "operations" key, its detail shape, and the 404 paths below

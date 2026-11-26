@@ -1,4 +1,4 @@
-// Regression tests for the WP22 two-way view<->URL sync in Home.tsx.
+// Regression tests for the two-way view<->URL sync in Home.tsx.
 // The key scenario is browser Back/Forward: the view must FOLLOW the URL.
 // (The original implementation re-ran its view->URL effect on searchParams
 // changes, so a Back press re-ran it in the same commit with the

@@ -1,7 +1,7 @@
-"""LDAP/AD directory-auth unit tests (0.2.0 P1, docs/archive/PLAN_LDAP_AD_AUTH.md §5).
+"""LDAP/AD directory-auth unit tests.
 
 Deterministic: the ``ldap3.Connection`` class is monkeypatched in
-``backend.services.ldap_provider`` (no real directory in CI — charter §6).
+``backend.services.ldap_provider`` (no real directory in CI).
 Covers the provider mechanics (search filter escaping, objectGUID hex,
 wrong password, unknown user, directory outage → LdapUnavailable, injection
 guards) and the seam integration (LdapBackend → DirectoryIdentity,

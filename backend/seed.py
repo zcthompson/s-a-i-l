@@ -1323,9 +1323,9 @@ SCORING_DATA = {
 }
 
 
-# ── S-A-I-L P7 — deterministic demo customer intelligence ──────────────────────
+# ── deterministic demo customer intelligence ──────────────────────
 # Fixed reference date so the seed is fully deterministic (re-seeding produces
-# identical data; v2 items 19/21). Demo data is illustrative — it is never
+# identical data). Demo data is illustrative — it is never
 # represented as verified real-company facts, and the seeder only fills empty
 # tables (see seed_customer_intelligence): user-entered data is never
 # overwritten or duplicated.
@@ -1958,10 +1958,10 @@ def seed_database(db: Session, reset: bool = False) -> int:
 
 
 def seed_customer_intelligence(db: Session, reset: bool = False) -> dict:
-    """S-A-I-L P7 — deterministic demo customer-intelligence seeding.
+    """Deterministic demo customer-intelligence seeding.
 
     Seeds each demo customer's Technology Inventory + Sales Notes ONLY when
-    that customer has none yet (v2 items 19/21: "seeds fill empty tables
+    that customer has none yet ("seeds fill empty tables
     only — never overwrite user-entered data"). Re-seeding a DB that already
     holds user data is a no-op (idempotent, non-destructive). ``reset=True``
     (used by ``--reset``) clears the S-A-I-L tables first, then seeds.
@@ -2050,7 +2050,7 @@ def seed_customer_intelligence(db: Session, reset: bool = False) -> dict:
         )
         if kn_count == 0:
             for k in intel.get("knowledge", []):
-                # PLAN.md part 43 (Docling normalization layer): derive the
+                # (Docling normalization layer): derive the
                 # processing-status contract from the seed's legacy
                 # ``processed`` flag so demo rows carry the same shape the
                 # upload path produces. Deterministic Markdown placeholder
@@ -2301,7 +2301,7 @@ def _slugify(name: str) -> str:
 def email_prefix(email: str) -> str:
     """Extract the part before @ and lowercase it, without hyphen insertion.
 
-    Used for the username = email-prefix rule (charter A1).
+    Used for the username = email-prefix rule.
     admin is the named exception — never apply this rule to it.
     """
     if not email or not isinstance(email, str):
@@ -2488,9 +2488,9 @@ def _bootstrap_admin(db: Session) -> None:
 
 
 def reconcile_legacy_admin_identity(db: Session) -> bool:
-    """Bring an existing volume's bootstrap admin to the 2026-10-14 identity.
+    """Bring an existing volume's bootstrap admin to the canonical identity.
 
-    The operator directive names the global admin user as username
+    The global admin user has username
     ``admin`` / display ``Administrator`` / email ``admin@sail.example``.
     Fresh databases already match (see ``_bootstrap_admin``); this
     reconcile updates the ORIGINAL admin row on live volumes in place
@@ -2561,7 +2561,7 @@ def main():
     try:
         created = seed_database(db, reset=args.reset)
 
-        # S-A-I-L P7 — deterministic demo customer intelligence (tech inventory +
+        # deterministic demo customer intelligence (tech inventory +
         # sales notes). Non-destructive: only fills customers that have no
         # existing technology/note records; --reset clears the S-A-I-L tables first.
         seed_customer_intelligence(db, reset=args.reset)

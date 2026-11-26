@@ -4,7 +4,7 @@ Revision ID: a2b3c4d5e6f7
 Revises: f1b2c3d4e5f6
 Create Date: 2026-10-14
 
-S-A-I-L 0.2.10. ``sales_ops_assignments`` (user_id + customer_id UNIQUE):
+``sales_ops_assignments`` (user_id + customer_id UNIQUE):
 customer-specific sales-ops assignments. A sales_ops user is read-only on an
 assigned account plus may write sales notes and contribute knowledge.
 

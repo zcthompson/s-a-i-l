@@ -45,8 +45,8 @@ let _cache: Promise<TemplateData[]> | null = null;
  * the same 11 templates — `GET /api/bulk/templates/` requires auth but has
  * no per-customer/per-role filtering), so a session-level cache is safe
  * across logout/login. If templates ever become identity-scoped, key the
- * cache by the authenticated identity and add an invalidation hook
- * (Codex review P1-4, 2026-08-29). */
+ * cache by the authenticated identity and add an invalidation hook.
+ */
 export function loadTemplates(): Promise<TemplateData[]> {
   if (!_cache) {
     _cache = api

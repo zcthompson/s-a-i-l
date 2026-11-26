@@ -1,16 +1,16 @@
 /**
- * CHANGELOG 0.1.0 U5 — AccountOverview / IntelligencePanels component tests.
+ * AccountOverview / IntelligencePanels component tests.
  *
- * The redesigned executive Overview (directives 16-26, 39-40, 54-55):
+ * The redesigned executive Overview:
  * balanced headline metrics (Business Impact is ONE card with savings +
- * revenue as sub-metrics — directive 20), the Account Snapshot
- * (ownership/departments/activity/assessment — directives 17-18), the
- * four actionable intelligence summaries (directive 22-26), Priority Use
- * Cases (directives 39-40), drill-down navigation (directive 55), and
- * provenance via tooltip instead of a "Derived" label (directive 21).
+ * revenue as sub-metrics), the Account Snapshot
+ * (ownership/departments/activity/assessment), the
+ * four actionable intelligence summaries, Priority Use
+ * Cases, drill-down navigation, and
+ * provenance via tooltip instead of a "Derived" label.
  *
  * Replaces CustomerIntelligenceOverview.test.tsx — the four sparse
- * numerical cards were the design this slice supersedes (directive 22).
+ * numerical cards were the design this slice supersedes.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, cleanup, fireEvent, act } from '@testing-library/react';
@@ -104,7 +104,7 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe('AccountOverview (CHANGELOG 0.1.0 U5)', () => {
+describe('AccountOverview', () => {
   beforeEach(() => {
     apiMock.getAccountWorkspace.mockResolvedValue(workspace);
   });
@@ -172,7 +172,7 @@ describe('AccountOverview (CHANGELOG 0.1.0 U5)', () => {
     expect(screen.getByRole('button', { name: 'View follow-ups' })).toBeTruthy();
   });
 
-  it('IntelligencePanels renders the dedicated Summary view (directive 51)', async () => {
+  it('IntelligencePanels renders the dedicated Summary view', async () => {
     render(<IntelligencePanels customerId={5} />);
     expect(await screen.findByText('Customer Intelligence')).toBeTruthy();
     expect(screen.getByText('Technology Landscape')).toBeTruthy();

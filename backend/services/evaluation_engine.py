@@ -131,7 +131,7 @@ def _compute_vendor_diversity(entries: list[CustomerKnowledge]) -> float:
     vendors: set[str] = set()
     for entry in entries:
         # Canonical content: normalized Markdown first, legacy extracted
-        # text fallback (PLAN.md part 43 item 16).
+        # text fallback.
         text = entry.knowledge_text
         if text:
             # Simple vendor extraction: look for capitalized multi-word terms
@@ -416,7 +416,7 @@ def create_sales_evaluation(
     runs gap/risk/growth analysis,
     persists the result.
 
-    S-A-I-L P5: an optional ``persona_id`` (see backend/services/
+an optional ``persona_id`` (see backend/services/
     sales_personas.py) tailors the generated sections and is persisted with
     the evaluation so historical evaluations retain their audience context.
     Every evaluation carries source-context provenance (deterministic
@@ -426,7 +426,7 @@ def create_sales_evaluation(
     customer = parts["customer"]
     customer_name = customer.name if customer else f"Customer {customer_id}"
 
-    # ── 8. S-A-I-L P5 — persona + provenance ─────────────────────────────────
+    # ── 8. — persona + provenance ─────────────────────────────────
     persona = get_persona(persona_id)
     overview = get_customer_overview(db, customer_id)
     competitive_notes = (
@@ -482,7 +482,7 @@ def create_sales_evaluation(
     return evaluation
 
 
-# ── S-A-I-L P5 — persona-driven sections + provenance ────────────────────────────
+# ── persona-driven sections + provenance ────────────────────────────
 
 GENERIC_PERSONA: dict[str, Any] = {
     "id": None,
@@ -515,7 +515,7 @@ def build_source_context(
     competitive_notes: list[SalesNote],
     parts: dict[str, Any],
 ) -> dict[str, Any]:
-    """Provenance metadata for a generated evaluation (v2 items 34, 39):
+    """Provenance metadata for a generated evaluation:
     which sources + indicators the deterministic engine consumed. Never
     contains free text copied from source records (no data leakage into
     provenance) — only counts, ids of at-risk items, and indicator values.
@@ -559,7 +559,7 @@ def _build_evidence_grounded_questions(
     overview: dict[str, Any], customer_name: str
 ) -> list[str]:
     """Discovery questions grounded in the customer's actual data — including
-    explicit questions about missing knowledge (v2 item 35: missing knowledge
+    explicit questions about missing knowledge (missing knowledge
     is surfaced as an actionable discovery gap, never fabricated).
     """
     tech = overview["technology_inventory"]
@@ -614,12 +614,12 @@ def build_persona_sections(
     parts: dict[str, Any],
     competitive_notes: list[SalesNote],
 ) -> dict[str, Any]:
-    """Build the persona-tailored section set (v2 item 33).
+    """Build the persona-tailored section set.
 
     Deterministic. Every section carries a label describing its epistemic
     status (evidence-based / derived / inference / discovery-needed) and
-    evidence references where applicable (v2 items 34, 39). Missing
-    knowledge is surfaced as an actionable discovery gap (v2 item 35).
+    evidence references where applicable. Missing
+    knowledge is surfaced as an actionable discovery gap.
     """
     tech = overview["technology_inventory"]
     notes = overview["sales_notes"]
@@ -634,7 +634,7 @@ def build_persona_sections(
         for g in gaps
     ]
 
-    # Competitive considerations — strictly evidence-based (v2 item 34)
+    # Competitive considerations — strictly evidence-based
     competitive = [
         {
             "id": n.id,
@@ -863,7 +863,7 @@ def preview_sales_evaluation(
     customer_id: int,
     persona_id: str | None = None,
 ) -> dict[str, Any]:
-    """Pre-generation view (v2 item 32): the selected customer, the persona,
+    """Pre-generation view: the selected customer, the persona,
     the related available intelligence, and the generation intent — computed
     without persisting anything. Mirrors create_sales_evaluation exactly
     (same _compute_evaluation_parts + build_persona_sections) so the preview

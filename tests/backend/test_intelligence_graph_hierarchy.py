@@ -275,7 +275,7 @@ def test_sparse_customer_adds_no_group_or_empty_nodes(db_session):
 
 
 def test_graph_carries_panel_renewal_coverage_and_eol_cards(db_session):
-    """D7: the graph uses the panel's full synthesis. Renewal attention groups
+    """The graph uses the panel's full synthesis. Renewal attention groups
     under Opportunities; contact coverage and dated EOL under Risks / Gaps; each
     card sits at level 3 under its portion group, and EOL links its technology."""
     from datetime import UTC, date, datetime, timedelta

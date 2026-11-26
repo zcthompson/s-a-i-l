@@ -54,7 +54,7 @@ def bulk_score_use_cases(
         # service layer (404-style error).
         target = db.query(UseCase).filter(UseCase.id == use_case_id).first()
         if target is not None:
-            # R4/Q7: an id the caller cannot reach (out of read scope — or an
+            # an id the caller cannot reach (out of read scope — or an
             # unassigned use case for a non-admin) reports the SAME per-item
             # error as a missing id, so a batch probe cannot confirm
             # existence. In-scope capability denials (the auditor rule) keep
@@ -83,7 +83,7 @@ def bulk_score_use_cases(
             result = ScoringService.score_use_case_sync(db, use_case_id, user=user)
             results.append(result)
         except GenericAssessmentError:
-            # Part 13 WS5 (R5): generic-round use case — AI scoring refused at
+            # generic-round use case — AI scoring refused at
             # the shared seam; reported per item with the exact message, never
             # scored, and the insight trigger below never sees it.
             errors.append({
@@ -175,7 +175,7 @@ def create_from_template(
 
     template = TEMPLATES[request.template_id]
 
-    # 404-first (R4/Q7): a customer the caller cannot reach is the same 404
+    # 404-first: a customer the caller cannot reach is the same 404
     # as a missing one; grant holders keep the in-scope capability 403.
     if (
         request.customer_id is not None

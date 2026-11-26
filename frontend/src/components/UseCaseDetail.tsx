@@ -1,21 +1,21 @@
 /**
- * UseCaseDetail — the shared use-case detail view (WP23a step 0, F6).
+ * UseCaseDetail — the shared use-case detail view.
  *
  * Before this extraction the detail view existed as two ~165-line inline
  * copies (Home.tsx `view === 'detail'` and CustomerDashboard.tsx's
  * `detail` tab) that were already drifting (button labels, navigation
- * targets) — charter §1: no two authoritative representations of the same
+ * targets) — no two authoritative representations of the same
  * thing.
  *
  * The component is presentation + action callbacks ONLY: every view
  * transition and mutation goes through a callback so each surface owns
- * its own state. The F1 fix rides on this: the customer dashboard passes
+ * its own state. The fix rides on this: the customer dashboard passes
  * callbacks that hand the use case UP to Home (setSelectedUseCase +
  * setView) instead of navigating to a selection-required view with no
  * selection (the pre-fix dead-end / wrong-use-case behavior).
  *
  * Both surfaces' button labels are preserved verbatim (the comments CTA
- * differs — `commentsLabel` — until WP23g unifies copy).
+ * differs — `commentsLabel` — until the copy is unified).
  */
 import { UseCase } from '../types/use_case';
 
@@ -25,9 +25,9 @@ interface UseCaseDetailProps {
    *  Undefined (Home surface): no role gating. */
   userRole?: string;
   allowWrite?: boolean;
-  /** Scoring in flight (WP23a F4): disables the scoring buttons. */
+  /** Scoring in flight (F4): disables the scoring buttons. */
   busy?: boolean;
-  /** Part 13 WS5 (R8): set when AI scoring is unavailable for this use case
+  /** set when AI scoring is unavailable for this use case
    *  (it belongs to a generic round) — the scoring controls are replaced by
    *  this label instead of rendering enabled buttons that would 422. */
   scoringUnavailableReason?: string | null;
@@ -38,8 +38,8 @@ interface UseCaseDetailProps {
   onOpenDrilldown: (uc: UseCase) => void;
   onOpenComments: (uc: UseCase) => void;
   onBack: () => void;
-  /** The two surfaces label the comments CTA differently until WP23g
-   *  unifies copy. */
+  /** The two surfaces label the comments CTA differently until
+   * the copy is unified. */
   commentsLabel?: string;
 }
 

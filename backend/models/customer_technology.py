@@ -1,8 +1,8 @@
 """Technology Inventory SQLAlchemy models (S-A-I-L).
 
-Structured, relational per-customer technology records (charter: structured
+Structured, relational per-customer technology records (structured
 relational data, not prose or unstructured JSON). Unknown attributes are
-stored as NULL — they are never fabricated (charter §4: "unknown
+stored as NULL — they are never fabricated ("unknown
 information stays unknown"). ``verification_state`` distinguishes verified
 customer facts from inferred / unverified observations; ``confidence``
 (0.0-1.0) applies to inferred items.

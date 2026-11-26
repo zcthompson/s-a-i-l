@@ -1,6 +1,6 @@
 /**
  * CustomerAliasesField (the Edit customer dialog's Aliases section — moved
- * off the Overview card per the operator directive 2026-11-01): writer
+ * off the Overview card): writer
  * controls vs read-only chips (fail-closed default), verbatim 422/409 inline
  * errors, add → refetch, onChange with the raw alias list. Synthetic names only.
  */

@@ -142,7 +142,7 @@ describe('Edit a use case from the customer dashboard Overview', () => {
     fireEvent.click(customerRow);
 
     // Use Cases (Assessments area): click the use case row -> local detail tab.
-    // CHANGELOG 0.1.0 U4: the table moved from the Overview to the Assessments ▸
+    // the table moved from the Overview to the Assessments ▸
     // Use Cases working view.
     fireEvent.click(await screen.findByRole('tab', { name: 'Navigate to Discovery & Value' }));
     fireEvent.click(screen.getByRole('tab', { name: 'Navigate to Use Cases' }));

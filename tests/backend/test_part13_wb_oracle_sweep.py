@@ -1,4 +1,4 @@
-"""Part 13 wave B — access-neutral 404-first oracle sweep (R4/Q7).
+"""access-neutral 404-first oracle sweep.
 
 For every remapped legacy route: an out-of-scope caller gets exactly the
 same 404 (status AND body) as a request for a missing record, so a probe
@@ -111,7 +111,7 @@ def test_customers_routes_are_404_first(client, sweep):
               f"{missing}assessments/{sweep['assessment']}/archive/")
     h = _token("sweep_auditor")
     assert client.get(base, headers=h).status_code == 200
-    # Part 13 DV2: update = central CAP_METADATA, create round = CAP_EDIT.
+    # update = central CAP_METADATA, create round = CAP_EDIT.
     _exact_403(client.put(base, headers=h, json={"description": "x"}), NOT_AUTHORIZED_TO_MODIFY)
     _exact_403(client.post(base + "assessments/", headers=h, json={"name": "R2"}),
                NOT_AUTHORIZED_TO_MODIFY)
@@ -264,7 +264,7 @@ def test_use_case_writes_are_404_first(client, sweep):
     _same_404(client, "put", uc, missing, json={"title": "x"})
     _same_404(client, "delete", uc, missing)
     body = {"title": "n", "customer_id": sweep["cust"]}
-    # create: out-of-scope customer == missing customer (R4/Q7)
+    # create: out-of-scope customer == missing customer
     out = client.post("/api/use-cases/", headers=_token("sweep_outsider"), json=body)
     assert out.status_code == 404 and out.json()["detail"] == "Customer not found"
     miss = client.post("/api/use-cases/", headers=_token("sweep_outsider"),

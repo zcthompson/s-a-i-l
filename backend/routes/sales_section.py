@@ -6,7 +6,7 @@ Provides endpoints for:
 3. Sales readiness insights linking scoring and customer knowledge
 
 All customer-scoped endpoints are auth-gated through the central
-``sales_access`` READ capability (Part 13 DV wave, ruling R1); admins pass
+``sales_access`` READ capability; admins pass
 via the central policy.
 """
 
@@ -27,7 +27,7 @@ router = APIRouter(prefix="/api/sales", tags=["sales"])
 
 
 def _require_existing_customer(db: Session, customer_id: int) -> Customer:
-    """Resolve an existing customer after the access gate (BE-04).
+    """Resolve an existing customer after the access gate.
 
     Access is checked first (403 for a caller without READ), then
     existence (404 for a missing customer) — so an unauthorized caller gets
@@ -52,9 +52,9 @@ def list_customer_use_cases_sales(
     """List all use cases for a customer with sales-ready data (auth-gated).
 
     Includes the technology tracking fields (tech_stack, devices, software,
-    vendor) via to_dict() so the data feeds sales briefs. A missing customer
-    is a 404 (BE-04). Explicitly paginated with the same bounded contract as
-    ``/api/use-cases/`` (BE-03/FE-03) — no arbitrary 1000-row cap.
+    vendor) via to_dict so the data feeds sales briefs. A missing customer
+    is a 404. Explicitly paginated with the same bounded contract as
+    ``/api/use-cases/`` — no arbitrary 1000-row cap.
     """
     user = customer_access.read_or_403(request, db, customer_id)
     _require_existing_customer(db, customer_id)
@@ -74,7 +74,7 @@ def list_customer_knowledge_sales(
 ):
     """List customer knowledge entries for sales evaluation (auth-gated).
 
-    A missing customer is a 404 (BE-04).
+    A missing customer is a 404.
     """
     customer_access.read_or_403(request, db, customer_id)
     _require_existing_customer(db, customer_id)
@@ -91,11 +91,11 @@ def get_customer_readiness_sales(
 ):
     """Get combined readiness assessment for sales team (auth-gated).
 
-    A missing customer is a 404 (BE-04) — previously it returned a
+    A missing customer is a 404 — previously it returned a
     zero-count readiness-shaped body that resembled a real empty account.
 
     The organizational_readiness aggregates are computed in SQL over the
-    COMPLETE customer dataset (BE-07) — not from a capped row fetch — so
+    COMPLETE customer dataset — not from a capped row fetch — so
     total/scored counts and the average stay correct past any arbitrary
     limit and never include another customer's records.
     """
@@ -134,8 +134,8 @@ def get_customer_readiness_sales(
             "tech_profile": tech_profile,
             "knowledge_entries": len(knowledge_entries),
             "knowledge_by_type": knowledge_counts,
-            # Third-party professional services (0.1.6, additive — existing
-            # keys unchanged; docs/archive/PLAN_THIRD_PARTY_SERVICES.md §4.4).
+            # Third-party professional services (additive — existing
+            # keys unchanged).
             "third_party_services": readiness_summary(db, customer_id),
         },
         "gap_analysis": {

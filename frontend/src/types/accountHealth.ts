@@ -1,4 +1,4 @@
-// E5 — account health components + lifecycle/EOL attention (normative FE contract).
+// Account health components + lifecycle/EOL attention (normative FE contract).
 // Backend: GET /api/customers/{customer_id}/health/
 // The health surface is a set of EXPLAINED COMPONENTS — never a composite
 // score (no traffic-light rollup, no 0-100 blend). Unknowns stay honest.

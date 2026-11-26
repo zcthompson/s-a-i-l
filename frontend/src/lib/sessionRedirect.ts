@@ -1,5 +1,5 @@
 /**
- * Session-expiry redirect helpers (FE-08, part 48).
+ * Session-expiry redirect helpers.
  *
  * A protected API returning 401 (session expired) must send the user to
  * /login AND preserve the exact internal destination they were at (pathname,

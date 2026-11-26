@@ -1,5 +1,5 @@
 /**
- * WP33 — the persisted, LLM-generated per-customer "Readiness Insight" panel
+ * The persisted, LLM-generated per-customer "Readiness Insight" panel
  * rendered inside the Readiness Insights block (AnalyticsDashboard,
  * section="correlation"), between the deterministic so-what strip and the
  * "Organization Use Case Readiness" heading.
@@ -108,7 +108,7 @@ afterEach(() => {
   generateInsight.mockClear();
 });
 
-describe('WP33 — Readiness Insight panel', () => {
+describe('Readiness Insight panel', () => {
   it('(a) renders a cached insight: summary, all three columns, missing-note callout', async () => {
     state.insightResponse = { insight: makeInsight(), state: readyState, stale: false };
     render(<AnalyticsDashboard section="correlation" selectedCustomerId={7} />);

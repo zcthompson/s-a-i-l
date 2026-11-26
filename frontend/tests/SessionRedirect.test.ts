@@ -1,5 +1,5 @@
 /**
- * FE-08 — session-expiry return destination (part 48).
+ * session-expiry return destination.
  *
  * The api-layer 401 handler preserves the current internal destination
  * (pathname+search+hash) in sessionStorage and Login returns to it. These

@@ -38,7 +38,7 @@ class Customer(Base):
     id = Column(Integer, primary_key=True, nullable=False, index=True)
     name = Column(String(255), nullable=False, unique=True, index=True)
     description = Column(Text, nullable=True)
-    # Industry vertical (WP19) — one of backend.verticals.VERTICALS, or NULL.
+    # Industry vertical — one of backend.verticals.VERTICALS, or NULL.
     vertical = Column(String(100), nullable=True)
     # Sales branch home (e.g. "BR20 - Example Customer H") — denormalized reference
     # value for the create-customer dropdown (prod-seed). Nullable; not a hard
@@ -53,12 +53,12 @@ class Customer(Base):
     # (CustomerUser remains the sole authority, as for branch/tech_profile).
     sales_area = Column(String(20), nullable=True)
     primary_subsidiary = Column(String(255), nullable=True)
-    # Technology profile (CHANGELOG 0.0.80 Layer 1) — customer technology
+    # Technology profile (Layer 1) — customer technology
     # landscape. INFORMATIONAL ONLY: does not participate in CustomerUser
-    # authorization, customer visibility, or filtering (charter §3 —
-    # CustomerUser remains the sole authoritative user-to-customer model).
+    # authorization, customer visibility, or filtering
+    # (CustomerUser remains the sole authoritative user-to-customer model).
     tech_profile = Column(JSON, nullable=True, comment="Customer technology profile (informational only)")
-    # RBAC directive: "needs_review" marks placeholder accounts whose primary
+    # "needs_review" marks placeholder accounts whose primary
     # owner is not yet confirmed (admin ownership-review queue). NULL = normal.
     ownership_status = Column(String(20), nullable=True, default=None)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -206,10 +206,10 @@ class User(Base):
     department = Column(String(100), nullable=True)
     # Role: admin (global), user (assigned customers), auditor (read-only,
     # granted), ps_admin (3rd-party professional services, cross-account on
-    # that surface only — 0.1.6).
+    # that surface only).
     role = Column(String(20), default="user", nullable=False, server_default="user")
-    # Sales role (shift-to-global-customer-management, phase 2). ORTHOGONAL to
-    # is_admin: a sales-manager NEVER sets is_admin=1 (directive §4 rule 1) —
+    # Sales role (shift to global customer management, phase 2). ORTHOGONAL to
+    # is_admin: a sales-manager NEVER sets is_admin=1 —
     # is_admin stays the exclusive system-admin authority. Values:
     #   'rep' (default sales account owner) | 'inside_sales' | 'sales_manager'
     #   | 'auditor' | None (non-sales: admin / ps_admin / plain user).
@@ -219,7 +219,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     is_active = Column(Integer, default=1)
-    # ── Federated identity (LDAP/AD as an additional provider, 0.2.0 P0) ──
+    # ── Federated identity (LDAP/AD as an additional provider) ──
     # 'local' | 'ldap'. Drives provider resolution on /login/; local rows
     # default to 'local' (pre-existing accounts are untouched).
     auth_provider = Column(String(20), nullable=False, server_default="local")
@@ -258,7 +258,7 @@ class User(Base):
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
             "is_active": self.is_active,
-            # 0.2.0 federated identity: 'local' | 'ldap' (admin UI provider
+            # federated identity: 'local' | 'ldap' (admin UI provider
             # column — directory rows show "managed by directory").
             "auth_provider": self.auth_provider or "local",
         }
@@ -299,7 +299,7 @@ class CustomerUser(Base):
 class Projection(Base):
     """Customer AI readiness projection with 30-day forecasts."""
     __tablename__ = "projections"
-    
+
     id = Column(Integer, primary_key=True, nullable=False, index=True)
     customer_id = Column(Integer, ForeignKey('customers.id', ondelete='CASCADE'), nullable=False, index=True)
     customer_name = Column(String(255), nullable=False, index=True)
@@ -307,10 +307,10 @@ class Projection(Base):
     projection_data = Column(JSON, nullable=False)
     status = Column(String(20), default="completed", server_default="completed", nullable=False)
     # status: "pending" | "completed" | "failed"
-    
+
     # Relationships
     customer = relationship("Customer", back_populates="projections")
-    
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -399,7 +399,7 @@ class UseCase(Base):
     # at most one active round per customer; see CustomerAssessment)
     assessment_id = Column(Integer, ForeignKey('assessments.id', ondelete='SET NULL'), nullable=True, index=True)
 
-    # Technology tracking fields (WP27+)
+    # Technology tracking fields
     tech_stack = Column(JSON, nullable=True,
                        comment="Structured technology stack information")
     devices = Column(JSON, nullable=True,
@@ -453,7 +453,7 @@ class UseCase(Base):
             "created_by": self.created_by,
             "assessment_id": self.assessment_id,
             "assessment_name": self.assessment.name if self.assessment else None,
-            # Part 13 WS5 (R5/R8): the round's type (legacy NULL round → 'ai').
+            # the round's type (legacy NULL round → 'ai').
             # Lets every use-case surface gate AI-only controls from the
             # payload alone (no extra request).
             "assessment_type": (self.assessment.assessment_type or "ai") if self.assessment else "ai",
@@ -466,7 +466,7 @@ class UseCase(Base):
 
     def set_department(self, department: str | None, department_id: int | None):
         """Set department (legacy) and department_id (primary).
-        
+
         Prevents setting both simultaneously. If both are provided,
         department_id wins and department is set to None with a warning.
         """
@@ -509,7 +509,7 @@ class CustomerAssessment(Base):
     customer_id = Column(Integer, ForeignKey('customers.id', ondelete='CASCADE'), nullable=False, index=True)
     name = Column(String(255), nullable=False)
     status = Column(String(20), default="active", nullable=False)  # active | archived
-    # Part 13 WS5 (R1/R2): round type — 'ai' (AI readiness / use-case
+    # round type — 'ai' (AI readiness / use-case
     # scoring; the default for all existing data) | 'generic' (non-AI
     # customer discovery; AI scoring/predictions/insight are refused).
     assessment_type = Column(String(20), nullable=False, default="ai", server_default="ai")

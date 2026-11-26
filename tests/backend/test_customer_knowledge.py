@@ -290,7 +290,7 @@ class TestCustomerKnowledgeRoutes:
     def test_user_without_customer_access_gets_404_on_get_list(self, client, db_session):
         """Non-admin user with a CustomerUser row for customer 1 but NOT
         customer 2 gets the same 404 as a missing customer on GET with
-        customer_id=2 (404-first, R4/Q7)."""
+        customer_id=2 (404-first)."""
         headers = _non_admin_headers(db_session, customer_id=1)
         from backend.models.use_case import Customer
 
@@ -304,7 +304,7 @@ class TestCustomerKnowledgeRoutes:
 
     def test_user_without_customer_access_gets_404_on_post(self, client, db_session):
         """Non-admin user without a CustomerUser row for the target customer
-        gets the same 404 as a missing customer on POST (R4/Q7)."""
+        gets the same 404 as a missing customer on POST."""
         headers = _non_admin_headers(db_session, customer_id=1)
         from backend.models.use_case import Customer
 

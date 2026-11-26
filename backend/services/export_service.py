@@ -90,7 +90,7 @@ def resolve_export_scope(
         if customer is None:
             raise ExportScopeError(404, "Customer for this assessment not found")
         if not check_customer_access(db, customer, user):
-            # 404-first (R4/Q7): an out-of-scope assessment is the same 404
+            # 404-first: an out-of-scope assessment is the same 404
             # as a missing one (no existence oracle).
             raise ExportScopeError(404, "Assessment not found")
         if customer_name is not None:
@@ -113,7 +113,7 @@ def resolve_export_scope(
             "assessment_id": assessment.id,
             "assessment_name": assessment.name,
             "assessment_status": assessment.status,
-            # Part 13 WS5 (R9): additive round type + purpose (round-scoped only).
+            # additive round type + purpose (round-scoped only).
             "assessment_type": assessment.assessment_type or "ai",
             "purpose": assessment.purpose,
             "created_by": assessment.created_by,
@@ -126,7 +126,7 @@ def resolve_export_scope(
     if customer_name is not None:
         customer = get_customer_by_name(db, customer_name)
         if customer is None or not check_customer_access(db, customer, user):
-            # 404-first (R4/Q7): out-of-scope == missing.
+            # 404-first: out-of-scope == missing.
             raise ExportScopeError(404, "Customer not found")
         customer_id = customer.id
         meta = {
@@ -144,7 +144,7 @@ def resolve_export_scope(
 
     # Unscoped global export (existing behavior for admins / scoped users).
     if id_list is not None and user.get("is_admin") != 1:
-        # Part 13 (2026-10-29, WB stop-and-report): an explicit ID request is
+        # (2026-10-29, WB stop-and-report): an explicit ID request is
         # a cross-customer read — the ID path had no caller check at all.
         # Intersect the IDs with the caller's central read scope; unassigned
         # use cases are admin-only (R2) and drop out. All-out-of-scope or all

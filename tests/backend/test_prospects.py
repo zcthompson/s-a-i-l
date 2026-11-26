@@ -1,4 +1,4 @@
-"""D3: sales managers may create prospect accounts that enter the existing
+"""Sales managers may create prospect accounts that enter the existing
 admin ownership-review queue; other non-admin roles may not create accounts."""
 
 import json

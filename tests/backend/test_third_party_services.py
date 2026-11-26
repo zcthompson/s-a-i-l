@@ -1,7 +1,6 @@
-"""Third-Party Professional Services (S-A-I-L, 0.1.6) tests.
+"""Third-Party Professional Services (S-A-I-L) tests.
 
-Deterministic, temporary SQLite (repo conftest) — no live endpoints
-(charter §6). Coverage per docs/archive/PLAN_THIRD_PARTY_SERVICES.md §6:
+Deterministic, temporary SQLite (repo conftest) — no live endpoints. Coverage:
 
 - CRUD lifecycle: create → list → get → partial update → delete
 - Authorization: 401 unauthenticated; 403 without a CustomerUser row
@@ -151,7 +150,7 @@ class TestCrudLifecycle:
 
         # collection: 403 for a missing and an existing customer alike (no oracle)
         assert client.get("/api/customers/1/third-party-services/", headers=headers_b).status_code == 403
-        # id-level: the same 404 as a missing engagement (404-first, R4/Q7 —
+        # id-level: the same 404 as a missing engagement (404-first —
         # supersedes plan §4.2/§6's 403, which differed from the missing 404)
         assert client.get(f"/api/third-party-services/{svc_id}/", headers=headers_b).status_code == 404
         assert client.put(f"/api/third-party-services/{svc_id}/", json={"notes": "x"}, headers=headers_b).status_code == 404
@@ -224,12 +223,12 @@ class TestPsAdminRole:
         # (PS surface still open:)
         assert client.get("/api/customers/1/third-party-services/", headers=ps).status_code == 200
         # (Non-PS surfaces closed:)
-        # 404-first (R4/Q7): sales-notes remapped out-of-scope to the missing 404.
+        # 404-first: sales-notes remapped out-of-scope to the missing 404.
         assert client.get("/api/customers/1/sales-notes/", headers=ps).status_code == 404
-        # sales_section is oracle-safe by design (BE-04): an unauthorized
+        # sales_section is oracle-safe by design: an unauthorized
         # caller is 403 whether or not the customer exists — kept as-is.
         assert client.get("/api/sales/customers/1/usecases", headers=ps).status_code == 403
-        # knowledge: customer-scoped list (404-first, R4/Q7)
+        # knowledge: customer-scoped list (404-first)
         r = client.get("/api/customer-knowledge/", params={"customer_id": 1}, headers=ps)
         assert r.status_code in (401, 404)
 
@@ -332,7 +331,7 @@ class TestDocuments:
         )
         doc_id = r.json()["id"]
         headers_b = _make_user(db_session, "ps_b", customer_id=2)
-        # 404-first (R4/Q7): out-of-scope is the same 404 as a missing record.
+        # 404-first: out-of-scope is the same 404 as a missing record.
         assert client.get(f"/api/third-party-services/{doc_id}/download/", headers=headers_b).status_code == 404
         assert client.get(f"/api/third-party-services/{svc_id}/documents/", headers=headers_b).status_code == 404
         assert client.delete(f"/api/third-party-services/{svc_id}/documents/{doc_id}/", headers=headers_b).status_code == 404

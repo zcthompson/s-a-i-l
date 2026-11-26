@@ -1,7 +1,6 @@
 """Customer knowledge SQLAlchemy model.
 
-Original + normalized document pair (PLAN.md part 43 /
-CHANGELOG 0.1.1):
+Original + normalized document pair:
 
 - ``file_name`` / ``file_data`` hold the ORIGINAL uploaded document,
   unchanged. ``file_name`` is the original filename;
@@ -41,7 +40,7 @@ PROCESSING_STATUSES = (STATUS_UPLOADED, STATUS_PROCESSING, STATUS_READY, STATUS_
 PROCESSOR_DOCLING = "docling"
 PROCESSOR_MARKDOWN_NATIVE = "markdown-native"
 
-# ── Knowledge categories (CHANGELOG 0.1.2 item 1) ──────────
+# ── Knowledge categories ──────────
 # Controlled vocabulary for the document knowledge category. Stored as
 # free-form String so the vocabulary can grow without a destructive
 # migration; the service layer validates against this list. The legacy
@@ -69,7 +68,7 @@ KNOWLEDGE_CATEGORIES = [
 ]
 
 
-# ── LLM enrichment lifecycle (CHANGELOG 0.1.2 items 2, 16) ──
+# ── LLM enrichment lifecycle ──
 ENRICHMENT_NOT_RUN = "NOT_RUN"
 ENRICHMENT_ENRICHING = "ENRICHING"
 ENRICHMENT_ENRICHED = "ENRICHED"
@@ -104,7 +103,7 @@ class CustomerKnowledge(Base):
     # kept for compatibility. The enrichment era uses
     # ``knowledge_category`` (controlled vocabulary).
     category = sa.Column(sa.String(50), nullable=True)
-    # Knowledge category (CHANGELOG 0.1.2 item 1): one of
+    # Knowledge category: one of
     # KNOWLEDGE_CATEGORIES, user-authoritative when set at upload; the LLM
     # may suggest one when the user did not choose (item 1).
     knowledge_category = sa.Column(sa.String(60), nullable=True, index=True)
@@ -122,7 +121,7 @@ class CustomerKnowledge(Base):
     processing_time_seconds = sa.Column(sa.Float, nullable=True)
     processed_at = sa.Column(sa.DateTime, nullable=True)
 
-    # ── LLM enrichment layer (CHANGELOG 0.1.2) ──────────
+    # ── LLM enrichment layer ──────────
     # Docling and LLM enrichment failures are tracked SEPARATELY (item 16):
     # processing_status covers Docling; enrichment_status covers the LLM.
     enrichment_status = sa.Column(
@@ -185,7 +184,7 @@ class CustomerKnowledge(Base):
             "processor_version": self.processor_version,
             "processing_time_seconds": self.processing_time_seconds,
             "processed_at": self.processed_at.isoformat() if self.processed_at else None,
-            # LLM enrichment layer (CHANGELOG 0.1.2 item 16):
+            # LLM enrichment layer:
             # tracked separately from Docling processing_status.
             "enrichment_status": self.enrichment_status,
             "enrichment_error": self.enrichment_error,
@@ -196,7 +195,7 @@ class CustomerKnowledge(Base):
         }
 
 
-# ── LLM-derived structured intelligence (CHANGELOG 0.1.2) ──
+# ── LLM-derived structured intelligence ──
 # Provenance types (item 6): "explicit" (directly stated in the source),
 # "derived" (reasonably inferred), "suggested" (AI-generated candidate
 # requiring validation). Items are the durable, traceable record of what

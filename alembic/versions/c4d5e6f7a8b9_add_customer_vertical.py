@@ -1,6 +1,6 @@
-"""add customers.vertical
+"""Add customers.vertical
 
-WP19: customers gain an optional industry ``vertical`` (one of
+Customers gain an optional industry ``vertical`` (one of
 ``backend.verticals.VERTICALS``). Additive, nullable — no data impact on
 existing rows.
 

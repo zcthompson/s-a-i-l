@@ -1,13 +1,13 @@
 /**
- * CHANGELOG 0.1.0 U4 — customer workspace navigation restructure tests.
+ * customer workspace navigation restructure tests.
  *
- * The 15 top-level tabs are reorganized into the two-level structure
- * (directives 1-5, 11-14, 50-53): five primary areas (Overview |
+ * The 15 top-level tabs are reorganized into the two-level structure:
+ * five primary areas (Overview |
  * Intelligence | Assessments | Sales | Team) with per-area secondary
  * rails, a proper SegmentedNav (not buttons-as-pseudo-tabs), no
- * "Quick Actions" row (directives 32-33), and breadcrumbs instead of
+ * "Quick Actions" row, and breadcrumbs instead of
  * the My Customers / Back to Dashboard pair. These tests drive the
- * real CustomerDashboard through the same Home path as the WP23
+ * real CustomerDashboard through the same Home path as the
  * regression tests.
  */
 import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
@@ -109,7 +109,7 @@ const { apiStub } = vi.hoisted(() => {
           },
         ],
       }),
-    // E1: the Timeline section expects a timeline page (an object, not a list).
+    // The Timeline section expects a timeline page (an object, not a list).
     getAccountTimeline: () =>
       Promise.resolve({
         customer_id: customer.id,
@@ -277,7 +277,7 @@ describe('customer workspace route restoration', () => {
   });
 });
 
-describe('U4 — two-level customer workspace navigation', () => {
+describe('two-level customer workspace navigation', () => {
   it('keeps Overview concise and opens grouped sales information', async () => {
     await selectCustomer();
     expect(screen.queryByRole('heading', { name: /^Attention/ })).toBeNull();
@@ -307,14 +307,14 @@ describe('U4 — two-level customer workspace navigation', () => {
     }
   });
 
-  it('the secondary rail follows the active primary area (directives 51-53)', async () => {
+  it('the secondary rail follows the active primary area', async () => {
     await selectCustomer();
     // Default area: Overview — no secondary rail.
     expect(screen.queryByRole('tab', { name: 'Navigate to Rounds' })).toBeNull();
 
     fireEvent.click(tab('Intelligence'));
-    // directive 51 plus the sibling professional-services intelligence panel
-    // (H5 adds Activities + Tasks after Contacts; E1 adds Timeline after
+    // The Intelligence rail includes the professional-services intelligence panel.
+    // (H5 adds Activities + Tasks after Contacts; Timeline follows
     // Brief — the Account 360 derived feed).
     expect(primaryTabs()).toEqual([
       'Overview', 'Sales', 'Intelligence', 'Discovery & Value', 'Team',
@@ -322,14 +322,14 @@ describe('U4 — two-level customer workspace navigation', () => {
     ]);
 
     fireEvent.click(tab('Discovery & Value'));
-    // directive 52 (Rounds is the default rail item on entry)
+    // (Rounds is the default rail item on entry)
     expect(primaryTabs()).toEqual([
       'Overview', 'Sales', 'Intelligence', 'Discovery & Value', 'Team',
       'Summary', 'Use Cases', 'Bulk Score', 'Analytics', 'Business Impact', 'Forecasting', 'Export',
     ]);
 
     fireEvent.click(tab('Sales'));
-    // directive 53 + E6/D6: Deals | Attention | Partner Pipeline | Vendor Intelligence | Evaluations | Account Strategy
+    // Deals | Attention | Partner Pipeline | Vendor Intelligence | Evaluations | Account Strategy
     expect(primaryTabs()).toEqual([
       'Overview', 'Sales', 'Intelligence', 'Discovery & Value', 'Team',
       'Deals', 'Attention', 'Partner Pipeline', 'Vendor Intelligence', 'Evaluations', 'Account Strategy',
@@ -342,25 +342,24 @@ describe('U4 — two-level customer workspace navigation', () => {
     ]);
   });
 
-  it('clicking a primary area lands on its default section (directives 3, 5)', async () => {
+  it('clicking a primary area lands on its default section', async () => {
     await selectCustomer();
     fireEvent.click(tab('Discovery & Value'));
-    // CHANGELOG 0.1.0 U7: the emoji is dropped (directive 15) and the Rounds area is
+    // the emoji is dropped and the Rounds area is
     // a single consolidated card (the duplicated report table is gone).
     await screen.findByText('Assessment Rounds', { selector: 'h2' });
 
     fireEvent.click(tab('Intelligence'));
     await screen.findByRole('tab', { name: 'Navigate to Summary' });
     // Intelligence ▸ Summary is the customer-intelligence summary
-    // (directive 51).
     await screen.findByText('Customer Intelligence');
 
     fireEvent.click(tab('Sales'));
-    // E6/D6: Sales ▸ Deals is the default (rep-owned records come first).
+    // Sales ▸ Deals is the default (rep-owned records come first).
     await screen.findByRole('heading', { level: 3, name: /^Deals/ });
   });
 
-  it('technology, knowledge, sales notes, and third-party services live under Intelligence (directive 3)', async () => {
+  it('technology, knowledge, sales notes, and third-party services live under Intelligence', async () => {
     await selectCustomer();
     fireEvent.click(tab('Intelligence'));
     fireEvent.click(tab('Technology'));
@@ -371,7 +370,7 @@ describe('U4 — two-level customer workspace navigation', () => {
     expect(tab('Sales Notes')).toBeTruthy();
   });
 
-  it('the old flat controls are gone: Quick Actions row and top-level Edit/Remove tabs (directives 32-36)', async () => {
+  it('the old flat controls are gone: Quick Actions row and top-level Edit/Remove tabs', async () => {
     await selectCustomer();
     expect(screen.queryByText('Quick Actions')).toBeNull();
     expect(screen.queryByRole('tab', { name: 'Navigate to Edit' })).toBeNull();
@@ -379,11 +378,11 @@ describe('U4 — two-level customer workspace navigation', () => {
     expect(screen.queryByText('✏️ Edit Customer')).toBeNull();
     expect(screen.queryByText('🗑️ Remove Customer')).toBeNull();
     // The account-management actions still exist in the header's
-    // settings overflow (directive 35 — never as primary buttons).
+    // settings overflow (never as primary buttons).
     fireEvent.click(screen.getByRole('button', { name: 'Customer settings' }));
     expect(screen.getByRole('menuitem', { name: 'Edit Customer' })).toBeTruthy();
     expect(screen.getByRole('menuitem', { name: 'Remove Customer' })).toBeTruthy();
-    // CHANGELOG 0.1.0 U7 (directives 35-38): picking Edit Customer opens the
+    // picking Edit Customer opens the
     // account-management surface as a transient dialog overlay (not a nav
     // area, not a full-screen view switch), and Cancel closes it.
     fireEvent.click(screen.getByRole('menuitem', { name: 'Edit Customer' }));
@@ -392,7 +391,7 @@ describe('U4 — two-level customer workspace navigation', () => {
     // UX audit #8: the buttons carry specific labels — Cancel is the
     // "Cancel customer settings" button; closing the dialog is what we're
     // proving here.
-    // Operator directive 2026-11-01: aliases are edited in this dialog,
+    // aliases are edited in this dialog,
     // below Description and Vertical.
     const field = within(editDialog).getByTestId('customer-aliases-field');
     expect(within(field).getByLabelText('New alias')).toBeTruthy();
@@ -406,7 +405,7 @@ describe('U4 — two-level customer workspace navigation', () => {
     fireEvent.keyDown(document, { key: 'Escape' });
   });
 
-  it('breadcrumbs replace the Back to Dashboard / My Customers button pair (directives 11-12)', async () => {
+  it('breadcrumbs replace the Back to Dashboard / My Customers button pair', async () => {
     await selectCustomer();
     const crumbs = screen.getByRole('navigation', { name: 'Breadcrumb' });
     expect(within(crumbs).getByText('Dashboard')).toBeTruthy();
@@ -416,7 +415,7 @@ describe('U4 — two-level customer workspace navigation', () => {
   });
 });
 
-describe('Edit Customer — aliases (operator directive 2026-11-01)', () => {
+describe('Edit Customer — aliases', () => {
   it('the Overview has no Aliases card', async () => {
     await selectCustomer();
     expect(screen.getByRole('tab', { name: 'Navigate to Overview' }).getAttribute('aria-selected')).toBe('true');

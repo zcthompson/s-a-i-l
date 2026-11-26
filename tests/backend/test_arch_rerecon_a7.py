@@ -1,5 +1,5 @@
-"""Re-recon A-7 pins — per-row queries on list surfaces batched (the four
-surfaces named in the re-recon table).
+"""Batch-query pins — per-row queries on list surfaces batched (the four
+surfaces named in the audit findings).
 
 Each pin records the SQL statement families executed by the surface and
 shows the family count is CONSTANT as the row count grows (was one query

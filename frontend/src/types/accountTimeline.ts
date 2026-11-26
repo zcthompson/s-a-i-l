@@ -1,4 +1,4 @@
-// E1 — Account 360 timeline + E10 QBR cadence (normative FE contract).
+// Account 360 timeline + QBR cadence (normative FE contract).
 // Backend: GET /api/customers/{customer_id}/timeline/
 
 export type TimelineKind =

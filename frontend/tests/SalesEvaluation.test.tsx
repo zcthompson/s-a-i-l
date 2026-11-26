@@ -1,8 +1,8 @@
 /**
  * Component tests for SalesEvaluation (Phase 3 — cross-domain sales
- * evaluations UI, extended with S-A-I-L P6c persona selection + pre-generation
+ * evaluations UI, extended with persona selection + pre-generation
  * preview + persona-section rendering). Mocks the api module (repo pattern:
- * vi.hoisted + vi.mock factory, cf. F5CustomerUrlSync.test.tsx). Plain
+ * vi.hoisted + vi.mock factory, cf. CustomerUrlSync.test.tsx). Plain
  * assertions — the project has no @testing-library/jest-dom setup.
  *
  * NOTE (jsdom): native <select> has no resolvable implicit ARIA role here, so
@@ -136,7 +136,7 @@ describe('SalesEvaluation component', () => {
     apiMock.deleteSalesEvaluation.mockResolvedValue(undefined);
     apiMock.listSalesPersonas.mockResolvedValue([{ id: 'security', label: 'Security Leader' }]);
     apiMock.previewSalesEvaluation.mockResolvedValue(mockPreview);
-    // CHANGELOG 0.1.0 U6: the generation panel surfaces the available intelligence
+    // the generation panel surfaces the available intelligence
     // from the account-workspace endpoint (advisory — the component guards
     // against non-object responses).
     apiMock.getAccountWorkspace.mockResolvedValue({
@@ -155,8 +155,8 @@ describe('SalesEvaluation component', () => {
     expect(select).not.toBeNull();
     expect(screen.getByText('2 found')).toBeTruthy();
     expect(screen.getByRole('button', { name: /generate evaluation/i })).toBeTruthy();
-    // S-A-I-L P6c — persona select + Refresh-Preview button are present
-    // (U6: the preview is auto-computed on load/persona-change; the button
+    // persona select + Refresh-Preview button are present
+    // (the preview is auto-computed on load/persona-change; the button
     // remains as an explicit re-run, labeled "Refresh Preview").
     expect(screen.getByLabelText('Select persona')).toBeTruthy();
     expect(screen.getByRole('button', { name: /Refresh Preview/i })).toBeTruthy();
@@ -207,7 +207,7 @@ describe('SalesEvaluation component', () => {
     expect(apiMock.createSalesEvaluationWithPersona).toHaveBeenCalledWith(5, 'Persona Eval', 'security');
   });
 
-  it('auto-computes the pre-generation preview on load (CHANGELOG 0.1.0 U6 directive 66 — no manual click required)', async () => {
+  it('auto-computes the pre-generation preview on load (no manual click required)', async () => {
     render(<SalesEvaluation customerId={5} />);
     await screen.findByPlaceholderText(/Evaluation name/i);
 
@@ -219,7 +219,7 @@ describe('SalesEvaluation component', () => {
     expect(screen.getByText('Discovery gaps (missing knowledge):')).toBeTruthy();
   });
 
-  it('refreshes the preview when the persona changes and passes the persona (U6 directives 31, 66)', async () => {
+  it('refreshes the preview when the persona changes and passes the persona', async () => {
     render(<SalesEvaluation customerId={5} />);
     await screen.findByPlaceholderText(/Evaluation name/i);
     expect(apiMock.previewSalesEvaluation).toHaveBeenCalledTimes(1);
@@ -232,7 +232,7 @@ describe('SalesEvaluation component', () => {
     expect(apiMock.previewSalesEvaluation).toHaveBeenLastCalledWith(5, 'security');
   });
 
-  it('surfaces the available customer intelligence in the generation panel (U6 directives 66-67)', async () => {
+  it('surfaces the available customer intelligence in the generation panel', async () => {
     render(<SalesEvaluation customerId={5} />);
     // The context block renders once the workspace resolves (the mock
     // resolves with non-zero counts). Scope to the block's container so the
@@ -247,7 +247,7 @@ describe('SalesEvaluation component', () => {
     expect(within(section).getByText('EOL technology')).toBeTruthy();
   });
 
-  it('shows the selected persona context (description, technical depth, concerns) in the generation panel (U6 directive 31)', async () => {
+  it('shows the selected persona context (description, technical depth, concerns) in the generation panel', async () => {
     apiMock.listSalesPersonas.mockResolvedValue([
       {
         id: 'security',

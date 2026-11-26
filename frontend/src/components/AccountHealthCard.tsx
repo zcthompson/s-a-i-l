@@ -1,6 +1,6 @@
 import { SectionIcon } from './SectionIcon';
 /**
- * E5 — Account health components (Overview surface).
+ * Account health components (Overview surface).
  *
  * Six independent, labelled components from GET /api/customers/{id}/health/:
  * Engagement, Renewals, Buying coverage, Tasks, End-of-support, Data freshness.

@@ -5,7 +5,7 @@
  * import's read-only unmatched rows, and Re-match the stored rows after
  * names/aliases/access change (no re-upload).
  *
- * Manager-only (D1): the backend 403s for every role other than system
+ * Manager-only: the backend 403s for every role other than system
  * admins and sales managers, so any 403 renders the access-denied state.
  *
  * Invariants the pane must preserve:

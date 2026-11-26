@@ -1,4 +1,4 @@
-"""E1 — Account 360 timeline: a DERIVED, read-only, reverse-chronological feed.
+"""Account 360 timeline: a DERIVED, read-only, reverse-chronological feed.
 
 One bounded query per source, merged and ordered in Python (no UNION, no
 stored event table). Imports are labelled ``imported`` and are never business

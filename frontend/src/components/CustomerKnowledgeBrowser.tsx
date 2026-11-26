@@ -35,7 +35,7 @@ function statusMeta(status: string): { label: string; color: string; bg: string;
   return STATUS_META[status as KnowledgeProcessingStatus] ?? STATUS_META.UPLOADED;
 }
 
-/** Enrichment lifecycle presentation (CHANGELOG 0.1.2 items 2, 16):
+/** Enrichment lifecycle presentation:
  *  shown ONLY once the document has reached a terminal processing state,
  *  because enrichment is a distinct second stage. */
 const ENRICHMENT_META: Record<KnowledgeEnrichmentStatus, { label: string; color: string; bg: string; pulse?: boolean }> = {

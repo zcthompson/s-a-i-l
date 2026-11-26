@@ -49,7 +49,7 @@ import { useCustomerArea } from '../lib/useCustomerArea';
 
 const ThirdPartyServices = lazy(() => import('../components/ThirdPartyServices'));
 
-// Part 14 B1/B2 — the My Customers side list defaults to A–Z (client-side over
+// the My Customers side list defaults to A–Z (client-side over
 // the complete authorized list; 'newest' stays = payload order). The default
 // state serializes to no nav params.
 const SIDE_LIST_NAV_DEFAULTS: NavDefaults = { defaultSort: { sort: 'name', dir: 'asc' } };
@@ -65,7 +65,7 @@ interface DepartmentObject {
 interface CustomerDashboardProps {
   onNavigate: (view: string) => void;
   onEditUseCase?: (useCase: UseCase) => void;
-  // WP23a (F1): cross-view handoff — the parent (Home) receives the
+  // (F1): cross-view handoff — the parent (Home) receives the
   // locally-selected use case when the detail tab opens the scoring
   // dashboard / drill-down / comments, so those views render for THAT
   // use case (the pre-fix behavior navigated without a selection:
@@ -73,7 +73,7 @@ interface CustomerDashboardProps {
   onOpenScoring?: (useCase: UseCase) => void;
   onOpenDrilldown?: (useCase: UseCase) => void;
   onOpenComments?: (useCase: UseCase) => void;
-  // WP23a F5: in-page customer selection is synced to the URL (?customer=)
+  // F5: in-page customer selection is synced to the URL (?customer=)
   // by the parent (Home) — called with the selected name (or null when
   // cleared) so refresh / Back / Forward restore the selection.
   onCustomerSelect?: (name: string | null) => void;
@@ -92,8 +92,8 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
   const [selectedUseCase, setSelectedUseCase] = useState<UseCase | null>(null);
   const [newAssessmentOpen, setNewAssessmentOpen] = useState(false);
   const [newAssessmentMode, setNewAssessmentMode] = useState<'template' | 'blank'>('template');
-  // CHANGELOG 0.1.0 U4 — the customer workspace navigation is two levels deep
-  // (directives 1-5, 50-53): a primary area (Overview | Sales | Intelligence |
+  // the customer workspace navigation is two levels deep
+  // a primary area (Overview | Sales | Intelligence |
   // Discovery & Value | Team) plus a per-area secondary rail. `area`
   // owns both levels — the detail view is a transient secondary of the
   // current area (use-case rows still open it from any table).
@@ -122,7 +122,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
   const accessCheckSeq = useRef(0);
   const { assessments, roundsLoading, roundsLoadError, loadAssessments } = useAssessmentRounds(selectedCustomer?.name);
   const [newRoundName, setNewRoundName] = useState('');
-  // Part 13 WS5 (R8): the round type is an explicit choice — null until the
+  // the round type is an explicit choice — null until the
   // user picks one (no silent default in the UI). Purpose is optional.
   const [newRoundType, setNewRoundType] = useState<AssessmentType | null>(null);
   const [newRoundPurpose, setNewRoundPurpose] = useState('');
@@ -131,11 +131,11 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
   const [mutationBusy, setMutationBusy] = useState(false);
   const [mutationError, setMutationError] = useState<string | null>(null);
   const [mutationStatus, setMutationStatus] = useState<string | null>(null);
-  // WP23a F12: round create/archive failures are a local, inline error in
+  // F12: round create/archive failures are a local, inline error in
   // the Assessment Rounds card — not the view-level load error (which used
   // to unmount the whole dashboard for a page reload).
   const [roundError, setRoundError] = useState<string | null>(null);
-  // WP27 — direct use-case add/remove from the Overview. The backend CRUD +
+  // direct use-case add/remove from the Overview. The backend CRUD +
   // junction authorization already exist (/api/use-cases/); these hold the
   // missing frontend affordance's state.
   const [showNewUcForm, setShowNewUcForm] = useState(false);
@@ -146,7 +146,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
   const [ucBusy, setUcBusy] = useState(false);
   const [ucError, setUcError] = useState<string | null>(null);
   const [ucStatus, setUcStatus] = useState<string | null>(null);
-  // CHANGELOG 0.1.0 U7 (directive 38): account management (Edit Customer /
+  // account management (Edit Customer /
   // Departments / Remove Customer) lives in the header settings menu, not
   // in the tab model — `settingsDialog` holds the transient destination
   // (null = none). `edit` / `remove` remain valid deep-link targets from
@@ -154,14 +154,14 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
   const [settingsDialog, setSettingsDialog] = useState<'edit' | 'remove' | null>(null);
   const appliedAction = useRef<string | null>(null);
   const canManageCustomer = getAuthIsAdmin() || userRole === 'owner';
-  // Aliases: owner or admin PLUS sales_admin (operator directive 2026-11-01 —
-  // the alias section is import-matching metadata the sales admin manages;
+  // Aliases: owner or admin PLUS sales_admin (the alias section is
+  // import-matching metadata the sales admin manages;
   // mirrors the backend gate exactly). Separate from canManageCustomer —
   // the sales admin must NOT gain use-case delete etc. from this.
   const canManageAliases = canManageCustomer || getAuthSalesRole() === 'sales_admin';
-  // D3: a non-admin sales manager creates an admin-reviewed prospect.
+  // a non-admin sales manager creates an admin-reviewed prospect.
   const creatingProspect = !getAuthIsAdmin() && getAuthSalesRole() === 'sales_manager';
-  // WP27 role gates mirror the backend authorization exactly:
+  // role gates mirror the backend authorization exactly:
   // create → owner or member (auditor/none get 403), delete → owner or admin
   // (members get 403 — do not surface a delete they cannot execute).
   const canAddUseCase = workspaceActions?.capabilities.use_case ?? false;
@@ -190,9 +190,9 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
   // selected customer). Not URL-synced, matching the selectedCustomerName
   // transient pattern.
   //
-  // CHANGELOG 0.1.0 U4: the deep-link targets live under the restructured
+  // the deep-link targets live under the restructured
   // navigation — bulk-score under the Discovery & Value area (PRIMARY_OF below);
-  // edit/remove render inside the Overview area (U7 moves them out of the
+  // edit/remove render inside the Overview area (moved out of the
   // tab model into the header settings menu).
   useEffect(() => {
     if (selectedCustomer && initialAction?.startsWith('deal:') && appliedAction.current !== initialAction) {
@@ -203,7 +203,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
     }
     const allowed = ['overview', 'bulk-score', 'edit', 'remove'];
     if (selectedCustomer && initialAction && allowed.includes(initialAction) && appliedAction.current !== initialAction) {
-      // CHANGELOG 0.1.0 U7: edit/remove are no longer areas — the settings overlay
+      // edit/remove are no longer areas — the settings overlay
       // renders them (MyDashboard deep links still resolve here).
       if (initialAction === 'edit' || initialAction === 'remove') {
         setSettingsDialog(initialAction);
@@ -222,7 +222,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
   }, []);
 
   const activeRound = assessments.find((a) => a.status === 'active');
-  // Part 13 WS5 (R5/R8): a use case in a GENERIC round has no AI scoring
+  // a use case in a GENERIC round has no AI scoring
   // (the backend 422s it); a NULL assessment_id is legacy → AI (allowed).
   const genericRoundIds = new Set(
     assessments.filter((a) => a.assessment_type === 'generic').map((a) => a.id),
@@ -339,7 +339,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
 
   useEffect(() => {
     if (isNewCustomer && (getAuthIsAdmin() || getAuthSalesRole() === 'sales_manager')) {
-      // F19/D3: only admins (customers) and sales managers (admin-reviewed
+      // F19: only admins (customers) and sales managers (admin-reviewed
       // prospects) may create accounts; no other identity sees the form.
       setShowNewCustomerForm(true);
     }
@@ -424,7 +424,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
   // eslint-disable-next-line react-hooks/exhaustive-deps -- pre-existing dependency list; change only with UI verification
   }, [area, detailId, selectedCustomer?.id, selectedCustomer?.name, selectedCustomerName, userLoading, userAccess, accessCustomer]);
 
-  // WP23a F4(d): a WS scoring event for this customer → refresh the use
+  // F4(d): a WS scoring event for this customer → refresh the use
   // case scores (single list refetch) so a background score completion
   // lands in the table + the open detail without a manual reload; clear
   // the busy state if the score fetch is in flight. The event is a
@@ -530,7 +530,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
     try {
       const updated = await api.updateCustomer(selectedCustomer.name, { description: editDescription, vertical: editVertical });
       setSelectedCustomer({ ...selectedCustomer, description: updated.description || '', vertical: updated.vertical });
-      // CHANGELOG 0.1.0 U7: the edit form is a settings-menu overlay — close it on
+      // the edit form is a settings-menu overlay — close it on
       // successful save (the header metadata updates in place).
       setSettingsDialog(null);
       setMutationStatus('Customer saved.');
@@ -541,7 +541,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
 
   const removeCustomer = async () => {
     if (!selectedCustomer) return;
-    // CHANGELOG 0.1.0 U7 (directive 35): the removal overlay IS the confirmation
+    // the removal overlay IS the confirmation
     // surface — no second window.confirm on top of it.
     setMutationBusy(true); setMutationError(null);
     try {
@@ -562,7 +562,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
     }
   };
 
-  // WP27 — after a use-case add/delete, refresh the list AND the customer
+  // after a use-case add/delete, refresh the list AND the customer
   // aggregate so the "Total Use Cases" KPI (selectedCustomer.use_case_count)
   // and the department counts stay live instead of stale.
   const refreshCustomerData = async () => {
@@ -590,7 +590,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
     });
   };
 
-  // WP27 — direct single-use-case add (bypasses the assessment/template
+  // direct single-use-case add (bypasses the assessment/template
   // flow on purpose: a use case is a first-class record with its own CRUD).
   const handleCreateUseCase = async () => {
     if (!selectedCustomer || !newUcTitle.trim() || ucBusy) return;
@@ -621,7 +621,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
     }
   };
 
-  // WP27 — delete with a consequence-stating confirm (the backend cascades
+  // delete with a consequence-stating confirm (the backend cascades
   // the use case's comments, score history, and AI predictions).
   const handleDeleteUseCase = async (useCase: UseCase) => {
     if (ucBusy) return;
@@ -651,7 +651,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
   const handleScore = async (useCaseId: number) => {
     if (!canAddUseCase || scoreLoading) return;
     setScoreLoading(true);
-    // WP23a F4(c): 300s cap on the scoring fetch (client-side — the model
+    // F4(c): 300s cap on the scoring fetch (client-side — the model
     // may keep running on the server; the abort message says so). The busy
     // surface is the shared detail's disabled buttons + "Scoring…" labels
     // (busy prop) — the guard above is the re-entry prevention.
@@ -697,12 +697,12 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
     }
   };
 
-  // ── CHANGELOG 0.1.0 U4 — two-level customer workspace navigation (1-5, 50-53) ──
+  // ── — two-level customer workspace navigation (1-5, 50-53) ──
   // Primary areas: Overview | Sales | Intelligence | Discovery & Value |
-  // Team. Secondary rails (directives 3, 51-53) — the existing
+  // Team. Secondary rails — the existing
   // functionality is MOVED underneath these areas, not duplicated.
-  // `edit` / `remove` (account management, directives 35-38) render inside
-  // the Overview area until U7 moves them into the header settings menu.
+  // `edit` / `remove` (account management) render inside
+  // the Overview area before moving into the header settings menu.
   const PRIMARY_AREAS = [
     { id: 'overview', label: 'Overview' },
     { id: 'sales', label: 'Sales' },
@@ -712,7 +712,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
   ] as const;
 
   const SECONDARY_OF: Record<string, { id: string; label: string }[]> = {
-    // directive 51: customer intelligence sources and structured observations
+    // customer intelligence sources and structured observations
     intelligence: [
       { id: 'intelligence-summary', label: 'Summary' },
       { id: 'technology-inventory', label: 'Technology' },
@@ -725,9 +725,9 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
       { id: 'account-timeline', label: 'Timeline' },
       { id: 'third-party-services', label: 'Third-Party Services' },
     ],
-    // directive 52: Rounds | Use Cases | Analytics | Business Impact |
-    // Forecasting — plus Bulk Score (directive 5 consolidation) and Export
-    // (the report's export path, also directive 5).
+    // Rounds | Use Cases | Analytics | Business Impact |
+    // Forecasting — plus Bulk Score and Export
+    // (the report's export path).
     assessments: [
       { id: 'assessments', label: 'Summary' },
       { id: 'use-cases', label: 'Use Cases' },
@@ -737,7 +737,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
       { id: 'business-impact-forecasting', label: 'Forecasting' },
       { id: 'export', label: 'Export' },
     ],
-    // directive 53: Opportunities | Evaluations | Account Strategy
+    // Opportunities | Evaluations | Account Strategy
     sales: [
       { id: 'sales-deals', label: 'Deals' },
       { id: 'sales-opportunities', label: 'Attention' },
@@ -746,7 +746,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
       { id: 'sales-evaluations', label: 'Evaluations' },
       { id: 'account-strategy', label: 'Account Strategy' },
     ],
-    // directive 38: account-management destinations (Team stays a primary
+    // account-management destinations (Team stays a primary
     // area; Departments is the admin surface for the account).
     team: [
       { id: 'team', label: 'Team' },
@@ -977,7 +977,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
           </div>
         ) : (
           <div className="crm-workspace" style={{ padding: '24px', minWidth: 0 }}>
-            {/* Breadcrumbs (CHANGELOG 0.1.0 U3, directives 11-12): replace the
+            {/* Breadcrumbs: replace the
                 "Back to Dashboard" + "My Customers" button pair with a
                 standard Dashboard / Customers / {customer} path. */}
             <Breadcrumbs
@@ -988,8 +988,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
               ]}
             />
 
-            {/* Compact persistent customer header (CHANGELOG 0.1.0 U3, directives
-                6-10, 33-38, 47): name/description/ownership/departments/
+            {/* Compact persistent customer header: name/description/ownership/departments/
                 metadata in one unified surface; the full-width active-
                 assessment banner is now a compact status element inside
                 the header; Edit/Remove live in the overflow settings
@@ -1038,7 +1037,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
                 }
               }}
               onOpenSettings={(target) => {
-                // CHANGELOG 0.1.0 U7 (directives 35-38): all account-management
+                // all account-management
                 // destinations (Edit Customer / Departments / Remove) are
                 // transient surfaces opened from this menu — never primary
                 // navigation areas. 'team' stays a real area (rail default).
@@ -1052,7 +1051,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
 
             {actionsError && <p role="status">Create actions unavailable. <button type="button" onClick={retryActions}>Retry actions</button></p>}
 
-            {/* E2 — in-account cross-module search (the account workspace's
+            {/* in-account cross-module search (the account workspace's
                 one search box; results deep-link to the owning rail area). */}
             <AccountSearchPanel key={selectedCustomer.id}
               customerId={selectedCustomer.id}
@@ -1070,8 +1069,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
               /></details>
             )}
 
-            {/* Two-level customer workspace navigation (CHANGELOG 0.1.0 U4,
-                directives 2, 50-53): the ~5 primary areas plus the
+            {/* Two-level customer workspace navigation: the ~5 primary areas plus the
                 per-area secondary rail. The use-case detail is a
                 transient secondary of the Discovery & Value area (it is only
                 reached from the Use Cases table). */}
@@ -1097,15 +1095,15 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
             <section id={workspacePanelId} role="tabpanel" aria-label={`${PRIMARY_AREAS.find(item => item.id === primaryActive)?.label || primaryActive} content`} tabIndex={0}>
             {customerRecord.record && <SelectedCustomerRecord onChanged={() => setRecordRefresh(value => value + 1)} customerName={selectedCustomer.name} onOpenRecord={customerRecord.select} key={`${customerRecord.record.customerId}-${customerRecord.record.module}-${customerRecord.record.id}-${recordRefresh}`} onEditDeal={id => setQuickCreate(previous => ({ customer: selectedCustomer.id, target: 'deal-edit', request: (previous?.request ?? 0) + 1, id }))} selection={customerRecord.record} onClose={customerRecord.clear} />}
 
-            {/* Area content (CHANGELOG 0.1.0 U4) */}
+            {/* Area content */}
             {area === 'overview' && (
               <div>
-                {/* CHANGELOG 0.1.0 U5 — executive account view: balanced headline
+                {/* executive account view: balanced headline
                     metrics, the Account Snapshot, the four actionable
                     intelligence summaries, and the small Priority Use
-                    Cases list (directives 16-20, 22-26, 39-40). Deterministic
-                    — fed by the account-workspace endpoint; provenance via
-                    tooltip, not a "Derived" label (directive 21). The dense
+                    Cases list. Deterministic
+                    fed by the account-workspace endpoint; provenance via
+                    tooltip, not a "Derived" label. The dense
                     use-case working table stays one rail step away. */}
                 <AccountOverview
                   customerId={selectedCustomer.id}
@@ -1124,7 +1122,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
 
             {area === 'intelligence-summary' && (
               <div>
-                {/* Intelligence ▸ Summary (directive 51): the actionable
+                {/* Intelligence ▸ Summary: the actionable
                     customer-intelligence summaries on their own. F4: the
                     Customer Intelligence Constellation (deterministic
                     graph projection of this customer's technologies, use
@@ -1132,9 +1130,8 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
                     dependency relationships) is the principal analytical
                     visualization of this section — it is NOT copied into
                     the Overview (which keeps only a lightweight teaser).
-                    The dense use-case working view is one rail step over
-                    (directive 41). Departments (account management,
-                    directive 38) is under the Team area. */}
+                    The dense use-case working view is one rail step over.
+                    Departments (account management) is under the Team area. */}
                 <CustomerIntelligenceConstellation
                   customerId={selectedCustomer.id}
                   customerName={selectedCustomer.name || ''}
@@ -1152,11 +1149,10 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
 
             {area === 'use-cases' && (
               <div>
-                {/* Use Cases working view (moved here from Overview in U4 —
+                {/* Use Cases working view (moved here from Overview —
                     the dense operational table lives in the working view
-                    the user intentionally navigates to, directive 41).
-                    U5 adds the small Priority Use Cases section to the
-                    Overview proper (directive 39). */}
+                    the user intentionally navigates to).
+                    The Overview includes a small Priority Use Cases section. */}
                 <div style={{ background: 'var(--neutral-0)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-card)', overflow: 'hidden' }}>
                   <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--divider)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                     <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--neutral-700)' }}>Use Cases ({customerUseCases.length})</h3>
@@ -1273,7 +1269,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
                               </td>
                               {canDeleteUseCase && (
                                 <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                                  {/* CHANGELOG 0.1.0 U7 (directive 42): per-row
+                                  {/* per-row
                                       overflow menu instead of a repetitive
                                       Delete button — the destructive action
                                       keeps its confirmation flow. */}
@@ -1298,7 +1294,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
               </div>
             )}
 
-            {/* Account-management surface (CHANGELOG 0.1.0 U7, directives 35-38):
+            {/* Account-management surface
                 opened from the header settings menu (or the MyDashboard
                 edit/remove deep links) as a transient overlay on top of the
                 current area — no more edit/remove nav areas, no more
@@ -1327,7 +1323,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
                         </select>
                       </>
                     )}
-                    {/* Operator directive 2026-11-01: aliases are edited here,
+                    {/* aliases are edited here,
                         under Edit Customer — not as an Overview card. */}
                     <CustomerAliasesField
                       customerName={selectedCustomer.name}
@@ -1397,13 +1393,13 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
                     ))}
                   </nav>
                 </section>
-                {/* CHANGELOG 0.1.0 U7 (directive 5): one consolidated card for the
+                {/* one consolidated card for the
                     Rounds area — the round registry, the round workflow
                     (create/archive), and starting a new assessment. The
                     duplicated "Assessment Report" use-case table is gone
                     (the dense working table lives one rail step over under
-                    Use Cases, directive 41) and the customer name is not
-                    repeated inside the workspace (directive 48). */}
+                    Use Cases) and the customer name is not
+                    repeated inside the workspace. */}
                 <div style={{ background: 'var(--neutral-0)', borderRadius: 'var(--radius)', padding: '20px', boxShadow: 'var(--shadow-card)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
                     <h2 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--ink)' }}>Assessment Rounds</h2>
@@ -1422,7 +1418,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
                         + New Round
                       </button>
                     </div>
-                  {/* Part 13 WS5 (R8): explicit round type — neither option is
+                  {/*explicit round type — neither option is
                       preselected, and + New Round stays disabled until one is
                       chosen. Purpose is optional for both types. */}
                   <fieldset style={{ border: '1px solid var(--divider)', borderRadius: 'var(--radius)', padding: '10px 14px', margin: '0 0 16px 0' }}>
@@ -1491,7 +1487,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
                             <td style={{ padding: '8px' }}>{a.use_case_count ?? 0}</td>
                             <td style={{ padding: '8px', color: 'var(--neutral-500)' }}>{a.created_at ? new Date(a.created_at).toLocaleDateString() : '—'}</td>
                             <td style={{ padding: '8px', textAlign: 'right' }}>
-                              {/* CHANGELOG 0.1.0 U7 (directive 42): the round action
+                              {/* the round action
                                   moves into a per-row overflow menu. */}
                               {a.status === 'active' && canAddUseCase && (
                                 <RowActions
@@ -1715,9 +1711,9 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
               <ThirdPartyServices customerId={selectedCustomer.id} userRole={userRole} />
             )}
 
-            {/* Sales workspace (CHANGELOG 0.1.0 U4, directive 4/53): Opportunities
-                (the synthesis panel as a standalone surface — U6 refines it
-                into the Sales destination), Evaluations (persona-driven
+            {/* Sales workspace: Opportunities
+                (the synthesis panel as a standalone Sales destination), Evaluations
+                (persona-driven
                 generation), and the Account Strategy placeholder for future
                 planning functionality. */}
             {area === 'sales-deals' && selectedCustomer && (
@@ -1774,7 +1770,7 @@ export function CustomerDashboard({ onNavigate, onEditUseCase, onOpenScoring, on
             {area === 'detail' && detailLoading && <div role="status">Loading use case…</div>}
             {area === 'detail' && detailError && <div role="alert">{detailError} <button type="button" onClick={() => setArea('use-cases')}>Return to use cases</button></div>}
             {area === 'detail' && !detailLoading && selectedUseCase && selectedUseCase.id === detailId && selectedUseCase.customer_id === selectedCustomer.id && (!selectedCustomerName || selectedCustomer.name === selectedCustomerName) && (
-              // WP23a step 0 (F6): the shared detail component — this
+              // (F6): the shared detail component — this
               // ~185-line inline copy (already diverged from Home's:
               // labels + navigation targets) is gone. The callbacks hand
               // the use case up to Home for cross-view navigation (F1

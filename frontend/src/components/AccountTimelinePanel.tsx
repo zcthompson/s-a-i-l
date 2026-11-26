@@ -1,5 +1,5 @@
 /**
- * E1 — Account 360 timeline panel (+ E10 QBR cadence header).
+ * Account 360 timeline panel (QBR cadence header).
  *
  * Read-only, derived feed: the backend merges notes, activities, task and
  * contact events, imports (labelled "imported" — never business events),

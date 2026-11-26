@@ -1,6 +1,6 @@
 """REST API routes for customer operations.
 
-Access control (404-first, R4/Q7):
+Access control (404-first):
 - Admin users: unrestricted access.
 - Junction users: access limited to their assigned customers.
 - Unauthenticated: 401.
@@ -52,7 +52,7 @@ from backend.verticals import VERTICAL_DEPARTMENTS, VERTICALS, canonical_vertica
 
 class AssessmentNameIn(BaseModel):
     name: str
-    # Part 13 WS5 (R4): optional round type + purpose. Omitted → an 'ai'
+    # optional round type + purpose. Omitted → an 'ai'
     # round exactly as before; any value outside the vocabulary → 422.
     type: str | None = None
     purpose: str | None = None
@@ -74,8 +74,8 @@ class TemplateAssessmentIn(BaseModel):
 
 
 class BootstrapResultWithTypeOut(BootstrapResultOut):
-    """BootstrapResultOut + the round's type/purpose (Part 13 WS5, R6 —
-    additive; the base wire shape is unchanged)."""
+    """BootstrapResultOut + the round's type/purpose
+    (additive; the base wire shape is unchanged)."""
     assessment_type: str = "ai"
     purpose: str | None = None
 
@@ -171,7 +171,7 @@ def _batched_sales_context(db: Session, ids: list) -> dict:
 
 
 def _batched_aliases(db: Session, ids: list) -> dict:
-    """Customer aliases for a whole list in ONE query (Part 14, A4 — the H2
+    """Customer aliases for a whole list in ONE query (the H2
     fixed-query convention: no N+1, per-customer alias lookups are a test
     failure). Rows arrive ordered (customer_id, alias), so each list is
     already the payload's sorted raw-alias order."""
@@ -211,7 +211,7 @@ def list_customers(
     # list payload carries the same sales context as the detail route —
     # a fixed number of queries, never one lookup per account.
     sales_context = _batched_sales_context(db, ids)
-    # Part 14 (A4): aliases on every row via ONE batched query — the H2
+    # aliases on every row via ONE batched query — the H2
     # fixed-query convention (per-customer alias lookups are a test failure).
     aliases_context = _batched_aliases(db, ids)
     return [
@@ -274,7 +274,7 @@ def create_customer(
 ):
     """Create a customer (system admin) or a prospect account (sales manager).
 
-    Decision D3: an active sales manager may create a prospect. It enters the
+    An active sales manager may create a prospect. It enters the
     existing ownership-review queue (``ownership_status = needs_review``) with
     the manager as its provisional owner; an admin confirms or reassigns the
     owner there. Name/alias duplicates are refused. Other roles get 403.
@@ -443,10 +443,10 @@ def bootstrap_template_assessment(
     user = _require_user(request)
     customer = customer_access.read_by_name_or_404(db, user, customer_name)
     # Out-of-scope callers already got the 404 above. In-scope callers must
-    # hold central CAP_EDIT (Part 13 DV wave — DV2/A8, ruling R1).
+    # hold central CAP_EDIT.
     if not sales_access.can(user, db, sales_access.CAP_EDIT, customer.id):
         raise HTTPException(status_code=403, detail="Not authorized to modify this customer")
-    # Part 13 WS5 (R8 honesty): template bootstrap seeds AI use cases — it can
+    # template bootstrap seeds AI use cases — it can
     # only work against an AI round. An active generic round would be seeded
     # with AI content (ensure_active returns it), so refuse with 409, naming
     # the fix. (No active round → the service creates an 'ai' round as before.)

@@ -1,4 +1,4 @@
-"""S-A-I-L P7 — deterministic demo customer-intelligence seed tests.
+"""deterministic demo customer-intelligence seed tests.
 
 Verifies seed_customer_intelligence:
 - seeds per-customer Technology Inventory + Sales Notes + Customer Knowledge
@@ -302,7 +302,7 @@ class TestSeedCustomerIntelligence:
 
 
 class TestSeedKnowledge:
-    """CHANGELOG 0.1.0 U2 — deterministic demo Customer Knowledge seeding."""
+    """deterministic demo Customer Knowledge seeding."""
 
     def test_seeds_knowledge_for_demo_customers(self, db_session):
         customers = _mk_demo_customers(db_session)

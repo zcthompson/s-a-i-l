@@ -1,5 +1,5 @@
 /**
- * E1/E10 — AccountTimelinePanel component tests (synthetic fixtures only).
+ * AccountTimelinePanel component tests (synthetic fixtures only).
  * Partial-mocks the api module (repo pattern: vi.hoisted + vi.mock factory).
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

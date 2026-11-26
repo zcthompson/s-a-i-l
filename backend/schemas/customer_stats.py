@@ -1,4 +1,4 @@
-"""Typed schemas for the customer-stats HTTP endpoints (BE-04).
+"""Typed schemas for the customer-stats HTTP endpoints.
 
 These model the *wire* shapes returned by ``/api/customers/{name}/stats/``
 (and the per-customer aggregate used by the sales readiness surface). Attaching

@@ -1,10 +1,10 @@
 /**
- * CHANGELOG 0.1.0 U5 (data: U1) — OpportunitiesPanel tests.
+ * OpportunitiesPanel tests.
  *
  * Verifies the Opportunities & Attention panel on the redesigned Overview:
- * typed opportunity cards (directive 28) with visible evidence/"why"
- * (directive 29), severity semantics (directive 43), the Generate Sales
- * Evaluation call to action (directive 30), and defensive behavior —
+ * typed opportunity cards with visible evidence/"why",
+ * severity semantics, the Generate Sales
+ * Evaluation call to action, and defensive behavior —
  * no signals → nothing rendered (no invented filler), non-object stub
  * response → no crash (same convention as CustomerIntelligenceOverview),
  * API error → inline error surface.

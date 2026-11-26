@@ -3,7 +3,7 @@
 Business logic for customer environment knowledge management:
 - Create/read/update/delete customer knowledge entries
 - Docling-based document normalization into canonical Markdown
-  (PLAN.md part 43 / CHANGELOG 0.1.1)
+
 - CustomerUser scoping via junction table (route layer owns auth; this
   layer owns the data behavior)
 
@@ -197,8 +197,7 @@ def create_customer_knowledge(
     Store-first (plan item 13): the record exists and is durable before
     any Docling call, so a Docling outage can never lose an upload.
     ``knowledge_category`` (when supplied by the caller) is the
-    user-authoritative classification (CHANGELOG 0.1.2
-    item 1) — the LLM may only fill it when it stays None.
+    user-authoritative classification — the LLM may only fill it when it stays None.
     """
     record = CKModel(
         customer_id=customer_id,
@@ -336,7 +335,7 @@ def normalize_record(record_id: int, db: Session | None = None,
     Any ProviderError / failure class → FAILED + processing_error. The
     original file is NEVER deleted here (plan item 14).
 
-    LLM enrichment (CHANGELOG 0.1.2 items 2, 4, 16) runs
+    LLM enrichment runs
     automatically after a successful normalization. On a record that is
     already READY, a plain job skips normalization and only fills in a
     missing enrichment (e.g. the enrichment FAILED previously — the
@@ -403,7 +402,7 @@ def normalize_record(record_id: int, db: Session | None = None,
                 ),
             )
         db.commit()
-        # Two-stage pipeline (CHANGELOG 0.1.2 items 2, 4):
+        # Two-stage pipeline:
         # enrichment runs automatically right after a successful
         # normalization, on the same session. A FAILED Docling result
         # never reaches this point — enrichment stays NOT_RUN.
@@ -457,7 +456,7 @@ def _normalize_markdown_inplace(db: Session, record: CKModel, converter: Documen
 
 
 def _normalize_via_provider(db: Session, record: CKModel, converter: DocumentConverter) -> None:
-    """Provider conversion (plan items 5, 6; Part 13 WS6)."""
+    """Provider conversion (plan items 5, 6)."""
     content_type = record.original_content_type or _mime_for_extension(record.file_name)
     try:
         result = converter.convert(

@@ -17,7 +17,7 @@ Prod-seed schema support (real-customer import):
   - ``users.email`` relaxed to NULL — a customer's Owner (sales rep) is
     seeded name-only (pending) until the operator fills in email/contact
     details. SQLite cannot ``ALTER COLUMN ... DROP NOT NULL``, so the
-    ``users`` table is rebuilt via Alembic batch operations (charter §3);
+    ``users`` table is rebuilt via Alembic batch operations;
     the rebuild preserves every existing row, its ``id`` (the
     ``customer_users`` junction references users.id, so ids stay stable),
     and every populated email value. SQLite UNIQUE treats NULLs as distinct,
@@ -26,7 +26,7 @@ Prod-seed schema support (real-customer import):
 Idempotent: each step is guarded by an inspector check, so a re-run (and a
 fresh DB that already has the columns/tables via create_all) is a no-op.
 ``alembic check`` stays clean afterwards (no create_all / startup mutation —
-charter prohibitions).
+prohibited).
 """
 
 from typing import Sequence, Union

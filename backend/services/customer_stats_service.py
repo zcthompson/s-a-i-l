@@ -218,7 +218,7 @@ class CustomerStatsService:
         Kept junction-based on purpose: it backs the admin ``my_view`` leg of
         GET /customers/stats/ ("my customers" = the admin's own assignments,
         not the reads-all expansion). Non-admin callers use the central-scope
-        path in ``build_stats_response`` (Part 13 DV wave, ruling C1).
+        path in ``build_stats_response``.
         """
         customer_ids = CustomerStatsService.get_user_stats_ids(db, user_id)
         return CustomerStatsService.get_stats_for_customer_ids(db, customer_ids)
@@ -339,9 +339,9 @@ class CustomerStatsService:
         """Build the GET /customers/{name}/stats/ response for the caller.
 
         Raises HTTPException 404 when the caller lacks READ access to the
-        customer (central policy, Part 13 DV wave ruling R1) — the same 404
+        customer (central policy) — the same 404
         as a missing customer, so a by-name probe cannot reveal existence
-        (R4/Q7). Never a 200 ``{"error": ...}`` dict (BE-04): that could
+. Never a 200 ``{"error":...}`` dict: that could
         masquerade as stats and made the FE render zeros/undefined.
         """
         if not sales_access.can(user, db, sales_access.CAP_READ, customer.id):

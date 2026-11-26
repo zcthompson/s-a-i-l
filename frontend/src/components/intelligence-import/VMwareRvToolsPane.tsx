@@ -94,7 +94,7 @@ export function VMwareRvToolsPane({ onOpenCustomer }: VMwareRvToolsPaneProps = {
     return () => { cancelled = true; };
   }, [customerRetry]);
 
-  // Part 14 A5c — narrow the existing-customer options by name OR alias
+  // narrow the existing-customer options by name OR alias
   // (case-insensitive substring). Option values remain the canonical customer name.
   // Changing the filter clears the target so every import requires an explicit pick.
   const normalizeFilter = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase();

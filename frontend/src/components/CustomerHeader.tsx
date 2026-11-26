@@ -1,5 +1,5 @@
 /**
- * CHANGELOG 0.1.0 U3 — compact persistent CustomerHeader (directives 6-10, 33-38, 47).
+ * compact persistent CustomerHeader.
  *
  * One unified header for the customer workspace: the name as the primary
  * title, the description as subdued supporting text, and account metadata
@@ -7,11 +7,11 @@
  * the account, active-assessment compact status) integrated in a single
  * row instead of multiple disconnected rows. Customer administration
  * (Edit / Departments / Team / Remove) lives in an overflow settings menu —
- * never alongside primary workflows (directives 37-38); a single
- * customer-level "+ Add" control exposes the create actions (directive 34).
+ * never alongside primary workflows; a single
+ * customer-level "+ Add" control exposes the create actions.
  *
- * The full-width active-assessment banner (directive 9) becomes a compact
- * status element with a single contextual action (directive 10).
+ * The full-width active-assessment banner becomes a compact
+ * status element with a single contextual action.
  */
 import { ActionMenu } from './workspacePrimitives';
 
@@ -42,7 +42,7 @@ interface CustomerHeaderProps {
    *  section even without metadata rights (the sales admin case). */
   canManageAliases?: boolean;
   canAddUseCase: boolean;
-  /** Compact active-assessment status (directives 9-10); null when none. */
+  /** Compact active-assessment status; null when none. */
   activeRound?: ActiveRoundInfo | null;
   createPermissions?: Record<string, boolean>;
   onManageRounds?: () => void;
@@ -58,7 +58,7 @@ const ROLE_TEXT: Record<string, string> = {
 };
 
 /** Semantic role chip colors (no emoji): owner=healthy, member=accent,
- *  auditor=neutral, none=attention (directive 43-44). */
+ * auditor=neutral, none=attention. */
 function roleChipStyle(role: string): React.CSSProperties {
   const soft =
     role === 'owner' ? 'var(--status-positive-soft)'
@@ -88,7 +88,7 @@ export function CustomerHeader({
     <div style={{ marginBottom: '24px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
         <div style={{ minWidth: 0, flex: 1 }}>
-          {/* Primary title + vertical (directive 47). */}
+          {/* Primary title + vertical. */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '6px' }}>
             <h1 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--ink)', fontWeight: 700, overflowWrap: 'anywhere', minWidth: 0 }}>{name}</h1>
             {vertical && (
@@ -121,7 +121,7 @@ export function CustomerHeader({
               use-case or department counts in this header. */}
           <div style={{ display: 'flex', gap: '14px', fontSize: '0.82rem', color: 'var(--neutral-500)', alignItems: 'center', flexWrap: 'wrap' }}>
             <span style={roleChipStyle(userRole)}>You: {ROLE_TEXT[userRole] || 'Member'}</span>
-            {/* Compact active-assessment status element (directives 9-10):
+            {/* Compact active-assessment status element:
                 replaces the full-width banner. */}
             {activeRound && (
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--brand-50)', color: 'var(--brand-700)', borderRadius: 'var(--radius-pill)', padding: '2px 4px 2px 10px', fontSize: '0.78rem', fontWeight: 500 }}>
@@ -142,8 +142,8 @@ export function CustomerHeader({
             )}
           </div>
         </div>
-        {/* Single + Add control + account-management overflow (directives
-            33-38). Destructive actions live in the settings menu only. */}
+        {/* Single + Add control + account-management overflow.
+             Destructive actions live in the settings menu only. */}
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           {onAdd && (
             <ActionMenu

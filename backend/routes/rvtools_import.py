@@ -27,7 +27,7 @@ def _require_manager(request):
 
 
 def _accessible_customer_ids(user, db):
-    # Central READ scope (Part 13 DV wave, ruling R1); admin -> None (all).
+    # Central READ scope; admin -> None (all).
     return None if user.get("is_admin") == 1 else sales_access.customer_scope(user, db)
 
 
@@ -37,7 +37,7 @@ async def upload_rvtools(
     db: Session = Depends(get_db),
 ):
     # customer_name = a customer name OR alias (case-insensitive); imports
-    # never create a customer (Part 14 import remediation).
+    # never create a customer.
     return await service.import_rvtools(
         db, file, _require_manager(request), customer_name, request,
     )

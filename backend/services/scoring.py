@@ -120,7 +120,7 @@ class ScoringService:
         if customer_id is None:
             raise ValueError(UNASSIGNED_ADMIN_ONLY)
 
-        # Central write basis (Part 13 DV6): CAP_EDIT on the customer.
+        # Central write basis: CAP_EDIT on the customer.
         if not sales_access.can(user, db, sales_access.CAP_EDIT, customer_id):
             raise ValueError(SCORING_EDIT_REQUIRED)
 
@@ -154,7 +154,7 @@ class ScoringService:
         # Enforce authentication and junction access (see assert_scoring_access)
         ScoringService.assert_scoring_access(db, user, use_case)
 
-        # Part 13 WS5 (R5): AI scoring is AI-round only — generic-round use
+        # AI scoring is AI-round only — generic-round use
         # cases are refused at the shared seam (covers the scoring routes,
         # bulk score-multiple, and any future caller). Legacy use cases with
         # no round resolve to 'ai' and pass.

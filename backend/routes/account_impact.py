@@ -6,7 +6,7 @@ the customer overview. Gated by the central sales_access resolver's READ
 capability (an auditor may read; ps_admin has no sales capability).
 
 Unauthenticated -> 401; unknown customer or no read capability -> the same
-404 (404-first, R4/Q7: a by-name probe cannot reveal existence).
+404 (404-first: a by-name probe cannot reveal existence).
 The portfolio roll-up covers ONLY customers the caller may read (an empty
 scope is an empty portfolio, never "all").
 """

@@ -1,4 +1,4 @@
-"""Tests for the auth provider seam (0.2.0 P0, docs/archive/PLAN_LDAP_AD_AUTH.md §3.2).
+"""Tests for the auth provider seam.
 
 Regression gate for the local (bcrypt) login path behind ``LocalBackend``.
 

@@ -1,11 +1,11 @@
 """Connection trust model (SSL/TLS) — one seam for every outbound connection.
 
-docs/archive/PLAN_LDAP_AD_AUTH.md §3.4 / P0b (user direction 2026-09-14): inference,
+Connection trust for inference,
 Docling Serve, and LDAP/AD each get an independent ``ssl_verify`` mode plus a
 custom CA bundle:
 
 * ``full`` (default) — verify chain + hostname exactly as today (``httpx``
-  default, ``ssl.create_default_context()``). **No behavior change.**
+  default, ``ssl.create_default_context``). **No behavior change.**
 * ``skip`` — TLS stays ON when the scheme is ``https``/``ldaps``, but
   certificate verification is OFF. High-risk (MITM); the admin UI labels it
   as such. For httpx: ``verify=False``.

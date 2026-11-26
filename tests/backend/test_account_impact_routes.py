@@ -87,7 +87,7 @@ def test_account_impact_auditor_can_read(client, impact_world):
 
 def test_account_impact_out_of_scope_and_unknown_404(client, impact_world):
     h = _headers("imp_rep")
-    # 404-first (R4/Q7): out-of-scope is the same 404 as an unknown customer.
+    # 404-first: out-of-scope is the same 404 as an unknown customer.
     assert client.get("/api/customers/ImpactOther/account-impact/", headers=h).status_code == 404
     assert client.get("/api/customers/NoSuchCustomer/account-impact/", headers=h).status_code == 404
     assert client.get("/api/customers/ImpactMine/account-impact/",
@@ -282,5 +282,5 @@ def test_account_impact_no_sales_read_capability_404(client, db_session, impact_
     db_session.commit()
     response = client.get("/api/customers/ImpactMine/account-impact/",
                           headers=_headers(user.username))
-    # No sales read capability = out of scope: 404-first (R4/Q7).
+    # No sales read capability = out of scope: 404-first.
     assert response.status_code == 404

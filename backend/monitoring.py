@@ -1,24 +1,22 @@
 """Enhanced health check and monitoring endpoints.
 
-Endpoint classes (BE-05/BE-06, part 48):
+Endpoint classes:
 
 - ``GET /api/monitoring/health`` — **public liveness**. Process-level only
   (status/service/version/uptime/timestamp): no memory, disk, PID, or
   request counters. The container healthcheck probes ``/health`` (main.py);
   this route is the minimal, secret-free liveness surface.
-- ``GET /api/monitoring/health/detailed`` — **admin-gated diagnostics**
-  (BE-06). Real database readiness (``get_database_health`` against the
+- ``GET /api/monitoring/health/detailed`` — **admin-gated diagnostics** Real database readiness (``get_database_health`` against the
   shared engine), the *effective* inference configuration as consumers see
-  it (DB overrides win — BE-05), and bounded request metrics.
+  it (DB overrides win), and bounded request metrics.
 - ``GET /api/monitoring/status`` — **admin-gated readiness**. Aggregates the
   actual dependency states (process liveness + bounded DB check); a failed
-  DB check reports ``degraded`` instead of a hardcoded ``healthy`` (BE-05).
-- ``GET /api/monitoring/metrics`` — **admin-gated** request metrics (BE-06).
+  DB check reports ``degraded`` instead of a hardcoded ``healthy``.
+- ``GET /api/monitoring/metrics`` — **admin-gated** request metrics.
 
 The AI health check reports configuration state only (configured /
 disabled / not_configured) — it performs no inference call and never
-includes the endpoint URL or API key in any response (BE-05/BE-06:
-internal addresses and secrets are not diagnostic strings).
+includes the endpoint URL or API key in any response (internal addresses and secrets are not diagnostic strings).
 """
 
 import os
@@ -39,7 +37,7 @@ monitoring_router = APIRouter(prefix="/api/monitoring", tags=["monitoring"])
 
 
 # Track request metrics - bounded to prevent unbounded growth
-# (A-8 re-recon 2026-11-01: through Settings).
+# Read through Settings.
 _MAX_METRICS_HISTORY = get_settings().metrics_history
 _request_metrics: dict[str, Any] = {
     "total_requests": 0,
@@ -96,7 +94,7 @@ def get_system_metrics() -> dict[str, Any]:
 
 
 def get_database_health(db) -> dict[str, Any]:
-    """Bounded database readiness check (BE-05).
+    """Bounded database readiness check.
 
     Runs ``SELECT 1`` on the provided session (or any object exposing
     ``execute``). A failed check reports ``unhealthy`` with the error text so
@@ -120,7 +118,7 @@ def get_database_health(db) -> dict[str, Any]:
 
 
 def get_ai_endpoint_health() -> dict[str, Any]:
-    """Report the *effective* inference configuration (BE-05).
+    """Report the *effective* inference configuration.
 
     Uses the same configuration consumers of inference actually use
     (``effective_inference_settings`` — .env defaults with DB overrides
@@ -173,7 +171,7 @@ def get_uptime() -> str:
 
 
 def _require_admin(request: Request) -> None:
-    """Gate a privileged diagnostic route (BE-06): 401 unauthenticated,
+    """Gate a privileged diagnostic route: 401 unauthenticated,
     403 for non-admins. Anonymous callers get no diagnostic detail and no
     accidental configuration disclosure."""
     from backend.auth import get_user_from_request
@@ -201,7 +199,7 @@ def _request_metrics_payload() -> dict[str, Any]:
 
 @monitoring_router.get("/health")
 def monitoring_health_check():
-    """Public liveness check (BE-05/BE-06).
+    """Public liveness check.
 
     Process-liveness only: if this route answers, the process is alive.
     Deliberately carries NO system metrics, PID, request counters, or
@@ -219,7 +217,7 @@ def monitoring_health_check():
 
 @monitoring_router.get("/health/detailed")
 def detailed_health_check(request: Request, db: Session = Depends(get_db)):
-    """Detailed health check with all subsystems (admin-only, BE-06).
+    """Detailed health check with all subsystems (admin-only).
 
     Real database readiness (bounded check on the request session) and the
     effective inference configuration — no hardcoded states, no internal
@@ -242,7 +240,7 @@ def detailed_health_check(request: Request, db: Session = Depends(get_db)):
 
 @monitoring_router.get("/metrics")
 def get_metrics(request: Request):
-    """Get request metrics and performance data (admin-only, BE-06)."""
+    """Get request metrics and performance data (admin-only)."""
     _require_admin(request)
     return {
         "requests": _request_metrics_payload(),
@@ -253,7 +251,7 @@ def get_metrics(request: Request):
 
 @monitoring_router.get("/status")
 def get_service_status(request: Request, db: Session = Depends(get_db)):
-    """Get overall service readiness (admin-only, BE-05/BE-06).
+    """Get overall service readiness (admin-only).
 
     Aggregates ACTUAL dependency states: process liveness (implicit — this
     route answered) and a bounded database check on the request session. A

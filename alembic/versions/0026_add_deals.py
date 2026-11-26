@@ -1,4 +1,4 @@
-"""E6: rep-owned deals, admin-managed pipeline stages, stage history and links.
+"""Rep-owned deals, admin-managed pipeline stages, stage history and links.
 
 Creates the tables (AUTOINCREMENT, ER-10/11/12 non-reuse) and seeds the
 starter pipeline stages. Downgrade drops the tables and warns when deals

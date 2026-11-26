@@ -1,4 +1,4 @@
-"""WP19 — customer vertical field + verticals endpoint.
+"""Customer vertical field + verticals endpoint.
 
 Deterministic TestClient tests against the temp DB (no LLM). Follows the
 test_template_flow.py auth pattern: conftest `client` + `db_session`

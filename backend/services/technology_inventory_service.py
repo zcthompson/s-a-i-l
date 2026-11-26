@@ -5,7 +5,7 @@ Business logic for per-customer structured technology inventory:
 - Controlled-vocabulary validation (category, deployment model, lifecycle,
   support, criticality, verification state) — vocabularies live in
   backend/models/customer_technology.py (single source of truth)
-- Unknown attributes stay None -> NULL (never fabricated, charter §4)
+- Unknown attributes stay None -> NULL (never fabricated)
 
 CustomerUser authorization is enforced at the route layer (same convention
 as customer_knowledge.py / sales_evaluations.py); the service validates

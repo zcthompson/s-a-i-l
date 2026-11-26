@@ -1,4 +1,4 @@
-"""Account workspace (CHANGELOG 0.1.0 U1) tests — summaries + Opportunities & Attention.
+"""Account workspace tests — summaries + Opportunities & Attention.
 
 Verifies get_account_workspace: four actionable summaries (Technology
 Landscape, Knowledge, Sales Activity, Assessment & Use Case), consolidated
@@ -452,7 +452,7 @@ class TestAccountWorkspaceRoutes:
         _seed_customer(db_session, 1)
         _seed_customer(db_session, 2)
         headers = _non_admin_headers(db_session, customer_id=2)
-        # 404-first (R4/Q7): out-of-scope is the same 404 as a missing customer.
+        # 404-first: out-of-scope is the same 404 as a missing customer.
         assert client.get("/api/customers/1/intelligence/workspace/", headers=headers).status_code == 404
 
     def test_member_can_read_workspace(self, client, db_session):

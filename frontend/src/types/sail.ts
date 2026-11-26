@@ -2,12 +2,12 @@
 // Sales Notes, Customer Intelligence Overview, Sales Personas, Evaluation Preview.
 // These mirror the backend Pydantic schemas (backend/schemas/*) and the
 // deterministic services (backend/services/customer_intelligence.py,
-// sales_personas.py, evaluation_engine.py). v2 item 43: clear TypeScript
+// sales_personas.py, evaluation_engine.py). Clear TypeScript
 // contracts for the new S-A-I-L surfaces.
 
 export type VerificationState = "verified" | "inferred" | "unverified";
 
-// ── Technology Inventory (S-A-I-L P2) ──────────────────────────────────────────
+// ── Technology Inventory ──────────────────────────────────────────
 export interface CustomerTechnology {
   id: number;
   customer_id: number;
@@ -54,7 +54,7 @@ export interface CustomerTechnologyCreate {
   notes?: string | null;
 }
 
-// ── Sales Notes (S-A-I-L P3) ───────────────────────────────────────────────────
+// ── Sales Notes ───────────────────────────────────────────────────
 export interface SalesNote {
   id: number;
   customer_id: number;
@@ -83,7 +83,7 @@ export interface SalesNoteCreate {
   related_use_case_ids?: number[];
 }
 
-// ── Third-Party Professional Services (S-A-I-L P2) ────────────────────────────
+// ── Third-Party Professional Services ────────────────────────────
 export interface ThirdPartyService {
   id: number;
   customer_id: number;
@@ -148,7 +148,7 @@ export interface ThirdPartyServiceDocument {
   created_at: string;
 }
 
-// ── Customer Intelligence Overview (S-A-I-L P4) ───────────────────────────────
+// ── Customer Intelligence Overview ───────────────────────────────
 export interface CriticalTechAtRisk {
   id: number;
   name: string;
@@ -210,7 +210,7 @@ export interface CustomerIntelligenceOverview {
   };
 }
 
-// ── Sales Personas (S-A-I-L P5) ───────────────────────────────────────────────
+// ── Sales Personas ───────────────────────────────────────────────
 export interface SalesPersona {
   id: string;
   label: string;
@@ -225,7 +225,7 @@ export interface SalesPersona {
   next_action_angles: string[];
 }
 
-// ── Evaluation Preview (S-A-I-L P5) ───────────────────────────────────────────
+// ── Evaluation Preview ───────────────────────────────────────────
 export interface SalesEvaluationPreview {
   customer: { id: number; name: string; vertical: string | null };
   persona: SalesPersona | { id: null; label: string } & Record<string, unknown>;
@@ -317,7 +317,7 @@ export const formatDocumentType = (value: string): string => {
   return titleCaseVocabulary(value);
 };
 
-// ── Account Workspace (CHANGELOG 0.1.0 U1) ──────────────────────────────────────────
+// ── Account Workspace ──────────────────────────────────────────
 // GET /api/customers/{id}/intelligence/workspace/ — deterministic account
 // workspace context: four actionable summaries, consolidated Business Impact,
 // latest-evaluation reference, and typed, evidence-backed opportunities

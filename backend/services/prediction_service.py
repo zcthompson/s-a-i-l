@@ -136,7 +136,7 @@ class AIPredictionService:
         uc = db.query(UseCase).filter(UseCase.id == use_case_id).first()
         if not uc:
             raise ValueError(f"Use case {use_case_id} not found")
-        # Part 13 WS5 (R5): predictions are AI-round only — refuse at the
+        # predictions are AI-round only — refuse at the
         # creation seam (GenericAssessmentError → 422) so forecast reads on
         # generic rounds stay honest-empty.
         AssessmentService.assert_ai_round(db, uc)

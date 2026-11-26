@@ -59,7 +59,7 @@ export const CATEGORY_STYLES: Record<CategoryKey, CategoryStyle> = {
   use_case: { key: 'use_case', label: 'Use Cases / Initiatives', color: '#7c3aed', shape: 'circle' },
   sales_note: { key: 'sales_note', label: 'Sales Notes', color: '#0d9488', shape: 'circle' },
   assessment: { key: 'assessment', label: 'AI Assessments', color: '#db2777', shape: 'circle' },
-  // Part 13 WS5 (R7): generic (non-AI) discovery rounds — their own legend
+  // generic (non-AI) discovery rounds — their own legend
   // entry so the graph never presents them as AI assessments.
   assessment_generic: { key: 'assessment_generic', label: 'Generic Assessments', color: '#eab308', shape: 'circle' },
   sales_evaluation: { key: 'sales_evaluation', label: 'Sales Evaluations', color: '#ea580c', shape: 'circle' },

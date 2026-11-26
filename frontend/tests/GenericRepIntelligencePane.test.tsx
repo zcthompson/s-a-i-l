@@ -110,7 +110,7 @@ describe('GenericRepIntelligencePane', () => {
     await waitFor(() => expect(apiMock.listRepIntelligenceImports).toHaveBeenCalledTimes(2));
   });
 
-  // Part 14 import remediation: customer-match skips get the non-blocking warning.
+  // customer-match skips get the non-blocking warning.
   it('warns about rows with no matching customer name or alias', async () => {
     apiMock.uploadRepIntelligenceImport.mockResolvedValue({ ...detail(), unmatched_customer_rows: 1 });
     render(<GenericRepIntelligencePane />);

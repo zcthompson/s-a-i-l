@@ -1,5 +1,5 @@
 /**
- * Part 14 A5c — RVTools existing-customer picker: a filter input narrows the
+ * RVTools existing-customer picker: a filter input narrows the
  * native select by name OR alias; option value/label stay the customer name
  * and the submission contract (customer_name) is unchanged. Synthetic names.
  */
@@ -42,7 +42,7 @@ const open = async () => {
   await waitFor(() => expect(options()).toHaveLength(3));
 };
 
-describe('Part 14 RVTools target picker', () => {
+describe('RVTools target picker', () => {
   it('shows loading, then an error and recovers on retry', async () => {
     let rejectLoad!: (error: Error) => void;
     apiMock.listCustomers.mockReturnValueOnce(new Promise((_resolve, reject) => { rejectLoad = reject; }));
