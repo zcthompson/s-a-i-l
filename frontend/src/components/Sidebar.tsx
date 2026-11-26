@@ -326,7 +326,7 @@ export function Sidebar({ activeView, onNavigate, username, onLogout, isCollapse
           </div>
           <div>
             <div style={{ fontSize: '0.85rem', color: 'var(--sidebar-ink)', fontWeight: 500 }}>{username || 'User'}</div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--sidebar-accent)' }}>AI Consultant</div>
+            <div style={{ fontSize: '0.7rem', color: 'var(--sidebar-accent)' }}>{is_admin ? 'Administrator' : 'Member'}</div>
           </div>
           <button role="button" aria-label="Logout" onClick={onLogout} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'var(--sidebar-accent)', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             LOGOUT
