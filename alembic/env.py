@@ -8,7 +8,25 @@ from logging.config import fileConfig
 
 import sqlalchemy as sa
 from alembic import context
+from alembic.ddl.postgresql import PostgresqlImpl
 from sqlalchemy import engine_from_config, pool
+
+
+class SailPostgresqlImpl(PostgresqlImpl):
+    """Widen the alembic version column on strict SQL backends.
+
+    This project's revision identifiers are long (12-char hex + slug),
+    which exceeds PostgreSQL's default ``alembic_version.version_num``
+    VARCHAR(32) and truncates on a real Postgres upgrade (SQLite's
+    dynamic typing hides the overflow).
+    """
+
+    __dialect__ = "postgresql"
+
+    def version_table_impl(self, **kw):
+        table = super().version_table_impl(**kw)
+        table.c.version_num.type = sa.String(128)
+        return table
 
 
 # Add project root to path
@@ -60,6 +78,9 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        # Long revision ids need the widened version column on strict
+        # backends; keep the default impl everywhere else.
+        impl=SailPostgresqlImpl if (url or "").startswith("postgres") else None,
     )
 
     with context.begin_transaction():
@@ -86,6 +107,10 @@ def run_migrations_online() -> None:
             target_metadata=target_metadata,
             render_as_batch=connection.dialect.name == "sqlite",
             include_object=include_object,
+            # Long revision ids need the widened version column on strict
+            # backends; keep the default impl everywhere else.
+            impl=(SailPostgresqlImpl
+                  if connection.dialect.name == "postgresql" else None),
         )
 
         with context.begin_transaction():
