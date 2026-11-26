@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 from backend.models.collaboration import Comment, Notification
-from backend.models.use_case import Customer, CustomerUser, User
+from backend.models.use_case import Customer, CustomerUser, UseCase, User
 from backend.services import customer_engagement_service, email_service
 from backend.services.collaboration_service import CollaborationService
 from backend.services.customer_user_service import CustomerUserService
@@ -23,12 +23,26 @@ def recipient(db_session):
     return row
 
 
-def mention(db):
-    return CollaborationService.create_comment(db, 1, "admin", "Hello @recipient")
+@pytest.fixture()
+def use_case(db_session):
+    """A real use case for the mention tests to comment on.
+
+    The comment table enforces its use_cases foreign key on PostgreSQL
+    (SQLite connections run with the pragma off), so the referenced row
+    must exist — a bare id would only pass on SQLite.
+    """
+    row = UseCase(title="Email notification use case")
+    db_session.add(row)
+    db_session.commit()
+    return row
 
 
-def test_mention(db_session, recipient, email_defaults, smtp):
-    mention(db_session)
+def mention(db, use_case_id):
+    return CollaborationService.create_comment(db, use_case_id, "admin", "Hello @recipient")
+
+
+def test_mention(db_session, recipient, use_case, email_defaults, smtp):
+    mention(db_session, use_case.id)
     assert len(smtp.messages) == 1
     msg = smtp.messages[0]
     row = db_session.query(Notification).filter_by(type="mention").one()
@@ -39,7 +53,7 @@ def test_mention(db_session, recipient, email_defaults, smtp):
 
 
 @pytest.mark.parametrize("skip", ["disabled", "no_email", "inactive", "missing_user"])
-def test_skipped_delivery(db_session, recipient, email_defaults, smtp, skip):
+def test_skipped_delivery(db_session, recipient, use_case, email_defaults, smtp, skip):
     if skip == "disabled":
         email_defaults.email_enabled = False
     elif skip == "no_email":
@@ -49,14 +63,14 @@ def test_skipped_delivery(db_session, recipient, email_defaults, smtp, skip):
     else:
         db_session.delete(recipient)
     db_session.commit()
-    mention(db_session)
+    mention(db_session, use_case.id)
     assert smtp.calls == []
 
 
 @pytest.mark.parametrize("failure", ["auth", "send", "connection"])
-def test_mail_failure_preserves_comment(db_session, recipient, email_defaults, smtp, failure):
+def test_mail_failure_preserves_comment(db_session, recipient, use_case, email_defaults, smtp, failure):
     smtp.failure = failure
-    created = mention(db_session)
+    created = mention(db_session, use_case.id)
     db_session.expire_all()
     assert db_session.query(Comment).filter_by(id=created["id"]).one().content == "Hello @recipient"
     assert db_session.query(Notification).filter_by(user_name="recipient").count() == 1

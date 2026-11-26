@@ -5,10 +5,18 @@ from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
+from alembic.config import Config
+from alembic.script import ScriptDirectory
 from sqlalchemy import text
 
 from tests.backend import database_support
 from tests.backend._shared import engine
+
+
+def _alembic_head() -> str:
+    cfg = Config(str(Path(__file__).parents[2] / "alembic.ini"))
+    cfg.set_main_option("script_location", str(Path(__file__).parents[2] / "alembic"))
+    return ScriptDirectory.from_config(cfg).get_current_head()
 
 
 def test_shared_integration_engine_matches_selected_backend(db_session, request):
@@ -18,7 +26,7 @@ def test_shared_integration_engine_matches_selected_backend(db_session, request)
     request.node.user_properties.append(('verified_integration_backend', expected))
     if expected == 'postgresql':
         assert db_session.scalar(text('SELECT current_database()')) == 'sail_test'
-        assert db_session.scalar(text('SELECT version_num FROM alembic_version')) == '0027_deal_vendor_evidence'
+        assert db_session.scalar(text('SELECT version_num FROM alembic_version')) == _alembic_head()
 
 
 def test_runner_cleanup_refuses_unrelated_database_before_connecting(monkeypatch):
