@@ -1,0 +1,55 @@
+# S-A-I-L (Sales Analytics and Intelligence Launchpad) — Docker Compose Dev Overlay (SQLite development)
+#
+# Overlay on docker-compose.yml to switch from the single-container deployment
+# to the two-container LOCAL-DEV topology:
+#   - app      (8081) — FastAPI, API-only (SERVE_FRONTEND=0), uvicorn --reload
+#                       on ./backend source (hot-reload for backend edits).
+#   - frontend (8082) — Vite dev server; proxies /api and /health (and
+#                       WebSocket upgrades) to the app container.
+#
+# The base file is the single-container deployment; this overlay only layers
+# dev ergonomics on top (it adds the frontend service and the backend
+# source bind-mounts; it does NOT change the single-container defaults).
+#
+# Run: docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  app:
+    # Dev topology (intended): 8081 = backend API only, 8082 = frontend
+    # (Vite dev server, proxies /api to the app container). The app must NOT
+    # render the built SPA in dev, so SERVE_FRONTEND is off here. The
+    # single-container deployment (base file) is the production decision.
+    environment:
+      - SERVE_FRONTEND=0
+    volumes:
+      # Bind-mount backend source for hot-reload. --reload is scoped to the
+      # bind-mounted source ONLY via --reload-dir: the SQLite file lives at
+      # /data (the app-data volume), so watching /app/backend is sufficient
+      # and watching /app would restart on the DB write at /data.
+      - ./backend:/app/backend
+      # Keep the in-container alembic in sync with the repo so the
+      # `alembic upgrade head` start step always runs current migrations.
+      - ./alembic:/app/alembic
+      - ./alembic.ini:/app/alembic.ini
+    # Dev hot-reload for backend edits (supersedes the base command, which
+    # this overlay overrides — the alembic step is kept).
+    command: ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--reload-dir", "/app/backend"]
+
+  frontend:
+    image: node:24-alpine
+    container_name: sail-frontend
+    working_dir: /app
+    ports:
+      - "8082:3000"
+    volumes:
+      - ./frontend:/app
+      - frontend-modules:/app/node_modules
+    command: sh -c "npm install && npm run dev"
+    # The Vite dev-server proxy target is set in frontend/vite.config.ts
+    # (http://app:8000 — the compose service name above). No per-request base
+    # URL is injected: the built SPA + the dev server both call /api and
+    # /health as relative URLs.
+    restart: unless-stopped
+
+volumes:
+  frontend-modules:

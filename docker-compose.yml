@@ -1,0 +1,78 @@
+# S-A-I-L (Sales Analytics and Intelligence Launchpad) — Docker Compose (SQLite — default database)
+#
+# This is the production-aligned, SINGLE-CONTAINER configuration. SQLite remains the
+# default; explicitly configured PostgreSQL is also supported. The app image is built by
+# the multi-stage Dockerfile (Node 24 frontend build → Python 3.12 slim/Uvicorn)
+# and serves the built SPA, the /api surface, and /health all from one origin
+# (SERVE_FRONTEND=1). One container, one port (8081) — the frontend makes
+# relative /api and /health requests, so no separate frontend container is
+# needed for a deployment. This mirrors methods/docker-swarm/ and k8s/.
+#
+# Run (deployment):  docker compose -f docker-compose.yml up -d
+#
+# Local development (hot-reload: Vite dev server + backend --reload) uses the
+# dev overlay, which adds a Vite frontend container on 8082 and keeps the
+# backend API on 8081:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  app:
+    image: sail:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend
+    # Container renamed to `sail` (the launchpad effort became part of S-A-I-L;
+    # the DB is sail.db and the env prefix is SAIL_). ARCH-03 deployment
+    # rename (image/manifest names) completed 2026-10-16; k8s/swarm
+    # manifests reference sail:latest (existing clusters redeploy on the
+    # next rollout — image tags, not in-place renames).
+    container_name: sail
+    # The image entrypoint prepares persistence, migrates/seeds and execs one worker.
+    ports:
+      - "8081:8000"
+    environment:
+      - SAIL_AI_ENDPOINT=${SAIL_AI_ENDPOINT:-}
+      - SAIL_AI_API_KEY=${SAIL_AI_API_KEY:-}
+      - SAIL_AI_MODEL=${SAIL_AI_MODEL:-gemma4-12b}
+      # Four slashes: sqlite:// + absolute path /data/sail.db (the
+      # mount point pre-created and owned by the app user in the Dockerfile).
+      - SAIL_DATABASE_URL=sqlite:////data/sail.db
+      # MANDATORY — compose refuses to start (and the backend raises
+      # RuntimeError) without a host-provided random secret. Generate:
+      #   openssl rand -hex 32
+      # (SEC-01: the previous committed default was a public signing key.)
+      - SAIL_JWT_SECRET=${SAIL_JWT_SECRET:?set a random secret (openssl rand -hex 32) in the host environment or .env file; see .env.example}
+      - SAIL_CORS_ORIGINS=${SAIL_CORS_ORIGINS:-*}
+      - SAIL_API_KEYS=${SAIL_API_KEYS:-}
+      # A-10 (operator ruling 2026-11-01): the explicit auth feature
+      # switch. true = auth on, false = auth off, unset = legacy rule
+      # (auth on iff SAIL_API_KEYS is non-empty). The default `true`
+      # makes this deployment's intent explicit — behavior is
+      # byte-identical to before (the key default above already
+      # enabled auth).
+      - SAIL_AUTH_ENABLED=${SAIL_AUTH_ENABLED:-true}
+      # Prefixed names — these are what backend/rate_limit.py reads. Defaults
+      # mirror the code defaults (10000 requests / 3600 s window). Tighten via
+      # the host env if desired.
+      - SAIL_RATE_LIMIT_REQUESTS=${SAIL_RATE_LIMIT_REQUESTS:-10000}
+      - SAIL_RATE_LIMIT_WINDOW=${SAIL_RATE_LIMIT_WINDOW:-3600}
+      # Single-container topology: serve the built SPA + /assets from the same
+      # origin as /api and /health (main.py mounts the SPA only when this is
+      # 1/true). The frontend's API client uses relative /api and /health URLs,
+      # so a same-origin deployment needs no absolute base URL.
+      - SERVE_FRONTEND=${SERVE_FRONTEND:-1}
+    volumes:
+      # SQLite (single writer — do not run >1 replica). Owned by the app user
+      # via the Dockerfile /data pre-creation on first mount.
+      - app-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+volumes:
+  app-data:
