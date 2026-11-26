@@ -1,0 +1,28 @@
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { Settings } from '../src/pages/Settings';
+import { resetPreferences } from '../src/lib/preferences';
+const sync = vi.hoisted(() => vi.fn());
+vi.mock('../src/lib/accountAppearance', () => ({ needsAccountAppearanceSave: () => false, saveAccountAppearance: sync }));
+beforeEach(() => { resetPreferences(); sync.mockReset(); });
+afterEach(cleanup);
+it('prevents Save and Reset from overlapping and permits retry after an error', async () => {
+  let reject!: (error: Error) => void;
+  sync.mockReturnValueOnce(new Promise((_, r) => { reject = r; })).mockResolvedValue(undefined);
+  render(<Settings />);
+  fireEvent.click(screen.getByRole('button', { name: 'Select dark theme' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Save appearance settings' }));
+  const save = screen.getByRole('button', { name: 'Save appearance settings' }) as HTMLButtonElement;
+  const reset = screen.getByRole('button', { name: 'Reset appearance settings' }) as HTMLButtonElement;
+  expect(save.disabled).toBe(true);
+  expect(save.getAttribute('aria-busy')).toBe('true');
+  expect(reset.disabled).toBe(true);
+  fireEvent.click(reset);
+  expect(sync).toHaveBeenCalledTimes(1);
+  await act(async () => { reject(new Error('Account sync unavailable')); });
+  expect(screen.getByRole('alert').textContent).toContain('Account sync unavailable');
+  expect(save.disabled).toBe(false);
+  fireEvent.click(save);
+  await screen.findByText('Appearance settings saved.');
+  expect(sync).toHaveBeenCalledTimes(2);
+});

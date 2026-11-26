@@ -1,0 +1,57 @@
+import { act, cleanup, fireEvent, render, renderHook, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { MemoryRouter, useNavigate } from 'react-router-dom';
+import { useAccountListState } from '../src/lib/useAccountListState';
+import { PipelineStageSettings } from '../src/components/PipelineStageSettings';
+import { DealPromotion } from '../src/components/DealPromotion';
+import { DealDetail } from '../src/components/DealDetail';
+const { mockApi } = vi.hoisted(() => ({ mockApi: { listPipelineStages: vi.fn(), createPipelineStage: vi.fn(), updatePipelineStage: vi.fn(), promoteDeal: vi.fn(), getDeal: vi.fn(), updateDeal: vi.fn(), getWorkspaceActions: vi.fn(), listCustomerContacts: vi.fn(), listTasks: vi.fn(), listActivities: vi.fn(), listCustomerSalesNotes: vi.fn(), listCustomerTechnology: vi.fn() } }));
+vi.mock('../src/lib/api', async original => ({ ...(await original<typeof import('../src/lib/api')>()), api: mockApi }));
+afterEach(() => { cleanup(); vi.restoreAllMocks(); });
+beforeEach(() => { vi.clearAllMocks(); });
+it('restores account list filters with history and isolates a different account', () => {
+  const wrapper = ({ children }: any) => <MemoryRouter initialEntries={['/?deal_customer=7&deal_stage=999&deal_layout=board']}>{children}</MemoryRouter>;
+  const { result, rerender } = renderHook(({ customer }) => { const [state, update] = useAccountListState(customer, 'deal', { stage: '', layout: 'list' }); return { state, update, navigate: useNavigate() }; }, { wrapper, initialProps: { customer: 7 } });
+  expect(result.current.state).toEqual({ stage: '999', layout: 'board' });
+  act(() => result.current.update({ stage: '1' }));
+  act(() => result.current.navigate(-1));
+  expect(result.current.state.stage).toBe('999');
+  rerender({ customer: 8 });
+  expect(result.current.state).toEqual({ stage: '', layout: 'list' });
+});
+it('creates pipeline stages and reviews same-class retirement', async () => {
+  const stage = { id: 1, key: 'discovery', label: 'Discovery', stage_class: 'open', position: 10, active: true, default_probability: null };
+  mockApi.listPipelineStages.mockResolvedValue([stage, { ...stage, id: 2, key: 'proposal', label: 'Proposal' }]);
+  mockApi.updatePipelineStage.mockResolvedValue({ ...stage, active: false });
+  vi.spyOn(window, 'confirm').mockReturnValue(true);
+  render(<PipelineStageSettings onChanged={vi.fn()} />);
+  fireEvent.click(await screen.findByText('Edit Discovery'));
+  fireEvent.click(screen.getByLabelText('Active stage'));
+  fireEvent.change(screen.getByLabelText('Replacement stage'), { target: { value: '2' } });
+  fireEvent.click(screen.getByText('Save stage'));
+  await waitFor(() => expect(mockApi.updatePipelineStage).toHaveBeenCalledWith(1, expect.objectContaining({ active: false, remap_to_stage_id: 2 })));
+});
+it('promotes once and subsequently opens the linked deal', async () => {
+  vi.spyOn(window, 'confirm').mockReturnValue(true);
+  mockApi.promoteDeal.mockResolvedValue({ created: false, deal: { id: 9 } });
+  const open = vi.fn();
+  render(<DealPromotion customerId={7} attentionId="eol-attention-1" allowed onOpen={open} />);
+  fireEvent.click(screen.getByText('Create a deal?'));
+  fireEvent.click(await screen.findByText('Open linked deal #9'));
+  expect(mockApi.promoteDeal).toHaveBeenCalledExactlyOnceWith(7, { attention_id: 'eol-attention-1' });
+  expect(open).toHaveBeenCalledWith(9);
+});
+it('saves buying stakeholders using the loaded deal version', async () => {
+  const deal = { id: 9, customer_id: 7, name: 'Linked deal', version: 4, stage: { label: 'Discovery' }, amount: null, amount_basis: null, probability: null, suggested_probability: null, contacts: [], task_ids: [], activity_ids: [], note_ids: [], technology_ids: [], vendor_evidence: [] };
+  mockApi.getDeal.mockResolvedValue(deal);
+  mockApi.updateDeal.mockResolvedValue({ ...deal, version: 5, contacts: [{ contact_id: 3, role: 'champion' }] });
+  mockApi.getWorkspaceActions.mockResolvedValue({ customer_id: 7, capabilities: { deal: true }, assignees: [] });
+  mockApi.listCustomerContacts.mockResolvedValue([{ id: 3, display_name: 'Synthetic Champion' }]);
+  for (const key of ['listTasks', 'listActivities', 'listCustomerSalesNotes', 'listCustomerTechnology'] as const) mockApi[key].mockResolvedValue([]);
+  render(<DealDetail id={9} customerId={7} onClose={vi.fn()} />);
+  fireEvent.click(await screen.findByText('Edit relationships'));
+  fireEvent.click(await screen.findByLabelText('Synthetic Champion'));
+  fireEvent.change(screen.getByLabelText('Buying role for Synthetic Champion'), { target: { value: 'champion' } });
+  fireEvent.click(screen.getByText('Save relationships'));
+  await waitFor(() => expect(mockApi.updateDeal).toHaveBeenCalledWith(9, expect.objectContaining({ expected_version: 4, contacts: [{ contact_id: 3, role: 'champion' }] })));
+});

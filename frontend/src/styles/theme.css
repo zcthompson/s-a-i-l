@@ -1,0 +1,496 @@
+/* ── Theme (dark mode / font size / compact) ─────────────────────────────────
+ *
+ * The standard (light) mode is the S-A-I-L purple-and-white brand (white
+ * page, brand-purple accents and sidebar — the palette in the marketing
+ * index.html at the repository root), built from light-themed inline
+ * styles. The dark theme (html[data-theme='dark']) swaps the design tokens
+ * for a dark token set below; there is no rendered-app inversion.
+ *
+ * The attributes are set on <html> by main.tsx at startup (from the saved
+ * preferences in lib/preferences.ts) and kept in sync by Settings.tsx
+ * while the Settings page is open.
+ */
+
+/* Full-viewport height that still spans the full viewport after the
+ * compact-mode zoom on #root (zoom scales a 100vh element down to 0.85×
+ * its specified size, so a plain 100vh sidebar would end 15% short of
+ * the page bottom). The app shell uses this for its height/min-height
+ * (the Home.tsx flex row, the Sidebar.tsx asides); the inline fallback
+ * 100vh keeps the layout intact if this stylesheet is absent. */
+:root {
+  --full-viewport: 100vh;
+}
+html[data-compact='true'] {
+  --full-viewport: calc(100vh / 0.85);
+}
+
+/* ── Design tokens (WP23b — the compact token system, direction D1) ─────────
+ * Single source of truth for palette and geometry. Every color, radius,
+ * shadow, and divider in components/pages is referenced through these
+ * custom properties from inline styles (e.g. `style={{ color: 'var(--brand-500)' }}`)
+ * — the app primarily uses inline styles, with reviewed semantic component
+ * classes for responsive, focus and disabled rules (CI rejects utility classes), so tokens live here and are consumed with `var()`.
+ *
+ * Dark mode overrides these tokens in the screen-scoped dark token block
+ * below, so components must use tokens (not literal colors) to theme correctly.
+ *
+ * Scale rationale (census 2026-09-02: 140 distinct hex / 1459 occurrences):
+ * - brand: the S-A-I-L "open water" identity (#0f7c8a teal primary, #0b4f6c ocean
+ *   deep end, #0a2540 navy sidebar; the two
+ *   pale tints are derived scale fill).
+ * - neutral: one ramp absorbs the 40+ web/Material/Bootstrap/Tailwind grays.
+ * - status: ONE canonical value per state (Material/Tailwind/Bootstrap
+ *   variants removed); `--status-info` is the brand — one accent hue for
+ *   primary/link/info.
+ * - score: the D1 "migration readout" device — band accents on brand hues,
+ *   low scores deliberately fading to neutral.
+ * - geometry: one standard radius (6px/8px/12px collapse to 8px), one card
+ *   shadow, one divider.
+ */
+:root {
+  /* Brand scale (6 tokens) */
+  --brand-50: #eef7f8;
+  --brand-100: #d3ecef;
+  --brand-300: #6fbfc8;
+  --brand-500: #0f7c8a;
+  --brand-700: #0b4f6c;
+  --brand-900: #0a2540;
+
+  /* Ink — the near-black heading text (purple-tinted, pre-existing value) */
+  --ink: #0f1b2d;
+
+  /* Neutral ramp (light → dark) */
+  --neutral-0: #ffffff;
+  --neutral-50: #f9fafb;
+  --neutral-100: #f3f4f6;
+  --neutral-200: #e5e7eb;
+  --neutral-300: #d1d5db;
+  --neutral-400: #9ca3af;
+  --neutral-500: #5b6170; /* ≥4.5:1 on neutral-0…100 and brand-50 surfaces */
+  --neutral-600: #4b5563;
+  --neutral-700: #374151;
+  --neutral-800: #1f2937;
+  --neutral-900: #111827;
+
+  /* Status semantics — one canonical value per state */
+  --status-positive: #2e7d32;
+  --status-positive-soft: #e8f5e9;
+  --status-negative: #c62828;
+  --status-negative-soft: #fff3f3;
+  --status-warning: #b45309;
+  --status-warning-soft: #fff9e6;
+  --status-info: var(--brand-500);
+
+  /* Score bands (WP29 — threshold semantics, one canonical value per band;
+   * WP30 adjustment 2026-09-02: red <35, amber 35–69, green 70–100 —
+   * supersedes the initial WP29 75/50 boundaries and the D1 brand-hue readout):
+   * the user-facing requirement is that 70+ is consistently GREEN/strong and
+   * that weak/moderate/strong read as red/amber/green in every score
+   * visualization. Reuses the status tokens — one canonical value per state.
+   * Consumed for chart fills, threshold reference lines, band chips, and
+   * score text across all score surfaces. */
+  --score-high: var(--status-positive);
+  --score-mid: var(--status-warning);
+  --score-low: var(--status-negative);
+  --score-unscored: var(--neutral-400);
+
+  /* Categorical palette (WP29 — the Business Impact Matrix department
+   * series). 13 Okabe-Ito colorblind-safe hues (7 core + 6 extended) so
+   * that every department bubble color is immediately distinguishable from
+   * the other departments. The matrix is the only surface where point color
+   * encodes DEPARTMENT; score meaning is carried by size (readiness) and by
+   * the threshold tokens above. */
+  --cat-1: #0072B2; /* blue */
+  --cat-2: #E69F00; /* orange */
+  --cat-3: #009E73; /* bluish green */
+  --cat-4: #CC79A7; /* reddish purple */
+  --cat-5: #56B4E9; /* sky blue */
+  --cat-6: #D55E00; /* vermilion */
+  --cat-7: #F0E442; /* yellow */
+  --cat-8: #7570B3; /* violet */
+  --cat-9: #FF7F00; /* bright orange */
+  --cat-10: #9467BD; /* purple */
+  --cat-11: #17BECF; /* cyan */
+  --cat-12: #8C564B; /* brown */
+  --cat-13: #BCBD22; /* olive */
+
+  /* Geometry — one standard radius (+ small, + pill), one divider */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-pill: 999px;
+  --divider: var(--neutral-200);
+
+  /* Spacing scale (PLAN_UI U8, directives 45-46) — the single source of
+     truth for vertical/horizontal rhythm in the customer workspace.
+     4 = 4px (intra-control), 8 = 8px (inline groups), 12 = 12px (dense
+     card content), 16 = 16px (card padding / grid gaps), 24 = 24px
+     (section separation), 32 = 32px (major section blocks). */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Shadows — one card shadow (+ sm, raised, modal) */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-raised: 0 8px 32px rgba(0, 0, 0, 0.15);
+  --shadow-modal: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  /* Brand gradients — the existing exact values, tokenized */
+  --gradient-brand: linear-gradient(135deg, #0f7c8a 0%, #0b4f6c 100%);
+  --gradient-brand-deep: linear-gradient(135deg, #0a2540 0%, #081c31 100%);
+  --gradient-brand-tint: linear-gradient(135deg, #0f7c8a10, #0b4f6c10);
+}
+
+/* Dark theme tokens (shipping since 2026-11-09; replaced the root invert filter).
+ * data-theme-preview='dark' is kept as a developer alias for the same tokens.
+ * Screen scope preserves light printing. */
+@media screen {
+  html[data-theme='dark'], html[data-theme-preview='dark'] {
+    --brand-50: #0f2230;
+    --brand-100: #15324a;
+    --brand-300: #2f7f95;
+    --brand-500: #4fc3d1;
+    --brand-700: #8fdbe4;
+    --brand-900: #0a2540;
+    --ink: #eceef6;
+    --neutral-0: #14151f;
+    --neutral-50: #191b26;
+    --neutral-100: #20222e;
+    --neutral-200: #2c2f3d;
+    --neutral-300: #3b3f4f;
+    --neutral-400: #6e7487;
+    --neutral-500: #9aa1b2;
+    --neutral-600: #b4bac8;
+    --neutral-700: #cdd2dc;
+    --neutral-800: #e2e5eb;
+    --neutral-900: #f1f3f6;
+    --status-positive: #5cc169;
+    --status-positive-soft: #13291a;
+    --status-negative: #ff7b7b;
+    --status-negative-soft: #2e1517;
+    --status-warning: #f0a24a;
+    --status-warning-soft: #2e2210;
+    --status-info: var(--brand-500);
+    --cat-1: #0072B2;
+    --cat-2: #E69F00;
+    --cat-3: #009E73;
+    --cat-4: #CC79A7;
+    --cat-5: #56B4E9;
+    --cat-6: #D55E00;
+    --cat-7: #F0E442;
+    --cat-8: #7570B3;
+    --cat-9: #FF7F00;
+    --cat-10: #9467BD;
+    --cat-11: #17BECF;
+    --cat-12: #a3685c;
+    --cat-13: #BCBD22;
+    --shadow-card: 0 2px 8px rgba(0,0,0,0.40);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.45);
+    --shadow-raised: 0 8px 32px rgba(0,0,0,0.60);
+    --shadow-modal: 0 4px 20px rgba(0,0,0,0.70);
+    --gradient-brand-tint: linear-gradient(135deg, #4fc3d11a, #8fdbe41a);
+    color-scheme: dark;
+  }
+  html[data-theme='dark'] input::placeholder,
+  html[data-theme='dark'] textarea::placeholder,
+  html[data-theme-preview='dark'] input::placeholder,
+  html[data-theme-preview='dark'] textarea::placeholder {
+    color: var(--neutral-500);
+    opacity: 1;
+  }
+}
+
+/* Font-size preference scales rem-based text. */
+html[data-fontsize='small'] {
+  font-size: 14px;
+}
+html[data-fontsize='medium'] {
+  font-size: 16px;
+}
+html[data-fontsize='large'] {
+  font-size: 18px;
+}
+
+/* Compact layout ("Reduce padding and spacing for denser data display"):
+ * the app is built from light-themed inline styles with no CSS classes to
+ * hook, so a stylesheet cannot reduce individual inline padding/margin
+ * values. `zoom` on #root is the single global rule that deterministically
+ * scales every rendered dimension (padding, spacing, and type) down to a
+ * denser display. Fixed-positioned overlays are rendered via createPortal
+ * to document.body (outside #root), so they are intentionally unaffected.
+ * The attribute is written as "true"/"false" by Settings.tsx and set only
+ * when true by main.tsx at startup, so keying on 'true' covers both. */
+html[data-compact='true'] #root {
+  zoom: 0.85;
+}
+
+/* The zoomed #root renders at 85% of the viewport, so the body shows a thin
+ * strip along the bottom/right edges. Paint it with the app's own page
+ * background token so the strip blends in. The body itself is
+ * never given a filter: portaled fixed-positioned overlays live in
+ * document.body and must keep the viewport as their containing block. */
+html[data-compact='true'] body {
+  background: #ffffff;
+}
+html[data-theme='dark'][data-compact='true'] body {
+  background: var(--neutral-0);
+}
+
+/* Customer CRM: shared surfaces and controls, including contained mobile overflow. */
+.crm-surface, .crm-board-column {
+  background: var(--neutral-0);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  min-width: 0;
+}
+.crm-actions, .crm-list-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin: 12px 0 20px; }
+.crm-list-controls > label { flex: 1 1 140px; }
+.crm-workspace input, .crm-workspace select, .crm-workspace textarea,
+.crm-list-controls input, .crm-list-controls select {
+  min-width: 0; max-width: 100%; box-sizing: border-box;
+  padding: 8px 10px; border: 1px solid var(--divider); border-radius: var(--radius);
+  background: var(--neutral-0); color: var(--ink); font: inherit;
+}
+.crm-actions button, .crm-workspace button:not([role=tab]):not([role=menuitem]) { border-radius: var(--radius); }
+/* Account Overview navigation: each action group spans the available width. */
+nav.crm-actions[aria-label='Primary customer actions'],
+nav.crm-actions[aria-label='More customer information'] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
+  align-items: stretch;
+  gap: 8px;
+  margin: 0;
+}
+nav.crm-actions[aria-label='Primary customer actions'] > button,
+nav.crm-actions[aria-label='More customer information'] > button {
+  min-width: 0;
+  padding: 8px 12px;
+  background: var(--neutral-0);
+  color: var(--brand-700);
+  border: 1px solid var(--divider);
+  font: inherit;
+  cursor: pointer;
+}
+.crm-workspace :focus-visible, .crm-board :focus-visible {
+  outline: 2px solid var(--brand-500); outline-offset: 3px;
+}
+.crm-account-search { margin: 0 0 16px; padding: 8px 0; min-width: 0; }
+.crm-account-search input { flex: 1 1 200px; }
+.crm-account-search p { margin: 8px 0; color: var(--neutral-600); }
+.crm-disclosure { border-top: 1px solid var(--divider); padding: 12px 0; }
+.crm-disclosure > summary { cursor: pointer; color: var(--brand-700); font-weight: 600; padding: 4px 0 12px; }
+.crm-board { display: flex; overflow-x: auto; gap: 12px; padding: 4px 4px 16px; }
+.crm-board-column { flex: 0 0 min(300px, 85vw); }
+.crm-board-column li { margin-bottom: 12px; }
+@media (max-width: 600px) {
+  .crm-workspace { padding: 16px !important; }
+  .crm-workspace h1, .crm-workspace h2 { overflow-wrap: anywhere; }
+  .crm-workspace [role=region] table { min-width: 560px; }
+}
+.crm-workspace button:not([role=tab]):not([role=menuitem]) {
+  padding: 8px 12px; background: var(--neutral-0); color: var(--brand-700);
+  border: 1px solid var(--divider); font: inherit; cursor: pointer;
+}
+.crm-workspace button:disabled { cursor: not-allowed; opacity: .6; }
+.crm-deal-detail > p { margin: 8px 0; line-height: 1.5; }
+.crm-deal-detail > h2, .crm-deal-detail > h3 { margin: 8px 0 12px; }
+.crm-deal-detail fieldset { display: grid; gap: 12px; margin: 16px 0; min-width: 0; }
+
+/* Application Settings: communicate the actual disabled state consistently. */
+.application-settings button:disabled { opacity: 0.55; cursor: not-allowed; }
+.application-settings button:not(:disabled) { cursor: pointer; }
+.application-settings fieldset:disabled { opacity: 0.75; }
+
+/* Focused application settings categories retain mounted drafts. */
+.application-settings section[hidden], .application-settings [hidden] { display: none !important; }
+.application-settings nav[aria-label='Application settings sections'] {
+  padding: 6px; background: var(--neutral-50); border: 1px solid var(--divider); border-radius: var(--radius);
+}
+.application-settings nav a { padding: 10px 14px; border-radius: var(--radius); color: var(--neutral-700); text-decoration: none; font-weight: 600; }
+.application-settings nav a[aria-current] { background: var(--brand-700); color: var(--neutral-0); }
+.application-settings nav a:focus-visible, .application-settings summary:focus-visible { outline: 3px solid var(--brand-500); outline-offset: 3px; }
+.application-settings section { min-width: 0; scroll-margin-top: 20px; }
+.application-settings .settings-card { margin-bottom: 20px; min-width: 0; }
+.application-settings input, .application-settings select, .application-settings textarea { box-sizing: border-box; min-width: 0; max-width: 100%; color: var(--ink); background: var(--neutral-0); }
+.application-settings input:not([type='checkbox']), .application-settings select, .application-settings textarea { width: 100%; }
+.application-settings label, .application-settings p, .application-settings h3, .application-settings td { overflow-wrap: anywhere; }
+.application-settings h2 { font-size: 1.2rem; color: var(--ink); margin: 0 0 12px; }
+.application-settings button { margin: 8px 8px 0 0; }
+.application-settings .settings-provider-fields { display: grid; }
+.application-settings .settings-advanced { padding: 14px; border: 1px solid var(--divider); border-radius: var(--radius); margin: 16px 0; }
+.application-settings .settings-advanced summary { cursor: pointer; font-weight: 600; color: var(--neutral-700); }
+.application-settings .settings-field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px; margin-top: 16px; }
+@media (max-width: 600px) {
+  .application-settings nav[aria-label='Application settings sections'] { gap: 4px !important; }
+  .application-settings nav a { flex: 1 1 130px; padding: 10px; }
+  .application-settings .settings-card { padding: 14px !important; }
+}
+
+.application-settings .settings-integration-status { display: grid; gap: 4px; padding: 12px; background: var(--neutral-50); border-radius: var(--radius); margin: 12px 0; font-size: 0.85rem; color: var(--neutral-600); }
+.application-settings .settings-integration-status strong { grid-row: 1; color: var(--ink); }
+.application-settings button { min-height: 36px; padding: 8px 12px; border-radius: var(--radius); font-size: 0.85rem; }
+.application-settings input, .application-settings select { min-height: 38px; }
+.application-settings input[type='checkbox'] { min-height: initial; }
+.application-settings [role='status'] { color: var(--neutral-600); font-size: 0.85rem; line-height: 1.5; }
+.application-settings .settings-help { font-size: 0.85rem; line-height: 1.5; color: var(--neutral-600); margin: 12px 0 16px; }
+.application-settings [aria-invalid='true'] { border: 2px solid var(--status-negative) !important; }
+.application-settings input:focus-visible, .application-settings select:focus-visible, .application-settings textarea:focus-visible, .application-settings button:focus-visible { outline: 3px solid var(--brand-500); outline-offset: 2px; }
+
+/* UX pilot: restrained Overview surfaces and consistent action states. */
+[data-ui='account-overview'] {
+  --action-height: 40px;
+}
+[data-ui='account-overview'] nav.crm-actions > button {
+  min-height: var(--action-height);
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+[data-ui='account-overview'] nav.crm-actions > button:hover:not(:disabled) {
+  background: var(--brand-50);
+  border-color: var(--brand-300);
+}
+[data-ui='account-overview'] nav.crm-actions > button:active:not(:disabled) {
+  background: var(--brand-100);
+}
+[data-ui='account-overview'] button:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 3px;
+}
+[data-ui='account-overview'] button:disabled {
+  cursor: not-allowed;
+}
+@media (pointer: coarse) {
+  [data-ui='account-overview'] nav.crm-actions > button { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-ui='account-overview'] nav.crm-actions > button { transition: none; }
+}
+
+/* Shared secondary action contract for CRM groups and health drill-downs. */
+.crm-actions > button,
+[data-ui='account-overview'] section > button {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--divider);
+  border-radius: var(--radius);
+  background: var(--neutral-0);
+  color: var(--brand-700);
+  font: inherit;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.crm-actions > button:hover:not(:disabled),
+[data-ui='account-overview'] section > button:hover:not(:disabled) {
+  background: var(--brand-50);
+  border-color: var(--brand-300);
+}
+.crm-actions > button:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 3px;
+}
+@media (pointer: coarse) {
+  .crm-actions > button, [data-ui='account-overview'] section > button { min-height: 44px; }
+}
+
+button[data-ui='action-button'] {
+  min-height: 40px; padding: 8px 16px; border: 1px solid transparent;
+  border-radius: var(--radius); font: inherit; font-size: .875rem;
+  font-weight: 600; cursor: pointer;
+  background: var(--brand-500); color: var(--neutral-0);
+}
+button[data-ui='action-button'][data-variant='danger'] { background: var(--status-negative); }
+button[data-ui='action-button'][data-variant='secondary'] {
+  background: var(--neutral-0); color: var(--brand-700); border-color: var(--divider);
+}
+button[data-ui='action-button']:hover:not(:disabled) { box-shadow: inset 0 0 0 2px currentColor; }
+button[data-ui='action-button']:active:not(:disabled) { box-shadow: inset 0 0 0 3px currentColor; }
+button[data-ui='action-button']:disabled { background: var(--neutral-200); color: var(--neutral-600); cursor: not-allowed; }
+button[data-ui='action-button']:focus-visible, button[data-ui='summary-action']:focus-visible {
+  outline: 2px solid var(--brand-500); outline-offset: 3px;
+}
+button[data-ui='summary-action']:hover { box-shadow: inset 0 0 0 1px var(--brand-300); }
+@media (pointer: coarse) { button[data-ui='action-button'] { min-height: 44px; } }
+
+/* Sidebar has its own semantic palette for light and dark. */
+:root {
+  --sidebar-surface: #f1f6f8;
+  --sidebar-ink: #1b2a3a;
+  --sidebar-muted: #4f5f70;
+  --sidebar-accent: #0b4f6c;
+  --sidebar-selected: #d9eef1;
+  --sidebar-divider: #d3e0e6;
+}
+html[data-theme='dark'], html[data-theme-preview='dark'] {
+  --sidebar-surface: #191b26;
+  --sidebar-ink: #eceef6;
+  --sidebar-muted: #b4bac8;
+  --sidebar-accent: #8fdbe4;
+  --sidebar-selected: #15324a;
+  --sidebar-divider: #3b3f4f;
+}
+
+/* Busy slots retain their width; labels and accessible names remain stable. */
+button[data-ui='action-button'] { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+button[data-ui='action-button'][data-variant='quiet'] { background: transparent; border-color: transparent; color: var(--brand-700); }
+button[data-ui='action-button'][data-density='compact'] { min-height: 32px; padding: 4px 10px; font-size: .8125rem; }
+[data-ui='action-icon'] { width: 20px; height: 20px; flex: 0 0 20px; display: inline-flex; align-items: center; justify-content: center; }
+[data-ui='action-spinner'] { width: 16px; height: 16px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: action-progress 800ms linear infinite; }
+@keyframes action-progress { to { transform: rotate(360deg); } }
+button[data-ui='action-button'][data-layout='export-option'] { width: 100%; min-width: 0; padding: 16px 20px; justify-content: flex-start; text-align: left; }
+button[data-ui='action-button'][data-layout='export-option']:disabled { background: var(--neutral-50); color: var(--neutral-600); }
+button[data-ui='action-button'][data-suggested='true'] { border-color: var(--brand-500); }
+[data-ui='export-copy'] { display: flex; flex-direction: column; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
+[data-ui='export-title'] { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: .95rem; font-weight: 600; }
+[data-ui='export-description'] { color: var(--neutral-600); font-size: .85rem; font-weight: 400; line-height: 1.5; }
+[data-ui='format-hint'] { font-size: .75rem; font-weight: 500; color: var(--brand-700); }
+@media (prefers-reduced-motion: reduce) { [data-ui='action-spinner'] { animation: none; } }
+@media (pointer: coarse) { button[data-ui='action-button'][data-density='compact'] { min-height: 44px; } }
+
+/* Admin portals: explicit dark tokens (kept for portal content rendered outside #root). */
+@media screen {
+  html[data-theme='dark'] [data-ui='admin-dialog'] {
+    color-scheme: dark;
+    --neutral-0: #14151f; --neutral-100: #20222e; --neutral-200: #2c2f3d;
+    --neutral-400: #6e7487; --neutral-500: #9aa1b2; --neutral-600: #b4bac8; --neutral-700: #cdd2dc;
+    --ink: #eceef6; --divider: #3b3f4f;
+    --brand-500: #4fc3d1; --brand-700: #8fdbe4;
+    --status-negative: #ff7b7b; --status-negative-soft: #2e1517;
+    --shadow-raised: 0 8px 32px rgba(0,0,0,.6);
+  }
+}
+[data-ui='admin-dialog'] :focus-visible { outline: 2px solid var(--brand-500); outline-offset: 3px; }
+
+[data-ui='dimension-profile-row'] { grid-template-columns: minmax(140px, 1fr) minmax(80px, 2fr) minmax(80px, 120px); }
+[data-ui='dimension-profile-row'] > * { min-width: 0; }
+@media (max-width: 600px) {
+  [data-ui='dimension-profile-row'] { grid-template-columns: minmax(0, 1fr) 80px; }
+  [data-ui='dimension-profile-row'] > span:first-child { grid-column: 1 / -1; }
+}
+
+[data-ui='recovery-link'] { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; }
+[data-ui='recovery-link']:hover { box-shadow: inset 0 0 0 2px currentColor; }
+[data-ui='recovery-link']:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 3px; }
+@media (pointer: coarse) { [data-ui='recovery-link'] { min-height: 44px; } }
+/* Destructive first step: outlined in the negative tone; the confirm step is solid danger. */
+button[data-ui='action-button'][data-variant='secondary'][data-tone='danger'] { color: var(--status-negative); border-color: currentColor; }
+/* Fallback keyboard focus ring for any control in the workspace that has no specific treatment. */
+:where(main) :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; }
+/* Windows High Contrast / forced colors: backgrounds are stripped, so give every button a system-colored
+ * border and keep the selected tab/nav state distinguishable without color. */
+@media (forced-colors: active) {
+  button, summary { border: 1px solid ButtonText !important; }
+  button:disabled { border-color: GrayText !important; }
+  [aria-selected='true'], [aria-current='page'], [aria-pressed='true'] { outline: 2px solid Highlight; outline-offset: -2px; }
+}
+/* On phones a 200px sticky username column hides most of the scrolled table (including row actions). */
+[data-ui='sticky-actions-cell'] { box-shadow: inset 1px 0 0 var(--divider); }
+@media (max-width: 600px) { [data-ui='sticky-user-cell'], [data-ui='sticky-actions-cell'] { position: static !important; box-shadow: none; } }
+/* Compact buttons don't reserve an empty icon slot; the spinner appears only while busy. */
+button[data-ui='action-button'][data-density='compact'] [data-ui='action-icon']:empty { display: none; }

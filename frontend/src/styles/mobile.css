@@ -1,0 +1,261 @@
+/* Mobile-responsive styles for S-A-I-L (Sales Analytics and Intelligence Launchpad) */
+
+/* Base reset and box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Mobile-first layout improvements */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Responsive grid for forms and cards */
+.form-grid,
+.stats-grid,
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .form-grid,
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+/* Responsive tables */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+  min-width: 600px;
+  width: 100%;
+}
+
+/* Responsive charts */
+.chart-container {
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+}
+
+@media (min-width: 768px) {
+  .chart-container {
+    min-height: 400px;
+  }
+}
+
+/* Responsive navigation and headers */
+.nav-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+  background: var(--gradient-brand);
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .nav-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+  }
+}
+
+.nav-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-actions button {
+  font-size: 14px;
+  padding: 8px 12px;
+  min-width: 80px;
+}
+
+@media (min-width: 768px) {
+  .nav-actions {
+    gap: 12px;
+  }
+  
+  .nav-actions button {
+    font-size: 16px;
+    padding: 10px 16px;
+  }
+}
+
+/* Responsive cards */
+.card {
+  background: var(--neutral-0);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 24px;
+  }
+}
+
+/* Responsive forms */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .form-group label {
+    font-size: 16px;
+  }
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--neutral-300);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    font-size: 16px;
+  }
+}
+
+/* Responsive buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px; /* Minimum touch target size */
+}
+
+.btn-primary {
+  background: var(--gradient-brand);
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--neutral-100);
+  color: var(--neutral-700);
+}
+
+@media (min-width: 768px) {
+  .btn {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+}
+
+/* Responsive footer */
+.footer {
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--neutral-50);
+  border-top: 1px solid var(--neutral-200);
+  font-size: 14px;
+  color: var(--neutral-500);
+}
+
+@media (min-width: 768px) {
+  .footer {
+    padding: 32px;
+    font-size: 16px;
+  }
+}
+
+/* Mobile-specific touch optimizations */
+@media (max-width: 767px) {
+  /* Prevent text selection on buttons */
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  
+  /* Larger touch targets */
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 24px;
+    height: 24px;
+    margin: 8px;
+  }
+  
+  /* Improved scroll performance */
+  .scrollable-area {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* Landscape orientation for tablets */
+@media (max-width: 1024px) and (orientation: landscape) {
+  .chart-container {
+    min-height: 250px;
+  }
+}
+
+/* High DPI/Retina display optimization */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .card,
+  .btn {
+    border-radius: 4px; /* Slightly tighter radius on high-DPI */
+  }
+}
+
+/* Print styles */
+@media print {
+  .nav-header,
+  .btn,
+  .footer {
+    display: none;
+  }
+  
+  .card {
+    box-shadow: none;
+    border: 1px solid var(--neutral-200);
+    break-inside: avoid;
+  }
+}

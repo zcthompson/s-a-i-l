@@ -1,0 +1,22 @@
+import { afterEach, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { ScoringDashboard } from '../src/components/ScoringDashboard';
+const apiMock = vi.hoisted(() => ({ exportPdf: vi.fn(), exportExcel: vi.fn() }));
+vi.mock('../src/lib/api', () => ({ api: apiMock }));
+vi.mock('../src/components/RadarChart', () => ({ RadarChartComponent: () => <div>Radar</div> }));
+const data: any = { use_case: { id: 12, title: 'Synthetic scored use case' }, scores: { overall_score: 50, dimension_scores: [{ name: 'Strategy', score: 50, weight: 1 }], reasoning: 'Synthetic', recommendations: [] } };
+afterEach(cleanup);
+it('keeps export scoped and prevents repeat actions until error recovery', async () => {
+  let reject!: (e: Error) => void;
+  apiMock.exportPdf.mockReturnValue(new Promise((_, r) => { reject = r; }));
+  render(<ScoringDashboard scoredData={data} onBack={() => {}} />);
+  const pdf = screen.getByRole('button', { name: 'Export scoring results as PDF' }) as HTMLButtonElement;
+  const excel = screen.getByRole('button', { name: 'Export scoring results as Excel' }) as HTMLButtonElement;
+  fireEvent.click(pdf);
+  expect(apiMock.exportPdf).toHaveBeenCalledWith(undefined, [12]);
+  expect(pdf.getAttribute('aria-busy')).toBe('true');
+  expect(excel.disabled).toBe(true);
+  await act(async () => reject(new Error('Synthetic outage')));
+  expect(screen.getByRole('alert').textContent).toContain('PDF export failed');
+  expect(excel.disabled).toBe(false);
+});
